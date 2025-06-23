@@ -1,13 +1,13 @@
 export default function Badge({ type }) {
   let style = "";
   switch (type) {
-    case "In progress":
+    case "in-progress":
       style = "bg-orange-400";
       break;
-    case "Planned":
+    case "planned":
       style = "bg-blue-400";
       break;
-    case "Completed":
+    case "completed":
       style = "bg-green-400";
       break;
   }

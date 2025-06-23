@@ -1,15 +1,3 @@
-//  {
-//     feature: "User authentication",
-//     status: "In progress",
-//     upvotes: 5,
-//     comments: 2,
-//     milestones: [
-//       { title: "Identify auth approach", status: "completed" },
-//       { title: "Implement registration", status: "incompleted" },
-//       { title: "Implement login", status: "incompleted" },
-//       { title: "Test auth", status: "incompleted" },
-//     ],
-//   },
 import { BiComment, BiUpvote } from "react-icons/bi";
 import Badge from "./Badge";
 import Milestone from "./Milestone";
@@ -19,7 +7,7 @@ export default function Roadmap({ data }) {
   const { feature, status, upvotes, comments, milestones } = data;
   return (
     <Link
-      href={"#"}
+      href={`/roadmaps/${data._id}`}
       className="border hover:outline hover:outline-blue-300 p-4 border-gray-200 gap-2 w-[350px] bg-white flex flex-col items-start shadow-md rounded-md"
     >
       {/* <div > */}
