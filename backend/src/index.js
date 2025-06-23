@@ -4,11 +4,13 @@ import roadmapRouter from "./routes/roadmap.routes.js";
 import commentsRouter from "./routes/comments.route.js";
 import cors from "cors";
 import authRouter from "./routes/auth.routes.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 app.use("/api", roadmapRouter);
 app.use("/api", commentsRouter);
 app.use("/api", authRouter);

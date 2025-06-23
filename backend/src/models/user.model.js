@@ -22,7 +22,6 @@ const UserSchema = new Schema(
       min: [1, "Email is required!"],
     },
     refreshToken: {
-      required: true,
       type: String,
     },
   },
