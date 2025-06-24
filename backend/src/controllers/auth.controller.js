@@ -87,7 +87,11 @@ export const register = async function (req, res) {
       verificationTokenExpires: Date.now() + 1000 * 60 * 60, // 1 hour
     });
 
+    console.log("HERE");
+
     await sendVerificationEmail(email, verificationToken);
+
+    console.log("AFTER SEND");
 
     res.status(201).json({
       message: "Verification email sent.",
