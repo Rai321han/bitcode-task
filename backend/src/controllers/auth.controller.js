@@ -141,18 +141,16 @@ export const login = async function (req, res) {
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: false, // required for localhost
-      sameSite: "Lax", // required for localhost to allow cross-origin
-      domain: "localhost", // 🔥 this is important!
+      secure: true, // required for localhost
+      sameSite: "none", // required for localhost to allow cross-origin
       path: "/", // allow on all routes
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: false, // required for localhost
-      sameSite: "Lax", // required for localhost to allow cross-origin
-      domain: "localhost", // 🔥 this is important!
+      secure: true, // required for localhost
+      sameSite: "none", // required for localhost to allow cross-origin
       path: "/", // allow on all routes
       maxAge: 15 * 60 * 1000, // 15 mins
     });
@@ -218,18 +216,16 @@ export const refresh = async function (req, res) {
 
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
-      secure: false, // required for localhost
-      sameSite: "Lax", // required for localhost to allow cross-origin
-      domain: "localhost", // 🔥 this is important!
+      secure: true, // required for localhost
+      sameSite: "none", // required for localhost to allow cross-origin
       path: "/", // allow on all routes
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: false, // required for localhost
-      sameSite: "Lax", // required for localhost to allow cross-origin
-      domain: "localhost", // 🔥 this is important!
+      secure: true, // required for localhost
+      sameSite: "none", // required for localhost to allow cross-origin
       path: "/", // allow on all routes
       maxAge: 15 * 60 * 1000, // 15 mins
     });
@@ -349,18 +345,16 @@ export const verify = async function (req, res) {
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: false, // required for localhost
-      sameSite: "Lax", // required for localhost to allow cross-origin
-      domain: "localhost", // 🔥 this is important!
+      secure: true, // required for localhost
+      sameSite: "none", // required for localhost to allow cross-origin
       path: "/", // allow on all routes
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: false, // required for localhost
-      sameSite: "Lax", // required for localhost to allow cross-origin
-      domain: "localhost", // 🔥 this is important!
+      secure: true, // required for localhost
+      sameSite: "none", // required for localhost to allow cross-origin
       path: "/", // allow on all routes
       maxAge: 15 * 60 * 1000, // 15 mins
     });
