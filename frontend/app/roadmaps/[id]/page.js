@@ -12,7 +12,7 @@ export default async function RoadmapDetailsPage({ params }) {
 
   const roadmap = await getRoadById({ id: roadmapId });
 
-  const milestones = roadmap.milestones;
+  const milestones = roadmap?.milestones;
   const { createdAt, updatedAt } = roadmap;
   const option = {
     day: "numeric",

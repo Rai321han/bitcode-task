@@ -1,9 +1,12 @@
 export async function getComments({ roadmapId, parentCommentId = null }) {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/roadmaps/${roadmapId}/comments?parentCommentId=${parentCommentId}`
+      `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/roadmaps/${roadmapId}/comments?parentCommentId=${parentCommentId}`,
+      {
+        credentials: "include",
+      }
     );
-    console.log(parentCommentId);
+    if (!res.ok) return null;
     const data = await res.json();
 
     return data.comments;

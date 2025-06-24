@@ -22,7 +22,7 @@ export async function getRoadmaps(req, res) {
 
     return res.status(200).json({
       success: true,
-      roadmaps,
+      roadmaps: roadmaps || [],
     });
   } catch (error) {
     console.error("Error fetching roadmaps:", error.message);

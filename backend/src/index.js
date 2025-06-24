@@ -8,9 +8,15 @@ import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
-app.use(cors());
-app.use(express.json());
+app.use(
+  cors({
+    origin: "http://localhost:3000", //
+    // origin: process.env.NGROK_URL,
+    credentials: true, // allow cookies (credentials)
+  })
+);
 app.use(cookieParser());
+app.use(express.json());
 app.use("/api", roadmapRouter);
 app.use("/api", commentsRouter);
 app.use("/api", authRouter);

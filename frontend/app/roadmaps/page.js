@@ -11,7 +11,7 @@ export default async function RoadmapsPage({ searchParams }) {
     sort: sortArray,
   });
 
-  const roadmapData = data.roadmaps;
+  const roadmapData = data?.roadmaps;
 
   return (
     <div className="mt-5 mx-16">
@@ -25,7 +25,7 @@ export default async function RoadmapsPage({ searchParams }) {
           <FilterSort filter={filterArray} sort={sortArray} />
         </div>
         <div className="flex flex-row flex-wrap gap-3.5 bg-gray-100 rounded-lg p-5">
-          {roadmapData.map((roadmap) => (
+          {roadmapData?.map((roadmap) => (
             <Roadmap key={roadmap._id} data={roadmap} />
           ))}
         </div>
