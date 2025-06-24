@@ -10,8 +10,8 @@ import {
   FormButton,
   FormErrorLabel,
 } from "./AuthForm/AuthForm";
-import { useFormState } from "react-dom";
 import { registerAction } from "@/actions/registerAction";
+import { useActionState } from "react";
 
 const initialState = {
   success: true,
@@ -20,7 +20,7 @@ const initialState = {
 };
 
 export default function RegisterForm() {
-  const [state, formAction] = useFormState(registerAction, initialState);
+  const [state, formAction] = useActionState(registerAction, initialState);
 
   const getFieldError = (field) => {
     return state.errors?.find((err) => err.field === field)?.message;
