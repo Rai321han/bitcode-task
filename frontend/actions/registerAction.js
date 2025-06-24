@@ -28,8 +28,9 @@ export async function registerAction(formData) {
       };
     }
 
-    if (data.redirectTo) {
-      redirect(data.redirectTo);
+    if (res.ok) {
+      // redirect(data.redirectTo);
+      redirect("/roadmaps");
     }
 
     return { success: true };

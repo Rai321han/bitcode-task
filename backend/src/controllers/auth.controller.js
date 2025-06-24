@@ -37,7 +37,7 @@ export const sendVerificationEmail = async function (email, token) {
       <p style="text-align: center; margin: 30px 0;">
         <a 
           href="${verifyUrl}" 
-          style="background-color: #2563eb; color: white; text-decoration: none; padding: 12px 24px; border-radius: 5px; font-weight: bold; display: inline-block;"
+          style="background-color: #2563eb; color: white; text-decoration: lax; padding: 12px 24px; border-radius: 5px; font-weight: bold; display: inline-block;"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -47,7 +47,7 @@ export const sendVerificationEmail = async function (email, token) {
       <p style="font-size: 14px; color: #777;">
         If you did not create an account, you can safely ignore this email.
       </p>
-      <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
+      <hr style="border: lax; border-top: 1px solid #eee; margin: 30px 0;">
       <p style="font-size: 12px; color: #aaa;">
         Task Manager Team<br>
         &copy; ${new Date().getFullYear()} Task Manager. All rights reserved.
@@ -66,9 +66,9 @@ export const register = async function (req, res) {
     const { username, email, password } = req.body;
 
     await connectDB();
-    const existing = await User.findOne({ email });
+    let user = await User.findOne({ email });
 
-    if (existing)
+    if (user)
       return res.status(409).json({
         message: "User already exists",
       });
@@ -76,29 +76,83 @@ export const register = async function (req, res) {
     // hashing the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const verificationToken = crypto.randomBytes(32).toString("hex");
+    //   const verificationToken = crypto.randomBytes(32).toString("hex");
 
-    const user = await User.create({
-      username,
-      email,
-      password: hashedPassword,
-      isVerified: false,
-      verificationToken,
-      verificationTokenExpires: Date.now() + 1000 * 60 * 60, // 1 hour
+    //   const user = await User.create({
+    //     username,
+    //     email,
+    //     password: hashedPassword,
+    //     isVerified: false,
+    //     verificationToken,
+    //     verificationTokenExpires: Date.now() + 1000 * 60 * 60, // 1 hour
+    //   });
+
+    //   console.log("HERE");
+
+    //   await sendVerificationEmail(email, verificationToken);
+
+    //   console.log("AFTER SEND");
+
+    //   res.status(201).json({
+    //     message: "Verification email sent.",
+    //     redirectTo: "/verify-reminder?email=" + encodeURIComponent(email),
+    //   });
+    // } catch (err) {
+    //   console.error("Register error:", err);
+    //   res.status(500).json({ message: "Server error" });
+    // }
+
+    // if (!user)
+    //   return res.status(400).json({ message: "Token invalid or expired" });
+
+    user.username = username;
+    user.email = email;
+    user.password = hashedPassword;
+    user.isVerified = true;
+    user.verificationToken = undefined;
+    user.verificationTokenExpires = undefined;
+
+    // generating tokens
+    const accessToken = jwt.sign(
+      { id: user._id, username: user.username },
+      ACCESS_SECRET,
+      { expiresIn: "15m" }
+    );
+    const refreshToken = jwt.sign(
+      { id: user._id, username: user.username },
+      REFRESH_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    // saving user
+    user.refreshToken = refreshToken;
+    await user.save();
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: false, // required for localhost
+      sameSite: "lax", // required for localhost to allow cross-origin
+      path: "/", // allow on all routes
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    console.log("HERE");
-
-    await sendVerificationEmail(email, verificationToken);
-
-    console.log("AFTER SEND");
-
-    res.status(201).json({
-      message: "Verification email sent.",
-      redirectTo: "/verify-reminder?email=" + encodeURIComponent(email),
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: false, // required for localhost
+      sameSite: "lax", // required for localhost to allow cross-origin
+      path: "/", // allow on all routes
+      maxAge: 15 * 60 * 1000, // 15 mins
     });
-  } catch (err) {
-    console.error("Register error:", err);
+    res.status(200).json({
+      code: "SUCCESS",
+      message: "registration success",
+      user: {
+        id: user._id,
+        username: user.username,
+      },
+    });
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -145,16 +199,16 @@ export const login = async function (req, res) {
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: true, // required for localhost
-      sameSite: "none", // required for localhost to allow cross-origin
+      secure: false, // required for localhost
+      sameSite: "lax", // required for localhost to allow cross-origin
       path: "/", // allow on all routes
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: true, // required for localhost
-      sameSite: "none", // required for localhost to allow cross-origin
+      secure: false, // required for localhost
+      sameSite: "lax", // required for localhost to allow cross-origin
       path: "/", // allow on all routes
       maxAge: 15 * 60 * 1000, // 15 mins
     });
@@ -220,16 +274,16 @@ export const refresh = async function (req, res) {
 
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
-      secure: true, // required for localhost
-      sameSite: "none", // required for localhost to allow cross-origin
+      secure: false, // required for localhost
+      sameSite: "lax", // required for localhost to allow cross-origin
       path: "/", // allow on all routes
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: true, // required for localhost
-      sameSite: "none", // required for localhost to allow cross-origin
+      secure: false, // required for localhost
+      sameSite: "lax", // required for localhost to allow cross-origin
       path: "/", // allow on all routes
       maxAge: 15 * 60 * 1000, // 15 mins
     });
@@ -268,14 +322,14 @@ export const logout = async function (req, res) {
 
     res.clearCookie("refreshToken", {
       httpOnly: true,
-      secure: true,
-      sameSite: "none",
+      secure: false,
+      sameSite: "lax",
     });
 
     res.clearCookie("accessToken", {
       httpOnly: true,
-      secure: true,
-      sameSite: "none",
+      secure: false,
+      sameSite: "lax",
     });
 
     res.status(200).json({
@@ -349,16 +403,16 @@ export const verify = async function (req, res) {
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: true, // required for localhost
-      sameSite: "none", // required for localhost to allow cross-origin
+      secure: false, // required for localhost
+      sameSite: "lax", // required for localhost to allow cross-origin
       path: "/", // allow on all routes
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: true, // required for localhost
-      sameSite: "none", // required for localhost to allow cross-origin
+      secure: false, // required for localhost
+      sameSite: "lax", // required for localhost to allow cross-origin
       path: "/", // allow on all routes
       maxAge: 15 * 60 * 1000, // 15 mins
     });

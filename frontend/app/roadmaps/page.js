@@ -13,6 +13,7 @@ export default async function RoadmapsPage({ searchParams }) {
 
   const roadmapData = data?.roadmaps;
 
+
   return (
     <div className="mt-5 mx-16">
       <div className="flex flex-col gap-5">
