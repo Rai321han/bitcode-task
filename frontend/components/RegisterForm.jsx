@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+
 import {
   AuthForm,
   FormContainer,
@@ -21,8 +21,6 @@ const initialState = {
 
 export default function RegisterForm() {
   const [state, formAction] = useFormState(registerAction, initialState);
-
-  const isLoading = state === initialState;
 
   const getFieldError = (field) => {
     return state.errors?.find((err) => err.field === field)?.message;
@@ -72,9 +70,7 @@ export default function RegisterForm() {
           {!state.success && state.message && (
             <FormErrorLabel message={state.message} />
           )}
-          <FormButton disabled={isLoading}>
-            {isLoading ? "creating account..." : "create account"}
-          </FormButton>
+          <FormButton>Create Account</FormButton>
         </FormContainer>
       </AuthForm>
     </>
