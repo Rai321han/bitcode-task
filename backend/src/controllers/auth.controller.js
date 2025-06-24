@@ -66,9 +66,9 @@ export const register = async function (req, res) {
     const { username, email, password } = req.body;
 
     await connectDB();
-    let user = await User.findOne({ email });
+    let exists = await User.findOne({ email });
 
-    if (user)
+    if (exists)
       return res.status(409).json({
         message: "User already exists",
       });
@@ -105,14 +105,17 @@ export const register = async function (req, res) {
     // if (!user)
     //   return res.status(400).json({ message: "Token invalid or expired" });
 
-    user.username = username;
-    user.email = email;
-    user.password = hashedPassword;
-    user.isVerified = true;
-    user.verificationToken = undefined;
-    user.verificationTokenExpires = undefined;
+    // create user
+    const user = await User.create({
+      username,
+      email,
+      password: hashedPassword,
+      isVerified: true,
+      verificationToken: undefined,
+      verificationTokenExpires: undefined,
+    });
 
-    // generating tokens
+    // generate tokens
     const accessToken = jwt.sign(
       { id: user._id, username: user.username },
       ACCESS_SECRET,
@@ -124,7 +127,6 @@ export const register = async function (req, res) {
       { expiresIn: "7d" }
     );
 
-    // saving user
     user.refreshToken = refreshToken;
     await user.save();
 
