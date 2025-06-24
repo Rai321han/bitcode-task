@@ -26,7 +26,6 @@ export default function EmailVerificationPage() {
           return;
         }
 
-
         router.push("/roadmaps");
       } catch (err) {
         console.log("Error: ", err);
@@ -34,7 +33,7 @@ export default function EmailVerificationPage() {
     }
 
     verify();
-  }, [token]);
+  }, [token, router]);
 
   return (
     <div className="text-center py-10">

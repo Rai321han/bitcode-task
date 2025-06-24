@@ -22,6 +22,8 @@ const initialState = {
 export default function RegisterForm() {
   const [state, formAction] = useFormState(registerAction, initialState);
 
+  const isLoading = state === initialState;
+
   const getFieldError = (field) => {
     return state.errors?.find((err) => err.field === field)?.message;
   };
