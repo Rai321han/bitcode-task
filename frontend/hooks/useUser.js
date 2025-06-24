@@ -1,7 +1,7 @@
 import { useQueries, useQuery } from "@tanstack/react-query";
 
 const fetchMe = async () => {
-  const res = await fetch("http://localhost:5100/api/me", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/me`, {
     credentials: "include",
   });
 

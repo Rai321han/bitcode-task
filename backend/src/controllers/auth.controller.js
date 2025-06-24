@@ -11,7 +11,7 @@ const REFRESH_SECRET = process.env.REFRESH_SECRET;
 // user registration
 export const sendVerificationEmail = async function (email, token) {
   try {
-    const verifyUrl = `https://17c8-103-113-173-69.ngrok-free.app/verify-email?token=${token}`;
+    const verifyUrl = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -305,7 +305,7 @@ export const getUser = async function (req, res) {
     const user = await User.findById(decoded.id);
 
     if (!user) return res.status(404).json({ message: "User not found" });
-  
+
     res.json({ user: { id: user._id, username: user.username } });
   } catch (error) {
     console.error("GetMe error:", error);

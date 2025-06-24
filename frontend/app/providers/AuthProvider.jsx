@@ -7,14 +7,14 @@ const AuthContext = createContext();
 
 const fetchMe = async () => {
   try {
-    let res = await fetch("http://localhost:5100/api/me", {
+    let res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/me`, {
       credentials: "include",
     });
 
     // here I am getting user data
 
     if (res.status === 401) {
-      const refreshRes = await fetch("http://localhost:5100/api/refresh", {
+      const refreshRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/refresh`, {
         method: "POST",
         credentials: "include",
       });
@@ -22,7 +22,7 @@ const fetchMe = async () => {
         // Refresh token invalid or missing
         return null;
       }
-      res = await fetch("http://localhost:5100/api/me", {
+      res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/me`, {
         credentials: "include",
       });
     }

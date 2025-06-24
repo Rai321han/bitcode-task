@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 const logout = async () => {
-  await fetch("http://localhost:5100/api/logout", {
+  await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/logout`, {
     method: "POST",
     credentials: "include",
   });

@@ -1,5 +1,5 @@
 const useRegister = async ({ email, password, username }) => {
-  const res = await fetch("http://localhost:5100/api/register", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/register`, {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },

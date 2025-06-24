@@ -10,8 +10,7 @@ dotenv.config();
 const app = express();
 app.use(
   cors({
-    origin: "http://localhost:3000", //
-    // origin: process.env.NGROK_URL,
+    origin: [process.env.FRONTEND_URL, "http://localhost:3000"],
     credentials: true, // allow cookies (credentials)
   })
 );
@@ -21,7 +20,7 @@ app.use("/api", roadmapRouter);
 app.use("/api", commentsRouter);
 app.use("/api", authRouter);
 
-const port = process.env.BACKEND_PORT || 5100;
+const port = process.env.PORT || 5100;
 app.listen(port, () => {
   console.log("Server running on port: ", port);
 });

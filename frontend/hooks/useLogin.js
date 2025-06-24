@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const login = async ({ email, password }) => {
-  const res = await fetch("http://localhost:5100/api/login", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/login`, {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },

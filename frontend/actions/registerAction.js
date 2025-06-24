@@ -8,12 +8,15 @@ export async function registerAction(formData) {
   const username = formData.get("username");
 
   try {
-    const res = await fetch("http://localhost:5100/api/register", {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password, username }),
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/register`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, username }),
+      }
+    );
 
     const data = await res.json();
 
