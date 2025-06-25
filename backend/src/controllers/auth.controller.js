@@ -27,12 +27,12 @@ export const sendVerificationEmail = async function (email, token) {
     });
 
     await transporter.sendMail({
-      from: `"Task Manager" <${process.env.EMAIL_USER}>`,
+      from: `"BitCodeTask" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: "Verify Your Email Address",
       html: `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;">
-      <h2 style="color: #333;">Welcome to YourApp Name!</h2>
+      <h2 style="color: #333;">Welcome to BitCodeTask!</h2>
       <p style="font-size: 16px; color: #555;">
         Thanks for signing up. To complete your registration, please verify your email address by clicking the button below:
       </p>
@@ -51,8 +51,8 @@ export const sendVerificationEmail = async function (email, token) {
       </p>
       <hr style="border: lax; border-top: 1px solid #eee; margin: 30px 0;">
       <p style="font-size: 12px; color: #aaa;">
-        Task Manager Team<br>
-        &copy; ${new Date().getFullYear()} Task Manager. All rights reserved.
+        BitCodeTask Team<br>
+        &copy; ${new Date().getFullYear()} BitCodeTask. All rights reserved.
       </p>
     </div>
   `,
