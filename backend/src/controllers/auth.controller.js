@@ -142,7 +142,7 @@ export const register = async function (req, res) {
 
     res.status(200).json({
       success: true,
-      redirectTo: `/verification-reminder?email=${email}`,
+      redirectTo: `/verify-reminder?email=${email}`,
     });
   } catch (error) {
     console.error(error);
