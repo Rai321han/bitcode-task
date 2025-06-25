@@ -10,7 +10,6 @@ export const protect = (req, res, next) => {
   } else if (req.cookies?.accessToken) {
     token = req.cookies.accessToken;
   }
-
   if (!token) {
     return res.status(401).json({ message: "Unauthorized: No token provided" });
   }

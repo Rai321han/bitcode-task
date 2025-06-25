@@ -1,9 +1,19 @@
-// import { cookies } from "next/headers";
+import { cookies } from "next/headers";
 
 export default async function getRoadmaps({ filter, sort }) {
   const params = new URLSearchParams();
   filter.forEach((f) => params.append("filter", f));
   sort.forEach((s) => params.append("sort", s));
+
+  const cookie = await cookies();
+  const accessToken = cookie.get("accessToken")?.value;
+
+  if (!accessToken) {
+    return {
+      error: true,
+      message: "no token",
+    };
+  }
 
   try {
     const res = await fetch(
@@ -11,14 +21,17 @@ export default async function getRoadmaps({ filter, sort }) {
         process.env.NEXT_PUBLIC_BASE_API_URL
       }/api/roadmaps?${params.toString()}`,
       {
-        credentials: "include", // send cookies to backend
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
         cache: "no-store",
       }
     );
 
     if (!res.ok) return null;
+    const data = await res.json();
 
-    return res.json();
+    return data.roadmaps;
   } catch (error) {
     console.error("getRoadmaps error:", error);
     return null;

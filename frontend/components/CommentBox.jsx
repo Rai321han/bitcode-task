@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 
-export default function CommentBox() {
+export default function CommentBox({ onSubmit }) {
   const [text, setText] = useState("");
   const inputRef = useRef(null);
 
@@ -10,10 +10,10 @@ export default function CommentBox() {
     setText(inputRef.current.innerText);
   }
 
-  // function handleSubmit() {
-  //   onSubmit(text);
-  //   inputRef.current.innerText = "";
-  // }
+  function handleSubmit() {
+    onSubmit(text);
+    inputRef.current.innerText = "";
+  }
 
   return (
     <div className=" bg-white rounded-xl border-2 border-gray-300">
@@ -29,7 +29,7 @@ export default function CommentBox() {
         />
         <div className="ml-auto pr-2 pb-2">
           <button
-            // onClick={handleSubmit}
+            onClick={handleSubmit}
             className="px-2 cursor-pointer text-white text-sm rounded-md py-1 bg-amber-600 inline-block"
           >
             Comment

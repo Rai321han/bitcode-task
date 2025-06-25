@@ -8,7 +8,7 @@ export default function Roadmap({ data }) {
   return (
     <Link
       href={`/roadmaps/${data._id}`}
-      className="border hover:outline hover:outline-blue-300 p-4 border-gray-200 gap-2 w-[350px] bg-white flex flex-col items-start shadow-md rounded-md"
+      className="hover:outline hover:outline-blue-300 p-4  gap-2 w-[350px] bg-white flex flex-col items-start shadow-2xl shadow-gray-200 rounded-md"
     >
       {/* <div > */}
       <div className="rounded-sm">

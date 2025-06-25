@@ -1,5 +1,7 @@
 "use client";
 
+import { register } from "@/hooks/useRegister";
+// import { useAuth } from "@/app/providers/AuthProvider";
 import {
   AuthForm,
   FormContainer,
@@ -10,27 +12,62 @@ import {
   FormButton,
   FormErrorLabel,
 } from "./AuthForm/AuthForm";
-import { registerAction } from "@/actions/registerAction";
-import { useActionState } from "react";
-
-const initialState = {
-  success: true,
-  message: "",
-  errors: [],
-};
+// import { useRegister } from "@/hooks/useRegister";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function RegisterForm() {
-  const [state, formAction] = useActionState(registerAction, initialState);
+  // const { refetch } = useAuth();
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [formError, setFormError] = useState("");
+  // const { mutate: register, isPending, error } = useRegister();
 
-  const getFieldError = (field) => {
-    return state.errors?.find((err) => err.field === field)?.message;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setFormError("");
+    setIsLoading(true);
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email");
+    const password = formData.get("password");
+    const username = formData.get("username");
+
+    if (!email || !password) {
+      setFormError("Email and password are required");
+      return;
+    }
+
+    if (!username) {
+      setFormError("username is required");
+      return;
+    }
+
+    // register(
+    //   { email, password, username },
+    //   {
+    //     onSuccess: async () => {
+    //       await refetch();
+    //       router.push("/roadmaps");
+    //     },
+    //     onError: (err) => setFormError(err.message || "Registrations failed"),
+    //   }
+    // );
+    const data = await register({ email, password, username });
+
+    if (data.error) {
+      setFormError("Something is wrong");
+      return;
+    }
+    setIsLoading(false);
+    router.push(data.redirectTo);
   };
 
   return (
     <>
       <AuthForm>
         <FormHeading>Create Account</FormHeading>
-        <FormContainer action={formAction}>
+        <FormContainer onSubmit={handleSubmit}>
           <FormElement>
             <Label htmlFor="username">username</Label>
             <FormInput
@@ -40,9 +77,7 @@ export default function RegisterForm() {
               placeholder="ex: john hope"
             />
           </FormElement>
-          {getFieldError("username") && (
-            <FormErrorLabel message={getFieldError("username")} />
-          )}
+
           <FormElement>
             <Label htmlFor="email">email</Label>
             <FormInput
@@ -51,9 +86,6 @@ export default function RegisterForm() {
               type="text"
               placeholder="ex: john@gmail.com"
             />
-            {getFieldError("email") && (
-              <FormErrorLabel message={getFieldError("email")} />
-            )}
           </FormElement>
           <FormElement>
             <Label htmlFor="password">password</Label>
@@ -64,13 +96,10 @@ export default function RegisterForm() {
               placeholder="********"
             />
           </FormElement>
-          {getFieldError("password") && (
-            <FormErrorLabel message={getFieldError("password")} />
-          )}
-          {!state.success && state.message && (
-            <FormErrorLabel message={state.message} />
-          )}
-          <FormButton>Create Account</FormButton>
+          <FormErrorLabel message={formError} />
+          <FormButton disabled={isLoading}>
+            {isLoading ? "creating account..." : "create account"}
+          </FormButton>
         </FormContainer>
       </AuthForm>
     </>

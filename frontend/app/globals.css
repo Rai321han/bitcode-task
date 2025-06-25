@@ -5,6 +5,25 @@
   --foreground: #171717;
 }
 
+@layer utilities {
+  @keyframes textReveal {
+    from {
+      width: 0;
+    }
+    to {
+      width: 100%;
+    }
+  }
+
+  .reveal-text {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 0;
+    animation: textReveal 1s ease-out forwards;
+  }
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

@@ -5,6 +5,10 @@ const CommentSchema = new Schema({
     type: String,
     required: true,
   },
+  commenterId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+  },
   roadmapId: {
     type: Schema.Types.ObjectId,
     required: true,
@@ -17,11 +21,10 @@ const CommentSchema = new Schema({
     type: Schema.Types.ObjectId,
     default: null,
   },
-  children: [
-    {
-      type: Schema.Types.ObjectId,
-    },
-  ],
+  hasChild: {
+    type: Boolean,
+    default: false,
+  },
   likes: {
     type: Number,
     default: 0,

@@ -1,24 +1,65 @@
 "use client";
 
-import { getComments } from "@/actions/comments";
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { getCommentById, getComments, LikeComment } from "@/actions/comments";
+import { useAuth } from "@/app/providers/AuthProvider";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 
-export default function Comment({ comment }) {
+export default function Comment({ commentId, onReply, onLike, onUnlike }) {
   const [showReplies, setShowReplies] = useState(false);
+  const queryClient = useQueryClient();
 
-  const { data: replies = [], isPending } = useQuery({
-    queryKey: ["comments", comment.roadmapId, comment._id],
+  const { user } = useAuth();
+
+  const { data: comment, status: commentStatus } = useQuery({
+    queryKey: ["comment", commentId],
+    queryFn: () => getCommentById({ commentId }),
+    enabled: !!commentId,
+  });
+
+  const {
+    data: replies,
+    status: replyStatus,
+    isPending: repliesPending,
+  } = useQuery({
+    queryKey: ["comments", commentId],
     queryFn: () =>
       getComments({
         roadmapId: comment.roadmapId,
-        parentCommentId: comment._id,
+        parentCommentId: commentId,
       }),
-    enabled: showReplies, // Only fetch when expanded
+    enabled: showReplies && !!comment?.roadmapId, // only run when button is clicked and roadmapId is available
   });
 
+  useEffect(() => {
+    if (replyStatus === "success" && replies) {
+      replies.forEach((reply) => {
+        queryClient.setQueryData(["comment", reply._id], reply);
+      });
+    }
+  }, [replyStatus, replies, queryClient]);
+
+  if (commentStatus === "pending") {
+    return (
+      <div className="text-sm text-gray-400 italic">Loading comment...</div>
+    );
+  }
+
+  if (commentStatus === "error") {
+    return (
+      <div className="text-sm text-red-400 italic">Failed to load comment</div>
+    );
+  }
+
+  const hasLiked = comment?.likers?.includes(user.id);
+
+  function handleOnClick() {
+    if (comment.likers.includes(user.id)) onUnlike(commentId);
+    else onLike(commentId);
+  }
+
   return (
-    <div className="flex flex-col justify-end">
+    <div className={`flex flex-col justify-end ${!comment.hasChild && "mb-3"}`}>
       <div
         key={comment._id}
         className="p-3 text-gray-700 text-sm flex flex-col gap-1 justify-start bg-gray-100 rounded-md"
@@ -29,19 +70,21 @@ export default function Comment({ comment }) {
         </div>
         <div>{comment.content}</div>
         <div className="flex flex-row text-xs justify-end gap-3">
-          <button
-            // onClick={() => setIsOpen(true)}
-            className="cursor-pointer"
-          >
+          <button onClick={() => onReply(comment)} className="cursor-pointer">
             Reply
           </button>
-          <button className="flex flex-row gap-1 cursor-pointer">
+          <button
+            className={`flex flex-row gap-1 cursor-pointer ${
+              hasLiked && "text-blue-500"
+            }`}
+            onClick={handleOnClick}
+          >
             <div className="font-semibold">{comment.likes}</div>
             <div>Likes</div>
           </button>
         </div>
       </div>
-      {comment.children.length > 0 && (
+      {comment.hasChild && (
         <div className="text-right">
           <button
             onClick={() => setShowReplies((prev) => !prev)}
@@ -53,10 +96,18 @@ export default function Comment({ comment }) {
       )}
       {showReplies && (
         <div className="ml-4 mt-2 pl-2 relative border-l-1 border-gray-300">
-          {isPending ? (
+          {repliesPending ? (
             <p className="text-xs text-gray-400">Loading replies...</p>
           ) : (
-            replies.map((reply) => <Comment key={reply._id} comment={reply} />)
+            replies.map((reply) => (
+              <Comment
+                key={reply._id}
+                commentId={reply._id}
+                onLike={onLike}
+                onUnlike={onUnlike}
+                onReply={onReply}
+              />
+            ))
           )}
         </div>
       )}

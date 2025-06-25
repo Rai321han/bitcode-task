@@ -11,7 +11,9 @@ export default function Milestone({ milestone }) {
           }`}
         />
       </div>
-      <div className="text-sm text-gray-500">{title}</div>
+      <div className="text-sm text-gray-500 truncate overflow-hidden">
+        {title}
+      </div>
     </div>
   );
 }

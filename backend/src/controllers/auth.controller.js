@@ -8,6 +8,8 @@ import crypto from "crypto";
 const ACCESS_SECRET = process.env.ACCESS_SECRET;
 const REFRESH_SECRET = process.env.REFRESH_SECRET;
 
+const isProduction = process.env.NODE_ENV === "production";
+
 // user registration
 export const sendVerificationEmail = async function (email, token) {
   try {
@@ -76,46 +78,96 @@ export const register = async function (req, res) {
     // hashing the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    //   const verificationToken = crypto.randomBytes(32).toString("hex");
-
-    //   const user = await User.create({
-    //     username,
-    //     email,
-    //     password: hashedPassword,
-    //     isVerified: false,
-    //     verificationToken,
-    //     verificationTokenExpires: Date.now() + 1000 * 60 * 60, // 1 hour
-    //   });
-
-    //   console.log("HERE");
-
-    //   await sendVerificationEmail(email, verificationToken);
-
-    //   console.log("AFTER SEND");
-
-    //   res.status(201).json({
-    //     message: "Verification email sent.",
-    //     redirectTo: "/verify-reminder?email=" + encodeURIComponent(email),
-    //   });
-    // } catch (err) {
-    //   console.error("Register error:", err);
-    //   res.status(500).json({ message: "Server error" });
-    // }
-
-    // if (!user)
-    //   return res.status(400).json({ message: "Token invalid or expired" });
-
     // create user
-    const user = await User.create({
+    // let user = await User.create({
+    //   username,
+    //   email,
+    //   password: hashedPassword,
+    //   isVerified: true,
+    //   verificationToken: undefined,
+    //   verificationTokenExpires: undefined,
+    // });
+
+    // // generate tokens
+    // const accessToken = jwt.sign(
+    //   { id: user._id, username: user.username },
+    //   ACCESS_SECRET,
+    //   { expiresIn: "15m" }
+    // );
+    // const refreshToken = jwt.sign(
+    //   { id: user._id, username: user.username },
+    //   REFRESH_SECRET,
+    //   { expiresIn: "7d" }
+    // );
+
+    // user.refreshToken = refreshToken;
+    // await user.save();
+
+    // res.cookie("refreshToken", refreshToken, {
+    //   httpOnly: true,
+    //   secure: isProduction, // required for localhost
+    //   sameSite: isProduction ? "None" : "lax", // required for localhost to allow cross-origin
+    //   path: "/", // allow on all routes
+    //   maxAge: 7 * 24 * 60 * 60 * 1000,
+    // });
+
+    // res.cookie("accessToken", accessToken, {
+    //   httpOnly: true,
+    //   secure: isProduction, // required for localhost
+    //   sameSite: isProduction ? "None" : "lax", // required for localhost to allow cross-origin
+    //   path: "/", // allow on all routes
+    //   maxAge: 15 * 60 * 1000, // 15 mins
+    // });
+    // res.status(200).json({
+    //   success: true,
+    //   message: "registration success",
+    //   user: {
+    //     id: user._id,
+    //     username: user.username,
+    //   },
+    // });
+    const verificationToken = crypto.randomUUID();
+
+    await User.create({
       username,
       email,
       password: hashedPassword,
-      isVerified: true,
-      verificationToken: undefined,
+      isVerified: false,
       verificationTokenExpires: undefined,
+      verificationToken: verificationToken,
     });
 
-    // generate tokens
+    // send email
+    await sendVerificationEmail(email, verificationToken);
+
+    res.status(200).json({
+      success: true,
+      redirectTo: `/verification-reminder?email=${email}`,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// email verification
+export const verify = async function (req, res) {
+  try {
+    const { token } = req.query;
+    await connectDB();
+    const user = await User.findOne({
+      verificationToken: token,
+      verificationTokenExpires: { $gt: Date.now() },
+    });
+
+    if (!user)
+      return res.status(400).json({ message: "Token invalid or expired" });
+
+    user.isVerified = true;
+    user.verificationToken = undefined;
+    user.verificationTokenExpires = undefined;
+
+    // generating tokens
     const accessToken = jwt.sign(
       { id: user._id, username: user.username },
       ACCESS_SECRET,
@@ -127,26 +179,27 @@ export const register = async function (req, res) {
       { expiresIn: "7d" }
     );
 
+    // saving user
     user.refreshToken = refreshToken;
     await user.save();
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: false, // required for localhost
-      sameSite: "lax", // required for localhost to allow cross-origin
+      secure: isProduction, // required for localhost
+      sameSite: isProduction ? "None" : "lax", // required for localhost to allow cross-origin
       path: "/", // allow on all routes
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: false, // required for localhost
-      sameSite: "lax", // required for localhost to allow cross-origin
+      secure: isProduction, // required for localhost
+      sameSite: isProduction ? "None" : "lax", // required for localhost to allow cross-origin
       path: "/", // allow on all routes
       maxAge: 15 * 60 * 1000, // 15 mins
     });
     res.status(200).json({
-      code: "SUCCESS",
+      code: "EMAIL_VERIFIED",
       message: "registration success",
       user: {
         id: user._id,
@@ -201,16 +254,16 @@ export const login = async function (req, res) {
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: false, // required for localhost
-      sameSite: "lax", // required for localhost to allow cross-origin
+      secure: isProduction, // required for localhost
+      sameSite: isProduction ? "None" : "lax", // required for localhost to allow cross-origin
       path: "/", // allow on all routes
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: false, // required for localhost
-      sameSite: "lax", // required for localhost to allow cross-origin
+      secure: isProduction, // required for localhost
+      sameSite: isProduction ? "None" : "lax", // required for localhost to allow cross-origin
       path: "/", // allow on all routes
       maxAge: 15 * 60 * 1000, // 15 mins
     });
@@ -276,16 +329,16 @@ export const refresh = async function (req, res) {
 
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
-      secure: false, // required for localhost
-      sameSite: "lax", // required for localhost to allow cross-origin
+      secure: isProduction, // required for localhost
+      sameSite: isProduction ? "None" : "lax", // required for localhost to allow cross-origin
       path: "/", // allow on all routes
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: false, // required for localhost
-      sameSite: "lax", // required for localhost to allow cross-origin
+      secure: isProduction, // required for localhost
+      sameSite: isProduction ? "None" : "lax", // required for localhost to allow cross-origin
       path: "/", // allow on all routes
       maxAge: 15 * 60 * 1000, // 15 mins
     });
@@ -324,14 +377,14 @@ export const logout = async function (req, res) {
 
     res.clearCookie("refreshToken", {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: isProduction,
+      sameSite: isProduction ? "None" : "lax",
     });
 
     res.clearCookie("accessToken", {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: isProduction,
+      sameSite: isProduction ? "None" : "lax",
     });
 
     res.status(200).json({
@@ -368,66 +421,5 @@ export const getUser = async function (req, res) {
     if (error.name === "TokenExpiredError")
       return res.status(401).json({ message: "Token expired" });
     res.status(401).json({ message: "User unauthorized" });
-  }
-};
-// email verification
-export const verify = async function (req, res) {
-  try {
-    const { token } = req.query;
-    await connectDB();
-    const user = await User.findOne({
-      verificationToken: token,
-      verificationTokenExpires: { $gt: Date.now() },
-    });
-
-    if (!user)
-      return res.status(400).json({ message: "Token invalid or expired" });
-
-    user.isVerified = true;
-    user.verificationToken = undefined;
-    user.verificationTokenExpires = undefined;
-
-    // generating tokens
-    const accessToken = jwt.sign(
-      { id: user._id, username: user.username },
-      ACCESS_SECRET,
-      { expiresIn: "15m" }
-    );
-    const refreshToken = jwt.sign(
-      { id: user._id, username: user.username },
-      REFRESH_SECRET,
-      { expiresIn: "7d" }
-    );
-
-    // saving user
-    user.refreshToken = refreshToken;
-    await user.save();
-
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: false, // required for localhost
-      sameSite: "lax", // required for localhost to allow cross-origin
-      path: "/", // allow on all routes
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
-
-    res.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      secure: false, // required for localhost
-      sameSite: "lax", // required for localhost to allow cross-origin
-      path: "/", // allow on all routes
-      maxAge: 15 * 60 * 1000, // 15 mins
-    });
-    res.status(200).json({
-      code: "EMAIL_VERIFIED",
-      message: "registration success",
-      user: {
-        id: user._id,
-        username: user.username,
-      },
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
   }
 };

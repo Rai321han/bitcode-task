@@ -20,14 +20,16 @@ import {
   getCommentById,
   getComments,
   likeComment,
+  unlikeComment,
 } from "../controllers/comments.controller.js";
 import { protect } from "../middlewares/auth.middleware.js";
 
 const comments = express.Router();
 comments.get("/roadmaps/:roadmapId/comments", protect, getComments);
 comments.get("/comment/:commentId", protect, getCommentById);
-comments.post("/comment", protect, createComment);
+comments.post("/:roadmapId/comment", protect, createComment);
 comments.post("/comments/:commentId/like", protect, likeComment);
+comments.post("/comments/:commentId/unlike", protect, unlikeComment);
 comments.delete("/comments/:commentId", protect, deleteComment);
 
 export default comments;

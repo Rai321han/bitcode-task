@@ -1,19 +1,55 @@
 "use client";
 import { BiComment, BiUpvote } from "react-icons/bi";
+import { RxCross1 } from "react-icons/rx";
+import { LuCornerUpRight } from "react-icons/lu";
 import CommentBox from "@/components/CommentBox";
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getComments } from "@/actions/comments";
 import { VscLoading } from "react-icons/vsc";
 import Comment from "./Comment";
+import { useEffect, useState } from "react";
+import useLikeComment from "@/hooks/useLikeComment";
+import useUnlikeComment from "@/hooks/useUnlikeComment";
+import useMakeComment from "@/hooks/useMakeComment";
+import { useAuth } from "@/app/providers/AuthProvider";
 export default function CommentSection({ roadmap }) {
-  const { data, isPending, isError, isSuccess } = useQuery({
+  const [selectComment, setSelectComment] = useState(null);
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
+
+  const { likeComment } = useLikeComment();
+  const { unlikeComment } = useUnlikeComment();
+  const { makeComment } = useMakeComment();
+  const {
+    data: comments,
+    status,
+    isLoading,
+    isError,
+    isFetching,
+  } = useQuery({
     queryKey: ["comments", roadmap._id],
     queryFn: () =>
       getComments({ roadmapId: roadmap._id, parentCommentId: null }),
   });
 
-  if (isPending) {
+  useEffect(() => {
+    if (status === "success" && comments) {
+      comments.forEach((comment) => {
+        queryClient.setQueryData(["comment", comment._id], comment);
+      });
+    }
+  }, [status, comments, queryClient]);
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-row justify-center items-center">
+        <VscLoading className="animate-spin w-6 h-6" />
+      </div>
+    );
+  }
+
+  if (isFetching) {
     return (
       <div className="flex flex-row justify-center items-center">
         <VscLoading className="animate-spin w-6 h-6" />
@@ -29,16 +65,27 @@ export default function CommentSection({ roadmap }) {
     );
   }
 
-  let rootComments = [];
+  console.log(selectComment, user.id);
+  let rootComments = comments ?? [];
 
-  if (isSuccess) {
-    const comments = data;
-    comments.forEach((comment) => {
-      if (comment.parentCommentId === null) rootComments.push(comment);
-    });
+  function handleCommentLike(commentId) {
+    likeComment(commentId);
   }
 
-  const totalComments = data.length;
+  function handleCommentUnlike(commentId) {
+    unlikeComment(commentId);
+  }
+
+  function handleCommentSubmit(text) {
+    const comment = {
+      content: text,
+      roadmapId: roadmap._id,
+      parentCommentId: selectComment ? selectComment._id : null,
+    };
+    makeComment(comment);
+  }
+
+  const totalComments = comments.length;
   return (
     <>
       <div className="w-full mt-10 md:mt-0 rounded-sm  justify-between gap-3 ">
@@ -67,16 +114,46 @@ export default function CommentSection({ roadmap }) {
   [&::-webkit-scrollbar-track]:bg-white
   [&::-webkit-scrollbar-thumb]:bg-gray-200 w-full pb-5 flex flex-col gap-3 rounded-md lg:max-w-[500px]  overflow-scroll overflow-x-auto"
           >
-            {rootComments.map((comment) => (
-              <Comment key={comment._id} comment={comment} />
-            ))}
+            {rootComments.length &&
+              rootComments?.map((comment) => (
+                <Comment
+                  key={comment._id}
+                  commentId={comment._id}
+                  onLike={handleCommentLike}
+                  onUnlike={handleCommentUnlike}
+                  onReply={setSelectComment}
+                />
+              ))}
           </div>
           <div
             // ref={commentBoxRef}
             className="mt-auto  w-full rounded-xl"
             id="comment"
           >
-            <CommentBox />
+            <div className="flex flex-row gap-1 items-center px-2 py-1 bg-white -mb-1 rounded-md">
+              {selectComment && (
+                <>
+                  <div>
+                    <LuCornerUpRight />
+                  </div>
+                  <div className="text-sm text-gray-600  w-fit">
+                    Replying to{" "}
+                    <span className="text-gray-700 font-bold">
+                      {user.id === selectComment.commenterId
+                        ? "Myself"
+                        : selectComment.commenterName}
+                    </span>
+                  </div>
+                  <div
+                    className="p-2 rounded-md hover:bg-amber-100"
+                    onClick={() => setSelectComment(null)}
+                  >
+                    <RxCross1 />
+                  </div>
+                </>
+              )}
+            </div>
+            <CommentBox onSubmit={(text) => handleCommentSubmit(text)} />
           </div>
           {/* {isOpen && (
           
