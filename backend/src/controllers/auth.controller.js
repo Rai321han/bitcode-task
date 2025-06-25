@@ -133,7 +133,7 @@ export const register = async function (req, res) {
       email,
       password: hashedPassword,
       isVerified: false,
-      verificationTokenExpires: undefined,
+      verificationTokenExpires: Date.now() + 1000 * 60 * 60,
       verificationToken: verificationToken,
     });
 
