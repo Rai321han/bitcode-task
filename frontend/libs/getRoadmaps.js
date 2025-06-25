@@ -5,7 +5,7 @@ export default async function getRoadmaps({ filter, sort }) {
   filter.forEach((f) => params.append("filter", f));
   sort.forEach((s) => params.append("sort", s));
 
-  const cookie = await cookies();
+  const cookie = cookies();
   const accessToken = cookie.get("accessToken")?.value;
 
   if (!accessToken) {
