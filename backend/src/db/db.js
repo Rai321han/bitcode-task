@@ -4,7 +4,10 @@ dotend.config();
 
 let uri = process.env.MONGODB_URI;
 
-if (!uri) throw new Error("MongoDB URI is missing!");
+if (!uri) {
+  console.error("MongoDB URI is missing!");
+  return;
+}
 
 export async function connectDB() {
   if (mongoose.connection.readyState >= 1) {
@@ -16,6 +19,5 @@ export async function connectDB() {
     console.log("MongoDB connection established");
   } catch (error) {
     console.log("Error while connecting to MongoDB", error);
-    throw error;
   }
 }

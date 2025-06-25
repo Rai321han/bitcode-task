@@ -5,7 +5,7 @@ const fetchMe = async () => {
     credentials: "include",
   });
 
-  if (!res.ok) throw new Error("Not authenticated");
+  if (!res.ok) console.error("Not authenticated");
 
   const data = await res.json();
   return data.user;

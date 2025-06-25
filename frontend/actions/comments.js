@@ -11,7 +11,9 @@ export async function getComments({ roadmapId, parentCommentId = null }) {
     return data.comments;
   } catch (error) {
     console.log("Error getting data", error.message);
-    throw error;
+    res.status(500).json({
+      message: "error encountered",
+    });
   }
 }
 
@@ -28,7 +30,7 @@ export async function getCommentById({ commentId }) {
     return data.comment;
   } catch (error) {
     console.log("Error getting data", error.message);
-    throw error;
+   
   }
 }
 

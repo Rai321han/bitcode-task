@@ -59,7 +59,9 @@ export const sendVerificationEmail = async function (email, token) {
     });
   } catch (error) {
     console.log("Error sending email ", error);
-    throw error;
+    res.status(500).json({
+      message: "failed to send verification email",
+    });
   }
 };
 

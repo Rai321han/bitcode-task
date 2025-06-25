@@ -28,7 +28,7 @@ const fetchMe = async () => {
     }
 
     if (!res.ok) {
-      // Instead of throwing, return null to indicate no user
+ 
       return null;
     }
 

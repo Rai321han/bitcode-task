@@ -22,6 +22,6 @@ export default async function getRoadById({ id }) {
     return data.roadmap;
   } catch (error) {
     console.log("Error getting data", error.message);
-    throw error;
+ 
   }
 }

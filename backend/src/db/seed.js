@@ -86,7 +86,7 @@ export async function seedDB() {
     process.exit(0)
   } catch (error) {
     console.log("Error while database seeding", error);
-    throw error;
+    
   }
 }
 
