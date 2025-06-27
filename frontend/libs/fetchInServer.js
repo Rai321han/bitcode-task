@@ -18,10 +18,11 @@ export const fetchInServer = async (url, options = {}) => {
     );
 
     if (refreshRes.ok) {
-      return fetch(url, {
+      const res = fetch(url, {
         ...options,
         credentials: options?.headers?.Authorization ? "omit" : "include",
       });
+      return res;
     } else {
       // refresh token is invalid/expired
       // logout user or redirect

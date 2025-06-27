@@ -16,10 +16,12 @@ export const fetchInClient = async (url, options = {}) => {
     );
 
     if (refreshRes.ok) {
-      return fetch(url, {
+      const res = await fetch(url, {
         ...options,
         credentials: options?.headers?.Authorization ? "omit" : "include",
       });
+
+      return res;
     } else {
       console.error("Session expired");
     }
