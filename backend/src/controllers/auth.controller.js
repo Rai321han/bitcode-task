@@ -94,7 +94,7 @@ export const register = async function (req, res) {
     // const accessToken = jwt.sign(
     //   { id: user._id, username: user.username },
     //   ACCESS_SECRET,
-    //   { expiresIn: "15m" }
+    //   { expiresIn: "2m" }
     // );
     // const refreshToken = jwt.sign(
     //   { id: user._id, username: user.username },
@@ -118,7 +118,7 @@ export const register = async function (req, res) {
     //   secure: isProduction, // required for localhost
     //   sameSite: isProduction ? "None" : "lax", // required for localhost to allow cross-origin
     //   path: "/", // allow on all routes
-    //   maxAge: 15 * 60 * 1000, // 15 mins
+    //   maxAge: 2 * 60 * 1000, // 2 mins
     // });
     // res.status(200).json({
     //   success: true,
@@ -173,7 +173,7 @@ export const verify = async function (req, res) {
     const accessToken = jwt.sign(
       { id: user._id, username: user.username },
       ACCESS_SECRET,
-      { expiresIn: "15m" }
+      { expiresIn: "2m" }
     );
     const refreshToken = jwt.sign(
       { id: user._id, username: user.username },
@@ -198,7 +198,7 @@ export const verify = async function (req, res) {
       secure: isProduction, // required for localhost
       sameSite: isProduction ? "None" : "lax", // required for localhost to allow cross-origin
       path: "/", // allow on all routes
-      maxAge: 15 * 60 * 1000, // 15 mins
+      maxAge: 2 * 60 * 1000, // 2 mins
     });
     res.status(200).json({
       code: "EMAIL_VERIFIED",
@@ -245,7 +245,7 @@ export const login = async function (req, res) {
     const accessToken = jwt.sign(
       { id: user._id, username: user.username },
       ACCESS_SECRET,
-      { expiresIn: "15m" }
+      { expiresIn: "2m" }
     );
 
     user.refreshToken = refreshToken;
@@ -267,7 +267,7 @@ export const login = async function (req, res) {
       secure: isProduction, // required for localhost
       sameSite: isProduction ? "None" : "lax", // required for localhost to allow cross-origin
       path: "/", // allow on all routes
-      maxAge: 15 * 60 * 1000, // 15 mins
+      maxAge: 2 * 60 * 1000, // 2 mins
     });
 
     res.status(200).json({
@@ -291,11 +291,13 @@ export const refresh = async function (req, res) {
         .json({ code: "NO TOKEN", message: "No refresh token provided" });
     }
 
+    console.log(token);
     // refresh token verification
     const decoded = jwt.verify(token, REFRESH_SECRET);
-
+    console.log(decoded);
     await connectDB();
     const user = await User.findById(decoded.id);
+    console.log(user);
 
     if (!user || user.refreshToken !== token) {
       return res.status(403).json({
@@ -322,7 +324,7 @@ export const refresh = async function (req, res) {
       },
       ACCESS_SECRET,
       {
-        expiresIn: "15m",
+        expiresIn: "2m",
       }
     );
 
@@ -342,7 +344,7 @@ export const refresh = async function (req, res) {
       secure: isProduction, // required for localhost
       sameSite: isProduction ? "None" : "lax", // required for localhost to allow cross-origin
       path: "/", // allow on all routes
-      maxAge: 15 * 60 * 1000, // 15 mins
+      maxAge: 2 * 60 * 1000, // 2 mins
     });
 
     res.status(200).json({
