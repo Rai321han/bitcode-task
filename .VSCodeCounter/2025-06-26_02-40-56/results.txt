@@ -1,0 +1,140 @@
+Date : 2025-06-26 02:40:56
+Directory : e:\bitcode-task
+Total : 79 files,  10929 codes, 150 comments, 441 blanks, all 11520 lines
+
+Languages
++--------------------+------------+------------+------------+------------+------------+
+| language           | files      | code       | comment    | blank      | total      |
++--------------------+------------+------------+------------+------------+------------+
+| JSON               |          4 |      8,063 |          0 |          4 |      8,067 |
+| JavaScript         |         48 |      1,801 |        126 |        293 |      2,220 |
+| JavaScript JSX     |         19 |        986 |         23 |        121 |      1,130 |
+| PostCSS            |          1 |         44 |          1 |          8 |         53 |
+| Markdown           |          1 |         23 |          0 |         14 |         37 |
+| JSON with Comments |          1 |          7 |          0 |          1 |          8 |
+| XML                |          5 |          5 |          0 |          0 |          5 |
++--------------------+------------+------------+------------+------------+------------+
+
+Directories
++---------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                      | files      | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                         |         79 |     10,929 |        150 |        441 |     11,520 |
+| backend                                                                   |         18 |      2,687 |         91 |        164 |      2,942 |
+| backend (Files)                                                           |          2 |      1,727 |          0 |          2 |      1,729 |
+| backend\src                                                               |         16 |        960 |         91 |        162 |      1,213 |
+| backend\src (Files)                                                       |          1 |         25 |          0 |          6 |         31 |
+| backend\src\controllers                                                   |          3 |        507 |         73 |         94 |        674 |
+| backend\src\db                                                            |          3 |        195 |          5 |         24 |        224 |
+| backend\src\middlewares                                                   |          2 |         37 |          0 |          9 |         46 |
+| backend\src\models                                                        |          3 |        113 |          0 |          9 |        122 |
+| backend\src\routes                                                        |          3 |         50 |         13 |         14 |         77 |
+| backend\src\validators                                                    |          1 |         33 |          0 |          6 |         39 |
+| frontend                                                                  |         61 |      8,242 |         59 |        277 |      8,578 |
+| frontend (Files)                                                          |          7 |      6,383 |          1 |         27 |      6,411 |
+| frontend\actions                                                          |          4 |        202 |          8 |         29 |        239 |
+| frontend\app                                                              |         16 |        526 |          3 |         69 |        598 |
+| frontend\app (Files)                                                      |          5 |        220 |          1 |         22 |        243 |
+| frontend\app\auth                                                         |          2 |         52 |          0 |          5 |         57 |
+| frontend\app\auth\login                                                   |          1 |         21 |          0 |          3 |         24 |
+| frontend\app\auth\register                                                |          1 |         31 |          0 |          2 |         33 |
+| frontend\app\providers                                                    |          2 |         66 |          2 |         15 |         83 |
+| frontend\app\roadmaps                                                     |          3 |        116 |          0 |         12 |        128 |
+| frontend\app\roadmaps (Files)                                             |          2 |         42 |          0 |          6 |         48 |
+| frontend\app\roadmaps\[id]                                                |          1 |         74 |          0 |          6 |         80 |
+| frontend\app\verify-email                                                 |          2 |         47 |          0 |         10 |         57 |
+| frontend\app\verify-reminder                                              |          2 |         25 |          0 |          5 |         30 |
+| frontend\components                                                       |         15 |        866 |         21 |         95 |        982 |
+| frontend\components (Files)                                               |         14 |        790 |         21 |         86 |        897 |
+| frontend\components\AuthForm                                              |          1 |         76 |          0 |          9 |         85 |
+| frontend\error                                                            |          1 |          3 |          0 |          1 |          4 |
+| frontend\hooks                                                            |         11 |        219 |         26 |         47 |        292 |
+| frontend\libs                                                             |          2 |         38 |          0 |          9 |         47 |
+| frontend\public                                                           |          5 |          5 |          0 |          0 |          5 |
++---------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++---------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| filename                                                                  | language           | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| e:\bitcode-task\backend\package-lock.json                                 | JSON               |      1,697 |          0 |          1 |      1,698 |
+| e:\bitcode-task\backend\package.json                                      | JSON               |         30 |          0 |          1 |         31 |
+| e:\bitcode-task\backend\src\controllers\auth.controller.js                | JavaScript         |        306 |         58 |         64 |        428 |
+| e:\bitcode-task\backend\src\controllers\comments.controller.js            | JavaScript         |        157 |         12 |         21 |        190 |
+| e:\bitcode-task\backend\src\controllers\roadmap.controller.js             | JavaScript         |         44 |          3 |          9 |         56 |
+| e:\bitcode-task\backend\src\db\commentSeed.js                             | JavaScript         |         88 |          5 |         13 |        106 |
+| e:\bitcode-task\backend\src\db\db.js                                      | JavaScript         |         20 |          0 |          4 |         24 |
+| e:\bitcode-task\backend\src\db\seed.js                                    | JavaScript         |         87 |          0 |          7 |         94 |
+| e:\bitcode-task\backend\src\index.js                                      | JavaScript         |         25 |          0 |          6 |         31 |
+| e:\bitcode-task\backend\src\middlewares\auth.middleware.js                | JavaScript         |         22 |          0 |          4 |         26 |
+| e:\bitcode-task\backend\src\middlewares\validate.js                       | JavaScript         |         15 |          0 |          5 |         20 |
+| e:\bitcode-task\backend\src\models\comments.model.js                      | JavaScript         |         38 |          0 |          3 |         41 |
+| e:\bitcode-task\backend\src\models\roadmap.model.js                       | JavaScript         |         38 |          0 |          3 |         41 |
+| e:\bitcode-task\backend\src\models\user.model.js                          | JavaScript         |         37 |          0 |          3 |         40 |
+| e:\bitcode-task\backend\src\routes\auth.routes.js                         | JavaScript         |         22 |          0 |          3 |         25 |
+| e:\bitcode-task\backend\src\routes\comments.route.js                      | JavaScript         |         18 |         10 |          8 |         36 |
+| e:\bitcode-task\backend\src\routes\roadmap.routes.js                      | JavaScript         |         10 |          3 |          3 |         16 |
+| e:\bitcode-task\backend\src\validators\auth.validator.js                  | JavaScript         |         33 |          0 |          6 |         39 |
+| e:\bitcode-task\frontend\README.md                                        | Markdown           |         23 |          0 |         14 |         37 |
+| e:\bitcode-task\frontend\actions\comments.js                              | JavaScript         |        130 |          7 |         12 |        149 |
+| e:\bitcode-task\frontend\actions\loginAction.js                           | JavaScript         |         25 |          1 |          6 |         32 |
+| e:\bitcode-task\frontend\actions\registerAction.js                        | JavaScript         |         25 |          0 |          5 |         30 |
+| e:\bitcode-task\frontend\actions\roadmaps.js                              | JavaScript         |         22 |          0 |          6 |         28 |
+| e:\bitcode-task\frontend\app\auth\login\page.js                           | JavaScript         |         21 |          0 |          3 |         24 |
+| e:\bitcode-task\frontend\app\auth\register\page.js                        | JavaScript         |         31 |          0 |          2 |         33 |
+| e:\bitcode-task\frontend\app\error.js                                     | JavaScript         |         23 |          0 |          3 |         26 |
+| e:\bitcode-task\frontend\app\globals.css                                  | PostCSS            |         44 |          1 |          8 |         53 |
+| e:\bitcode-task\frontend\app\layout.js                                    | JavaScript         |         29 |          0 |          5 |         34 |
+| e:\bitcode-task\frontend\app\not-found.js                                 | JavaScript         |         23 |          0 |          3 |         26 |
+| e:\bitcode-task\frontend\app\page.js                                      | JavaScript         |        101 |          0 |          3 |        104 |
+| e:\bitcode-task\frontend\app\providers\AuthProvider.jsx                   | JavaScript JSX     |         57 |          2 |         12 |         71 |
+| e:\bitcode-task\frontend\app\providers\queryclientProvider.jsx            | JavaScript JSX     |          9 |          0 |          3 |         12 |
+| e:\bitcode-task\frontend\app\roadmaps\[id]\page.js                        | JavaScript         |         74 |          0 |          6 |         80 |
+| e:\bitcode-task\frontend\app\roadmaps\layout.js                           | JavaScript         |         10 |          0 |          2 |         12 |
+| e:\bitcode-task\frontend\app\roadmaps\page.js                             | JavaScript         |         32 |          0 |          4 |         36 |
+| e:\bitcode-task\frontend\app\verify-email\EmailVerificationPageClient.jsx | JavaScript JSX     |         38 |          0 |          8 |         46 |
+| e:\bitcode-task\frontend\app\verify-email\page.js                         | JavaScript         |          9 |          0 |          2 |         11 |
+| e:\bitcode-task\frontend\app\verify-reminder\VerifyEmailPageClient.jsx    | JavaScript JSX     |         16 |          0 |          3 |         19 |
+| e:\bitcode-task\frontend\app\verify-reminder\page.js                      | JavaScript         |          9 |          0 |          2 |         11 |
+| e:\bitcode-task\frontend\components\AuthForm\AuthForm.jsx                 | JavaScript JSX     |         76 |          0 |          9 |         85 |
+| e:\bitcode-task\frontend\components\AuthGuard.jsx                         | JavaScript JSX     |         22 |          0 |          6 |         28 |
+| e:\bitcode-task\frontend\components\Badge.jsx                             | JavaScript JSX     |         19 |          0 |          1 |         20 |
+| e:\bitcode-task\frontend\components\Comment.jsx                           | JavaScript JSX     |        105 |          0 |         12 |        117 |
+| e:\bitcode-task\frontend\components\CommentBox.jsx                        | JavaScript JSX     |         36 |          0 |          6 |         42 |
+| e:\bitcode-task\frontend\components\CommentSection.jsx                    | JavaScript JSX     |        151 |          4 |         11 |        166 |
+| e:\bitcode-task\frontend\components\Dropdown.jsx                          | JavaScript JSX     |         97 |          0 |         13 |        110 |
+| e:\bitcode-task\frontend\components\FilterSort.jsx                        | JavaScript JSX     |         44 |          1 |          5 |         50 |
+| e:\bitcode-task\frontend\components\LayoutWrapper.jsx                     | JavaScript JSX     |         18 |          0 |          4 |         22 |
+| e:\bitcode-task\frontend\components\Loginform.jsx                         | JavaScript JSX     |         73 |          0 |          7 |         80 |
+| e:\bitcode-task\frontend\components\Milestone.jsx                         | JavaScript JSX     |         18 |          0 |          2 |         20 |
+| e:\bitcode-task\frontend\components\MiletoneDetail.jsx                    | JavaScript JSX     |         49 |          0 |          2 |         51 |
+| e:\bitcode-task\frontend\components\Navigation.jsx                        | JavaScript JSX     |         37 |          0 |          4 |         41 |
+| e:\bitcode-task\frontend\components\RegisterForm.jsx                      | JavaScript JSX     |         83 |         14 |         11 |        108 |
+| e:\bitcode-task\frontend\components\Roadmap.jsx                           | JavaScript JSX     |         38 |          2 |          2 |         42 |
+| e:\bitcode-task\frontend\error\page.js                                    | JavaScript         |          3 |          0 |          1 |          4 |
+| e:\bitcode-task\frontend\eslint.config.mjs                                | JavaScript         |         10 |          0 |          5 |         15 |
+| e:\bitcode-task\frontend\hooks\useDeleteReply.js                          | JavaScript         |          1 |          0 |          0 |          1 |
+| e:\bitcode-task\frontend\hooks\useEditReply.js                            | JavaScript         |          1 |          0 |          0 |          1 |
+| e:\bitcode-task\frontend\hooks\useLikeComment.js                          | JavaScript         |         37 |          0 |          5 |         42 |
+| e:\bitcode-task\frontend\hooks\useLogin.js                                | JavaScript         |         23 |          0 |          7 |         30 |
+| e:\bitcode-task\frontend\hooks\useLogout.js                               | JavaScript         |         18 |          0 |          3 |         21 |
+| e:\bitcode-task\frontend\hooks\useMakeComment.js                          | JavaScript         |         67 |          0 |         10 |         77 |
+| e:\bitcode-task\frontend\hooks\useRegister.js                             | JavaScript         |         16 |         26 |         11 |         53 |
+| e:\bitcode-task\frontend\hooks\useRoadmapLike.js                          | JavaScript         |          1 |          0 |          0 |          1 |
+| e:\bitcode-task\frontend\hooks\useRoadmapUnlike.js                        | JavaScript         |          1 |          0 |          1 |          2 |
+| e:\bitcode-task\frontend\hooks\useUnlikeComment.js                        | JavaScript         |         38 |          0 |          5 |         43 |
+| e:\bitcode-task\frontend\hooks\useUser.js                                 | JavaScript         |         16 |          0 |          5 |         21 |
+| e:\bitcode-task\frontend\jsconfig.json                                    | JSON with Comments |          7 |          0 |          1 |          8 |
+| e:\bitcode-task\frontend\libs\cn.js                                       | JavaScript         |          5 |          0 |          2 |          7 |
+| e:\bitcode-task\frontend\libs\getRoadmaps.js                              | JavaScript         |         33 |          0 |          7 |         40 |
+| e:\bitcode-task\frontend\next.config.mjs                                  | JavaScript         |          3 |          1 |          3 |          7 |
+| e:\bitcode-task\frontend\package-lock.json                                | JSON               |      6,308 |          0 |          1 |      6,309 |
+| e:\bitcode-task\frontend\package.json                                     | JSON               |         28 |          0 |          1 |         29 |
+| e:\bitcode-task\frontend\postcss.config.mjs                               | JavaScript         |          4 |          0 |          2 |          6 |
+| e:\bitcode-task\frontend\public\file.svg                                  | XML                |          1 |          0 |          0 |          1 |
+| e:\bitcode-task\frontend\public\globe.svg                                 | XML                |          1 |          0 |          0 |          1 |
+| e:\bitcode-task\frontend\public\next.svg                                  | XML                |          1 |          0 |          0 |          1 |
+| e:\bitcode-task\frontend\public\vercel.svg                                | XML                |          1 |          0 |          0 |          1 |
+| e:\bitcode-task\frontend\public\window.svg                                | XML                |          1 |          0 |          0 |          1 |
+| Total                                                                     |                    |     10,929 |        150 |        441 |     11,520 |
++---------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+

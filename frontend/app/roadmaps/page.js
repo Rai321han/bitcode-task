@@ -1,6 +1,6 @@
 import Roadmap from "@/components/Roadmap";
 import FilterSort from "@/components/FilterSort";
-import getRoadmaps from "@/libs/getRoadmaps";
+import { getRoadmaps } from "@/actions/roadmaps";
 
 export default async function RoadmapsPage({ searchParams }) {
   const awaitedSearchParams = await searchParams;

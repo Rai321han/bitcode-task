@@ -2,6 +2,7 @@
 
 import { useAuth } from "@/app/providers/AuthProvider";
 import { useLogout } from "@/hooks/useLogout";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function Navbar() {
@@ -18,6 +19,14 @@ export default function Navbar() {
         </h1>
         {isLoading === false && (
           <div className="flex flex-row gap-3 items-center">
+            <div>
+              <Link
+                href="/roadmaps"
+                className="text-orange-700  cursor-pointer"
+              >
+                Roadmaps
+              </Link>
+            </div>
             <div className="text-md flex flex-row items-center justify-center text-gray-500 p-2 w-[30px] h-[30px] sm:w-[40px] sm:h-[40px] bg-emerald-400 rounded-[100%]">
               <div className="text-sm text-white">{firstletter}</div>
             </div>

@@ -1,4 +1,4 @@
-import getRoadById from "@/actions/roadmaps";
+import { getRoadById } from "@/actions/roadmaps";
 import Badge from "@/components/Badge";
 import Link from "next/link";
 import { IoIosArrowRoundBack } from "react-icons/io";

@@ -65,7 +65,6 @@ export default function CommentSection({ roadmap }) {
     );
   }
 
-  console.log(selectComment, user.id);
   let rootComments = comments ?? [];
 
   function handleCommentLike(commentId) {

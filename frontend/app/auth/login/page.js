@@ -1,13 +1,23 @@
 "use client";
 
+import { useAuth } from "@/app/providers/AuthProvider";
 import Loginform from "@/components/Loginform";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function LoginPage() {
+  const { user } = useAuth();
+  const router = useRouter();
+  useEffect(() => {
+    if (user) {
+      router.push("/roadmaps");
+    }
+  }, [user, router]);
   return (
     <div className="w-full flex flex-row min-h-[90vh] items-center justify-center">
       <div className="flex flex-col items-center">
-        <Loginform /> 
+        <Loginform />
         <div className="text-sm flex flex-row gap-2">
           <span className="text-gray-500">Not an user?</span>
           <Link

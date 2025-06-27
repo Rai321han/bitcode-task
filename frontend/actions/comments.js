@@ -1,6 +1,8 @@
+import { fetchInClient } from "@/libs/fetchInClient";
+
 export async function getComments({ roadmapId, parentCommentId = null }) {
   try {
-    const res = await fetch(
+    const res = await fetchInClient(
       `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/roadmaps/${roadmapId}/comments?parentCommentId=${parentCommentId}`,
       {
         credentials: "include",
@@ -19,7 +21,7 @@ export async function getComments({ roadmapId, parentCommentId = null }) {
 
 export async function getCommentById({ commentId }) {
   try {
-    const res = await fetch(
+    const res = await fetchInClient(
       `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/comment/${commentId}`,
       {
         credentials: "include",
@@ -30,13 +32,12 @@ export async function getCommentById({ commentId }) {
     return data.comment;
   } catch (error) {
     console.log("Error getting data", error.message);
-   
   }
 }
 
 export async function LikeComment({ commentId, likerId }) {
   try {
-    const res = await fetch(
+    const res = await fetchInClient(
       `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/comments/${commentId}/like`,
       {
         method: "POST",
@@ -67,7 +68,7 @@ export async function LikeComment({ commentId, likerId }) {
 
 export async function UnlikeComment({ commentId, unlikerId }) {
   try {
-    const res = await fetch(
+    const res = await fetchInClient(
       `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/comments/${commentId}/unlike`,
       {
         method: "POST",
@@ -111,7 +112,7 @@ export async function createComment({
     // hasChild:
     // likes:
     // likers:
-    const res = await fetch(
+    const res = await fetchInClient(
       `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/${roadmapId}/comment`,
       {
         method: "POST",
