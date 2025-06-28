@@ -242,11 +242,3 @@ Don't forget to give the project a star! Thanks again!
 [Gemini]: https://img.shields.io/badge/Gemini-white?style=for-the-badge&logo=googlegemini&color=black
 [Gemini-url]: https://ai.google.dev/
 [Firebase-url]: https://firebase.google.com
-
-```
-
-```
-
-```
-
-```
