@@ -25,7 +25,7 @@ export default function Comment({ commentId, onReply, onLike, onUnlike }) {
     queryKey: ["comments", commentId],
     queryFn: () =>
       getComments({
-        roadmapId: comment.roadmapId,
+        roadmapId: comment?.roadmapId,
         parentCommentId: commentId,
       }),
     enabled: showReplies && !!comment?.roadmapId, // only run when button is clicked and roadmapId is available

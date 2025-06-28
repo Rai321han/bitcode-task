@@ -136,9 +136,7 @@ export async function createComment({
 
     const data = await res.json();
     if (res.ok) {
-      return {
-        comment: data.comment,
-      };
+      return data.comment;
     }
   } catch (error) {
     console.log("Error saving comment", error);

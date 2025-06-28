@@ -28,7 +28,7 @@ export default function useMakeComment() {
       await queryClient.cancelQueries({
         queryKey: ["comments", commentKey],
       });
-      const previous = queryClient.getQueryData(["comments", commentKey]);
+      const previous = queryClient.getQueryData(commentKey);
 
       const tempId = crypto.randomUUID();
 
@@ -42,12 +42,22 @@ export default function useMakeComment() {
         likers: [],
         hasChild: false,
       };
-      queryClient.setQueryData(["comments", commentKey], (old = []) => [
-        optimisticComment,
-        ...old,
-      ]);
+      queryClient.setQueryData(commentKey, (old = []) => {
+        // Prevent duplicates by checking if the comment already exists
+        if (old.some((c) => c._id === tempId)) return old;
+        return [...old, optimisticComment];
+      });
 
-      return { previous, commentKey };
+      if (parentCommentId) {
+        queryClient.setQueryData(["comment", parentCommentId], (parent) => {
+          if (parent) {
+            return { ...parent, hasChild: true };
+          }
+          return parent;
+        });
+      }
+
+      return { previous, commentKey, optimisticComment };
     },
 
     onError: (_err, _vars, context) => {
@@ -55,22 +65,30 @@ export default function useMakeComment() {
         queryClient.setQueryData(context.commentKey, context.previous);
       }
     },
+
+    onSuccess: (savedComment, _vars, context) => {
+      queryClient.setQueryData(context.commentKey, (old = []) =>
+        old.map((c) =>
+          c._id === context.optimisticComment._id ? savedComment : c
+        )
+      );
+      queryClient.setQueryData(["comment", savedComment._id], savedComment);
+    },
     onSettled: (_data, _error, { roadmapId, parentCommentId }) => {
       const commentKey = parentCommentId
         ? ["comments", parentCommentId]
         : ["comments", roadmapId];
 
-      queryClient.invalidateQueries({ queryKey: commentKey });
+      // Only invalidate if no socket update has occurred
+      const currentData = queryClient.getQueryData(commentKey);
+      if (currentData && !currentData.some((c) => c._id === _data?._id)) {
+        queryClient.invalidateQueries({ queryKey: commentKey });
+      }
     },
   });
 
   return {
-    makeComment: ({ roadmapId, content, parentCommentId }) =>
-      commentMutation.mutate({
-        roadmapId,
-        content,
-        parentCommentId,
-      }),
+    makeComment: commentMutation.mutateAsync,
     isCommenting: commentMutation.isPending,
   };
 }
