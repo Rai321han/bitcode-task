@@ -78,7 +78,7 @@ Major frameworks/libraries used to built this site:
 
 | Layer      | Tech                                     |
 | ---------- | ---------------------------------------- |
-| Frontend   | Next.js 14, Tailwind CSS, React Query    |
+| Frontend   | Next.js 15, Tailwind CSS, React Query    |
 | Backend    | Express.js, MongoDB, Mongoose            |
 | Auth       | JWT (access & refresh), HttpOnly Cookies |
 | Deployment | Vercel (frontend), Render (backend)      |

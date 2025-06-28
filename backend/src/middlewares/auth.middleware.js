@@ -12,7 +12,7 @@ export const protect = (req, res, next) => {
     token = req.cookies.accessToken;
   }
   if (!token) {
-    throw AppError("Unautorized: no token provided", 403);
+    throw new AppError("Unautorized: no token provided", 401);
   }
 
   try {

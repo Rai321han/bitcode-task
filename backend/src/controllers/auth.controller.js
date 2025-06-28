@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
 import { AppError } from "../utils/AppError.js";
+import { nextTick } from "process";
 
 // ----------- TODO ------------------
 // 1. unverified entry should be removed from database after token is expired (not done)
@@ -325,7 +326,7 @@ export const logout = async function (req, res) {
 };
 
 // get user data -> /api/me
-export const getUser = async function (req, res) {
+export const getUser = async function (req, res, next) {
   try {
     const token = req.cookies.accessToken;
 
@@ -343,6 +344,6 @@ export const getUser = async function (req, res) {
 
     res.json({ user: { id: user._id, username: user.username } });
   } catch (error) {
-    throw new AppError("Server error", 404);
+    next(error);
   }
 };

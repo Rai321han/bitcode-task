@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import { AppError } from "../utils/AppError.js";
 dotenv.config();
 
 let uri = process.env.MONGODB_URI;
 
-if (!uri) throw new Error("MongoDB URI is missing!");
+if (!uri) throw new AppError("MongoDB URI is missing!", 500);
 
 export async function connectDB() {
   if (mongoose.connection.readyState >= 1) {

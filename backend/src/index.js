@@ -26,16 +26,16 @@ app.use("/api", authRouter);
 
 app.use(errorHandler);
 
-process.on("uncaughtException", (err) => {
-  console.error("Uncaught Exception:", err.message);
-  process.exit(1); // Exit to prevent an unstable state
-});
+// process.on("uncaughtException", (err) => {
+//   console.error("Uncaught Exception:", err.message);
+//   process.exit(1); // Exit to prevent an unstable state
+// });
 
-// Handle unhandled promise rejections (async errors outside Express)
-process.on("unhandledRejection", (err) => {
-  console.error("Unhandled Promise Rejection:", err.message);
-  process.exit(1);
-});
+// // Handle unhandled promise rejections (async errors outside Express)
+// process.on("unhandledRejection", (err) => {
+//   console.error("Unhandled Promise Rejection:", err.message);
+//   process.exit(1);
+// });
 
 const port = process.env.PORT || 5100;
 app.listen(port, () => {
