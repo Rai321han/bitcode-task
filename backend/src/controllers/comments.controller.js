@@ -28,7 +28,6 @@ export async function getComments(req, res) {
       comments,
     });
   } catch (error) {
-    console.error("Error while fetching comments", error.message);
     return res.status(500).json({
       success: false,
       message: "Failed to fetch comments",
@@ -54,7 +53,6 @@ export async function getCommentById(req, res) {
       comment,
     });
   } catch (error) {
-    console.error("Error while fetching comment", error.message);
     return res.status(500).json({
       success: false,
       message: "Failed to fetch comment",
@@ -86,10 +84,10 @@ export async function likeComment(req, res) {
 
     res.status(204).end();
   } catch (error) {
-    console.error("Comment Like Error: ", error);
     res.status(500).json({
       success: false,
       message: "internal server error",
+      error: error.message,
     });
   }
 }
@@ -117,10 +115,10 @@ export async function unlikeComment(req, res) {
 
     res.status(204).end();
   } catch (error) {
-    console.error("Comment unlline error: ", error);
     res.status(500).json({
       success: false,
       message: "internal server error",
+      error: error.message,
     });
   }
 }
@@ -181,9 +179,9 @@ export async function createComment(req, res) {
       comment: newComment,
     });
   } catch (error) {
-    console.error("Comment Like Error: ", error);
     res.status(500).json({
       message: "failed to save comment",
+      error: error.message,
     });
   }
 }

@@ -147,8 +147,7 @@ export const register = async function (req, res) {
       redirectTo: `/verify-reminder?email=${email}`,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -209,8 +208,7 @@ export const verify = async function (req, res) {
       },
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -275,8 +273,7 @@ export const login = async function (req, res) {
       user: { id: user._id, username: user.username },
     });
   } catch (error) {
-    console.error("Login error", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -351,9 +348,10 @@ export const refresh = async function (req, res) {
       message: "new access token",
     });
   } catch (error) {
-    return res
-      .status(401)
-      .json({ message: "Invalid or expired refresh token" });
+    return res.status(401).json({
+      message: "Invalid or expired refresh token",
+      error: error.message,
+    });
   }
 };
 
@@ -394,8 +392,7 @@ export const logout = async function (req, res) {
       message: "Logged out successfully!",
     });
   } catch (error) {
-    console.error("Logout error:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -420,9 +417,9 @@ export const getUser = async function (req, res) {
 
     res.json({ user: { id: user._id, username: user.username } });
   } catch (error) {
-    console.error("GetMe error:", error);
     if (error.name === "TokenExpiredError")
-      return res.status(401).json({ message: "Token expired" });
-    res.status(401).json({ message: "User unauthorized" });
+      return res
+        .status(401)
+        .json({ message: "Token expired", error: error.message });
   }
 };

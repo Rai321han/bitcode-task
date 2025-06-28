@@ -20,6 +20,8 @@ export const protect = (req, res, next) => {
     next();
   } catch (error) {
     console.log("Invalid token :", error);
-    return res.status(403).json({ message: "Forbidden: Invalid token" });
+    return res
+      .status(403)
+      .json({ message: "Forbidden: Invalid token", error: error.message });
   }
 };

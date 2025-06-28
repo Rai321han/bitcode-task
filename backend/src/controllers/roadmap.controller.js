@@ -25,7 +25,6 @@ export async function getRoadmaps(req, res) {
       roadmaps: roadmaps || [],
     });
   } catch (error) {
-    console.error("Error fetching roadmaps:", error.message);
     return res.status(500).json({
       success: false,
       message: "Failed to fetch roadmaps",
@@ -45,7 +44,6 @@ export async function getRoadmapById(req, res) {
       roadmap,
     });
   } catch (error) {
-    console.error("Error while fetching roadmap by id", error.message);
     return res.status(500).json({
       success: false,
       message: "Failed to fetch roadmap by id",
