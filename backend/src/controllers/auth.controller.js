@@ -351,9 +351,8 @@ export const refresh = async function (req, res) {
       message: "new access token",
     });
   } catch (error) {
-    console.error("Refresh error:", error);
     return res
-      .status(403)
+      .status(401)
       .json({ message: "Invalid or expired refresh token" });
   }
 };
