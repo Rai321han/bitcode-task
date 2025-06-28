@@ -223,19 +223,23 @@ export const login = async function (req, res) {
 };
 
 // for getting new accesstoken
-export const refresh = async function (req, res) {
+export const refresh = async function (req, res, next) {
   try {
     const token = req.cookies.refreshToken;
 
     if (!token) throw new AppError("No refresh token provided", 401);
+
+
 
     // refresh token verification
     const decoded = jwt.verify(token, REFRESH_SECRET);
     await connectDB();
     const user = await User.findById(decoded.id);
 
+
     if (!user || user.refreshToken !== token)
       throw new AppError("Invalid refresh token", 403);
+
 
     // refresh token rotation
     const newRefreshToken = jwt.sign(
@@ -283,7 +287,7 @@ export const refresh = async function (req, res) {
       message: "new access token",
     });
   } catch (error) {
-    throw new AppError("Invalid or expired refresh token", 401);
+    next(error)
   }
 };
 

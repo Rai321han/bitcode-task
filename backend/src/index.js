@@ -6,6 +6,8 @@ import cors from "cors";
 import authRouter from "./routes/auth.routes.js";
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./middlewares/errorHandler.js";
+import { createServer } from "http";
+import { Server as SocketServer } from "socket.io";
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -26,18 +28,64 @@ app.use("/api", authRouter);
 
 app.use(errorHandler);
 
-// process.on("uncaughtException", (err) => {
-//   console.error("Uncaught Exception:", err.message);
-//   process.exit(1); // Exit to prevent an unstable state
-// });
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught Exception:", err.message);
+  process.exit(1); // Exit to prevent an unstable state
+});
 
-// // Handle unhandled promise rejections (async errors outside Express)
-// process.on("unhandledRejection", (err) => {
-//   console.error("Unhandled Promise Rejection:", err.message);
-//   process.exit(1);
-// });
+// Handle unhandled promise rejections (async errors outside Express)
+process.on("unhandledRejection", (err) => {
+  console.error("Unhandled Promise Rejection:", err.message);
+  process.exit(1);
+});
+
+const server = createServer(app);
+const io = new SocketServer(server, {
+  cors: {
+    origin: isProduction ? process.env.FRONTEND_URL : "http://localhost:3000",
+    credentials: true, // allow cookies (credentials)
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("User connected", socket.id);
+
+  // roadmap joining
+  socket.on("join_roadmap", (roadmapId) => {
+    socket.join(roadmapId);
+    console.log(`Socket ${socket.id} joined room ${roadmapId}`);
+  });
+
+  // making new comment
+  socket.on("new_comment", ({ roadmapId, comment }) => {
+    console.log("🟡 Received comment in socket:", comment);
+    socket.to(roadmapId).emit("new_comment", comment);
+  });
+
+  // like comment
+  socket.on("like_comment", ({ roadmapId, commentId }) => {
+    socket.to(roadmapId).emit("like_comment", commentId);
+  });
+
+  // delete comment
+  socket.on("delete_comment", ({ roadmapId, commentId }) => {
+    socket.to(roadmapId).emit("delete_comment", commentId);
+  });
+
+  // upvote roadmap
+  socket.on("upvote_roadmap", ({ roadmapId, newUpvoteCount }) => {
+    socket.to(roadmapId).emit("upvote_roadmap", newUpvoteCount);
+  });
+
+  // on disconnect
+  socket.on("disconnect", () => {
+    console.log("User disconnected", socket.id);
+  });
+});
 
 const port = process.env.PORT || 5100;
-app.listen(port, () => {
+server.listen(port, () => {
   console.log("Server running on port: ", port);
 });
+
+export { io };

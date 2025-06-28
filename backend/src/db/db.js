@@ -9,12 +9,10 @@ if (!uri) throw new AppError("MongoDB URI is missing!", 500);
 
 export async function connectDB() {
   if (mongoose.connection.readyState >= 1) {
-    console.log("MongoDB already connected");
     return;
   }
   try {
     await mongoose.connect(uri);
-    console.log("MongoDB connection established");
   } catch (error) {
     console.log("Error while connecting to MongoDB", error);
   }
