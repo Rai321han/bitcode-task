@@ -6,7 +6,7 @@
       <a href="#about-the-project">About The Project</a>
       <ul>
         <li><a href="#features">Features</a></li>
-        <li><a href="#tech stacks">Tech Stacks</a></li>
+        <li><a href="#tech-stacks">Tech Stacks</a></li>
       </ul>
     </li>
     <li>
@@ -16,7 +16,7 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#security highlights">Security Highlights</a></li>
+    <li><a href="#security-highlights">Security Highlights</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#contact">Contact</a></li>
 
