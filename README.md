@@ -6,7 +6,7 @@
       <a href="#about-the-project">About The Project</a>
       <ul>
         <li><a href="#features">Features</a></li>
-        <li><a href="#techs">Tech Stacks</a></li>
+        <li><a href="#tech stacks">Tech Stacks</a></li>
       </ul>
     </li>
     <li>
@@ -14,13 +14,11 @@
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
-        <li><a href="#usage">Usage</a></li>
       </ul>
     </li>
-    <li><a href="#security">Security Highlights</a></li>
+    <li><a href="#security highlights">Security Highlights</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
 
   </ol>
 </details>
@@ -108,7 +106,7 @@ To get a local copy of the project and to start running the application, you can
    Create .env.local for frontend
 
    ```sh
-       NEXT_PUBLIC_BASE_API_URL=http://localhost:5100
+    NEXT_PUBLIC_BASE_API_URL=http://localhost:5100
    ```
 
    Create .env for backend
