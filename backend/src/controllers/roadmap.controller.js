@@ -1,5 +1,6 @@
 import Roadmap from "../models/roadmap.model.js";
 import { connectDB } from "../db/db.js";
+import { AppError } from "../utils/AppError.js";
 // @desc    Get all roadmaps
 // @route   GET /api/roadmaps
 // @access  Public
@@ -25,11 +26,7 @@ export async function getRoadmaps(req, res) {
       roadmaps: roadmaps || [],
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Failed to fetch roadmaps",
-      error: error.message,
-    });
+    throw new AppError("Failed to fetch roadmaps", 500);
   }
 }
 
@@ -44,10 +41,6 @@ export async function getRoadmapById(req, res) {
       roadmap,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Failed to fetch roadmap by id",
-      error: error.message,
-    });
+    throw new AppError("Failed to fetch roadmap by id", 500);
   }
 }

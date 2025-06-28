@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { AppError } from "../utils/AppError.js";
 
 const ACCESS_SECRET = process.env.ACCESS_SECRET;
 
@@ -11,7 +12,7 @@ export const protect = (req, res, next) => {
     token = req.cookies.accessToken;
   }
   if (!token) {
-    return res.status(401).json({ message: "Unauthorized: No token provided" });
+    throw AppError("Unautorized: no token provided", 403);
   }
 
   try {
@@ -19,9 +20,6 @@ export const protect = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    console.log("Invalid token :", error);
-    return res
-      .status(403)
-      .json({ message: "Forbidden: Invalid token", error: error.message });
+    throw new AppError("Forbidden: Invalid token", 403);
   }
 };

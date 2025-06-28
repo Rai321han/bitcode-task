@@ -4,6 +4,10 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
+import { AppError } from "../utils/AppError.js";
+
+// ----------- TODO ------------------
+// 1. unverified entry should be removed from database after token is expired (not done)
 
 const ACCESS_SECRET = process.env.ACCESS_SECRET;
 const REFRESH_SECRET = process.env.REFRESH_SECRET;
@@ -13,6 +17,7 @@ const isProduction = process.env.NODE_ENV === "production";
 // user registration
 export const sendVerificationEmail = async function (email, token) {
   try {
+    // verify email -> route + randomly generated token as query
     const verifyUrl = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
 
     const transporter = nodemailer.createTransport({
@@ -58,10 +63,7 @@ export const sendVerificationEmail = async function (email, token) {
   `,
     });
   } catch (error) {
-    console.log("Error sending email ", error);
-    res.status(500).json({
-      message: "failed to send verification email",
-    });
+    throw new AppError("failed to send verification email", 500);
   }
 };
 
@@ -72,64 +74,15 @@ export const register = async function (req, res) {
     await connectDB();
     let exists = await User.findOne({ email });
 
-    if (exists)
-      return res.status(409).json({
-        message: "User already exists",
-      });
+    if (exists) throw new AppError("User already exists", 409);
 
     // hashing the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // create user
-    // let user = await User.create({
-    //   username,
-    //   email,
-    //   password: hashedPassword,
-    //   isVerified: true,
-    //   verificationToken: undefined,
-    //   verificationTokenExpires: undefined,
-    // });
-
-    // // generate tokens
-    // const accessToken = jwt.sign(
-    //   { id: user._id, username: user.username },
-    //   ACCESS_SECRET,
-    //   { expiresIn: "2m" }
-    // );
-    // const refreshToken = jwt.sign(
-    //   { id: user._id, username: user.username },
-    //   REFRESH_SECRET,
-    //   { expiresIn: "7d" }
-    // );
-
-    // user.refreshToken = refreshToken;
-    // await user.save();
-
-    // res.cookie("refreshToken", refreshToken, {
-    //   httpOnly: true,
-    //   secure: isProduction, // required for localhost
-    //   sameSite: isProduction ? "None" : "lax", // required for localhost to allow cross-origin
-    //   path: "/", // allow on all routes
-    //   maxAge: 7 * 24 * 60 * 60 * 1000,
-    // });
-
-    // res.cookie("accessToken", accessToken, {
-    //   httpOnly: true,
-    //   secure: isProduction, // required for localhost
-    //   sameSite: isProduction ? "None" : "lax", // required for localhost to allow cross-origin
-    //   path: "/", // allow on all routes
-    //   maxAge: 2 * 60 * 1000, // 2 mins
-    // });
-    // res.status(200).json({
-    //   success: true,
-    //   message: "registration success",
-    //   user: {
-    //     id: user._id,
-    //     username: user.username,
-    //   },
-    // });
+    // token for generating verification email
     const verificationToken = crypto.randomUUID();
 
+    // immediately saving the user - verify by comparing the token
     await User.create({
       username,
       email,
@@ -139,7 +92,6 @@ export const register = async function (req, res) {
       verificationToken: verificationToken,
     });
 
-    // send email
     await sendVerificationEmail(email, verificationToken);
 
     res.status(200).json({
@@ -147,7 +99,7 @@ export const register = async function (req, res) {
       redirectTo: `/verify-reminder?email=${email}`,
     });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    throw new AppError("Server error", 500);
   }
 };
 
@@ -161,8 +113,7 @@ export const verify = async function (req, res) {
       verificationTokenExpires: { $gt: Date.now() },
     });
 
-    if (!user)
-      return res.status(400).json({ message: "Token invalid or expired" });
+    if (!user) throw new AppError("Token invalid or expire", 400);
 
     user.isVerified = true;
     user.verificationToken = undefined;
@@ -208,7 +159,7 @@ export const verify = async function (req, res) {
       },
     });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    throw new AppError("Server error", 500);
   }
 };
 
@@ -218,20 +169,14 @@ export const login = async function (req, res) {
     const { email, password } = req.body;
 
     if (!email || !password)
-      return res
-        .status(400)
-        .json({ message: "Email and password are required" });
+      throw new AppError("Email and password are required", 400);
     await connectDB();
-    const user = await User.findOne({ email }).select("+password");
+    const user = await User.findOne({ email }).select("+password"); // explicitly returning password
 
-    if (!user)
-      return res.status(401).json({
-        message: "Invalid credentials",
-      });
+    if (!user) throw new AppError("Invalid credentials", 401);
     // verify password
     const isMatched = await bcrypt.compare(password, user.password);
-    if (!isMatched)
-      return res.status(401).json({ message: "Invalid credentials" });
+    if (!isMatched) throw new AppError("Invalid credentials", 401);
 
     // generating tokens
     const refreshToken = jwt.sign(
@@ -245,13 +190,12 @@ export const login = async function (req, res) {
       ACCESS_SECRET,
       { expiresIn: "2m" }
     );
-
+    ///////////////////
     user.refreshToken = refreshToken;
 
     await user.save();
 
-    //set cookie
-
+    //setting cookies
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: isProduction, // required for localhost
@@ -273,7 +217,7 @@ export const login = async function (req, res) {
       user: { id: user._id, username: user.username },
     });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    throw new AppError("Server error", 500);
   }
 };
 
@@ -282,25 +226,15 @@ export const refresh = async function (req, res) {
   try {
     const token = req.cookies.refreshToken;
 
-    if (!token) {
-      return res
-        .status(401)
-        .json({ code: "NO TOKEN", message: "No refresh token provided" });
-    }
+    if (!token) throw new AppError("No refresh token provided", 401);
 
-    console.log(token);
     // refresh token verification
     const decoded = jwt.verify(token, REFRESH_SECRET);
-    console.log(decoded);
     await connectDB();
     const user = await User.findById(decoded.id);
-    console.log(user);
 
-    if (!user || user.refreshToken !== token) {
-      return res.status(403).json({
-        message: "Invalid refresh token",
-      });
-    }
+    if (!user || user.refreshToken !== token)
+      throw new AppError("Invalid refresh token", 403);
 
     // refresh token rotation
     const newRefreshToken = jwt.sign(
@@ -348,10 +282,7 @@ export const refresh = async function (req, res) {
       message: "new access token",
     });
   } catch (error) {
-    return res.status(401).json({
-      message: "Invalid or expired refresh token",
-      error: error.message,
-    });
+    throw new AppError("Invalid or expired refresh token", 401);
   }
 };
 
@@ -360,10 +291,7 @@ export const logout = async function (req, res) {
   try {
     const refreshToken = req.cookies.refreshToken;
 
-    if (!refreshToken)
-      return res.status(204).json({
-        message: "Already logged out",
-      });
+    if (!refreshToken) throw new AppError("Already logged out", 200);
 
     const decoded = jwt.verify(refreshToken, REFRESH_SECRET);
 
@@ -392,34 +320,29 @@ export const logout = async function (req, res) {
       message: "Logged out successfully!",
     });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    throw new AppError("Server error", 500);
   }
 };
 
+// get user data -> /api/me
 export const getUser = async function (req, res) {
   try {
     const token = req.cookies.accessToken;
 
-    if (!token)
-      return res
-        .status(401)
-        .json({ code: "NO_TOKEN", message: "Token malformed" });
+    if (!token) throw new AppError("Token not found", 401);
 
     const decoded = jwt.verify(token, ACCESS_SECRET);
 
-    if (!decoded) return res.status(401).json({ message: "Invalid token" });
+    if (!decoded) throw new AppError("Invalid token", 401);
 
     await connectDB();
 
     const user = await User.findById(decoded.id);
 
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user) throw new AppError("User not found", 404);
 
     res.json({ user: { id: user._id, username: user.username } });
   } catch (error) {
-    if (error.name === "TokenExpiredError")
-      return res
-        .status(401)
-        .json({ message: "Token expired", error: error.message });
+    throw new AppError("Server error", 404);
   }
 };

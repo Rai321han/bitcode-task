@@ -4,6 +4,8 @@ import Comments from "../models/comments.model.js";
 import Comment from "../models/comments.model.js";
 import Roadmap from "../models/roadmap.model.js";
 
+import { AppError } from "../utils/AppError.js";
+
 export async function getComments(req, res) {
   try {
     await connectDB();
@@ -28,11 +30,7 @@ export async function getComments(req, res) {
       comments,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Failed to fetch comments",
-      error: error.message,
-    });
+    throw new AppError("Failed to fetch comments", 500);
   }
 }
 
@@ -40,11 +38,7 @@ export async function getCommentById(req, res) {
   try {
     await connectDB();
     const commentId = req.params?.commentId;
-    if (!commentId)
-      return res.json({
-        success: false,
-        message: "commentId id not found",
-      });
+    if (!commentId) throw new AppError("'commentId id not found", 404);
 
     const comment = await Comments.findById(commentId);
 
@@ -53,11 +47,7 @@ export async function getCommentById(req, res) {
       comment,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Failed to fetch comment",
-      error: error.message,
-    });
+    throw new AppError("Failed to fetch comment", 500);
   }
 }
 
@@ -84,11 +74,7 @@ export async function likeComment(req, res) {
 
     res.status(204).end();
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "internal server error",
-      error: error.message,
-    });
+    throw new AppError("internal server error", 500);
   }
 }
 
@@ -96,11 +82,7 @@ export async function unlikeComment(req, res) {
   const unlikerId = req.body.unlikerId;
   const commentId = req.params.commentId;
 
-  if (!unlikerId || !commentId)
-    return res.status(401).json({
-      success: false,
-      message: "id not found",
-    });
+  if (!unlikerId || !commentId) throw new AppError("id not found", 401);
 
   try {
     // database connection
@@ -115,11 +97,7 @@ export async function unlikeComment(req, res) {
 
     res.status(204).end();
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "internal server error",
-      error: error.message,
-    });
+    throw new AppError("internal server error", 500);
   }
 }
 
@@ -135,10 +113,7 @@ export async function createComment(req, res) {
   const roadmapId = req.params.roadmapId;
 
   if (!commenterId || !roadmapId || !commenterName)
-    return res.status(400).json({
-      success: false,
-      message: "missing required fields",
-    });
+    throw new AppError("missing required fields", 400);
 
   try {
     // database connection
@@ -179,9 +154,6 @@ export async function createComment(req, res) {
       comment: newComment,
     });
   } catch (error) {
-    res.status(500).json({
-      message: "failed to save comment",
-      error: error.message,
-    });
+    throw new AppError("failed to save comment", 500);
   }
 }
