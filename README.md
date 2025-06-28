@@ -32,8 +32,6 @@
 
 ## About The Project
 
-[![Select Component][product-screenshot]](https://bitcode-task.vercel.app/)
-
 A collaborative platform where users can explore predefined roadmaps and engage through **upvoting** and **commenting** — turning feedback into impact.
 
 ## 🚀 Live Demo
@@ -88,11 +86,6 @@ Major frameworks/libraries used to built this site:
 | Deployment | Vercel (frontend), Render (backend)      |
 | Email      | Nodemailer (for verification)            |
 
-- [![React.js]][React-url]
-- [![Tailwind]][Tailwind-url]
-- [![Gemini]][Gemini-url]
-- [![Firebase]][Firebase-url]
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
@@ -112,34 +105,34 @@ To get a local copy of the project and to start running the application, you can
 
 2. Setup Environment Variables
 
-Create .env.local for frontend
+   Create .env.local for frontend
 
-```sh
-    NEXT_PUBLIC_BASE_API_URL=http://localhost:5100
-```
+   ```sh
+       NEXT_PUBLIC_BASE_API_URL=http://localhost:5100
+   ```
 
-Create .env for backend
+   Create .env for backend
 
-```sh
-PORT=<backend server port number>
-MONGODB_URI=<mongodb URI>
-ACCESS_SECRET=<secret for signing access token>
-REFRESH_SECRET=<secret for signing refresh token>
-EMAIL_USER=<your email for sending verification email to user>
-EMAIL_PASS=<your google app password>
-GOOGLE_REFRESH_TOKEN=<your google refresh token>
-GOOGLE_CLIENT_SECRET=<your google client secret>
-GOOGLE_CLIENT_ID=<your google client ID>
-FRONTEND_URL=<your frontend url>
-```
+   ```sh
+   PORT=backend server port number
+   MONGODB_URI=mongodb URI
+   ACCESS_SECRET=secret for signing access token
+   REFRESH_SECRET=secret for signing refresh token
+   EMAIL_USER=your email for sending verification email to user
+   EMAIL_PASS=your google app password
+   GOOGLE_REFRESH_TOKEN=your google refresh token
+   GOOGLE_CLIENT_SECRET=your google client secret
+   GOOGLE_CLIENT_ID=your google client ID
+   FRONTEND_URL=your frontend url
+   ```
 
-2. Install Dependencies
+3. Install Dependencies
 
    ```sh
    npm install
    ```
 
-3. Run the project
+4. Run the project
 
    # Backend
 
@@ -153,20 +146,38 @@ FRONTEND_URL=<your frontend url>
    npm run dev
    ```
 
-4. Folder structure
+5. Folder structure
+
+   ```sh
    .
-   ├── app
-   │ ├── components/
-   │ ├── hooks/
-   │ ├── libs/
-   │ ├── providers/
-   │ └── (auth, roadmaps)
-   ├── pages/api/
-   ├── server/
-   │ ├── routes/
-   │ ├── controllers/
-   │ └── middleware/
-   └── public/
+   ├── backend
+   │   ├── node_modules
+   │   ├── package.json
+   │   ├── package-lock.json
+   │   ├── .env
+   │   └── src
+   │       ├── controllers       # Request handlers and business logic
+   │       ├── db                # Database connection, seed and configurations
+   │       ├── middlewares       # Express middlewares (auth, error handling, etc.)
+   │       ├── models            # Mongoose
+   │       ├── routes            # API route definitions
+   │       ├── utils             # Helper functions and utilities
+   │       ├── validators        # Request validation schemas
+   │       └── index.js          # App entry point
+   │
+   ├── frontend
+   │   ├── node_modules
+   │   ├── .next                # Next.js build output (auto-generated)
+   │   ├── public               # Static assets (images, icons, etc.)
+   │   ├── app                  # App directory for routing (Next.js App Router)
+   │   ├── actions              # Server-side or client-side actions (if using Next.js 13+)
+   │   ├── components           # Reusable UI components
+   │   ├── error                # Custom error pages (e.g., 404, 500)
+   │   ├── hooks                # Custom React hooks
+   │   ├── libs                 # External libraries or API utilities
+   │   └── package.json
+
+   ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -175,7 +186,6 @@ FRONTEND_URL=<your frontend url>
 - Access Token expires quickly (e.g., 2 mins)
 - Refresh Token stored securely in HttpOnly cookies
 - Refresh Token Rotation to prevent token replay attacks
-
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -199,8 +209,6 @@ Don't forget to give the project a star! Thanks again!
 ## Contact
 
 [![Linkedin]][Linkedin-url] [![Twitter]][Twitter-url] [![Gmail]][Gmail-url]
-
-[Project Link](https://github.com/Rai321han/AI-Trip-Planner)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -234,6 +242,10 @@ Don't forget to give the project a star! Thanks again!
 [Gemini]: https://img.shields.io/badge/Gemini-white?style=for-the-badge&logo=googlegemini&color=black
 [Gemini-url]: https://ai.google.dev/
 [Firebase-url]: https://firebase.google.com
+
+```
+
+```
 
 ```
 
