@@ -15,13 +15,14 @@ export const fetchInClient = async (url, options = {}) => {
       }
     );
 
+    let resFinal = null;
     if (refreshRes.ok) {
-      const res = await fetch(url, {
+      resFinal = await fetch(url, {
         ...options,
         credentials: options?.headers?.Authorization ? "omit" : "include",
       });
-      return res;
     }
+    return resFinal;
   }
 
   return res;

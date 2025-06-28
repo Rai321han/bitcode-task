@@ -17,18 +17,14 @@ export const fetchInServer = async (url, options = {}) => {
       }
     );
 
+    let resFinal = null;
     if (refreshRes.ok) {
-      const res = fetch(url, {
+      resFinal = fetch(url, {
         ...options,
         credentials: options?.headers?.Authorization ? "omit" : "include",
       });
-      return res;
-    } else {
-      // refresh token is invalid/expired
-      // logout user or redirect
-      // window.location.href = "/login";
-      console.error("Session expired");
     }
+    return resFinal;
   }
 
   return res;

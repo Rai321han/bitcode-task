@@ -6,7 +6,7 @@ export async function getRoadmaps({ filter, sort }) {
   filter.forEach((f) => params.append("filter", f));
   sort.forEach((s) => params.append("sort", s));
 
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
 
   if (!accessToken) {
@@ -36,7 +36,6 @@ export async function getRoadmaps({ filter, sort }) {
 
     return data.roadmaps;
   } catch (error) {
-    console.error("getRoadmaps error:", error);
     return null;
   }
 }

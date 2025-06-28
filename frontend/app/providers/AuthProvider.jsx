@@ -21,7 +21,6 @@ const fetchMe = async () => {
     const data = await res.json();
     return data?.user ?? null;
   } catch (error) {
-    console.error("fetchMe error:", error);
     return null;
   }
 };
