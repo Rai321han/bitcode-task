@@ -47,7 +47,11 @@ export default function Comment({ commentId, onReply, onLike, onUnlike }) {
 
   if (commentStatus === "error") {
     return (
-      <div className="text-sm text-red-400 italic">Failed to load comment</div>
+      <div>
+        <div className="text-sm text-red-400 italic">
+          Failed to load comment
+        </div>
+      </div>
     );
   }
 
@@ -56,6 +60,12 @@ export default function Comment({ commentId, onReply, onLike, onUnlike }) {
   function handleOnClick() {
     if (comment.likers.includes(user.id)) onUnlike(commentId);
     else onLike(commentId);
+  }
+
+  if (!comment) {
+    return (
+      <div className="w-full rounded-md bg-gray-300 p-10 animate-pulse"></div>
+    );
   }
 
   return (

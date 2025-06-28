@@ -20,10 +20,7 @@ export const fetchInClient = async (url, options = {}) => {
         ...options,
         credentials: options?.headers?.Authorization ? "omit" : "include",
       });
-
       return res;
-    } else {
-      console.error("Session expired");
     }
   }
 

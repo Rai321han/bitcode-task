@@ -41,21 +41,21 @@ export default function CommentSection({ roadmap }) {
     }
   }, [status, comments, queryClient]);
 
-  if (isLoading) {
-    return (
-      <div className="flex flex-row justify-center items-center">
-        <VscLoading className="animate-spin w-6 h-6" />
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="flex flex-row justify-center items-center">
+  //       <VscLoading className="animate-spin w-6 h-6" />
+  //     </div>
+  //   );
+  // }
 
-  if (isFetching) {
-    return (
-      <div className="flex flex-row justify-center items-center">
-        <VscLoading className="animate-spin w-6 h-6" />
-      </div>
-    );
-  }
+  // if (isFetching) {
+  //   return (
+  //     <div className="flex flex-row justify-center items-center">
+  //       <VscLoading className="animate-spin w-6 h-6" />
+  //     </div>
+  //   );
+  // }
 
   if (isError) {
     return (
@@ -65,7 +65,12 @@ export default function CommentSection({ roadmap }) {
     );
   }
 
-  let rootComments = comments ?? [];
+  let totalComments = 0;
+  let rootComments = [];
+  if (comments) {
+    totalComments = comments.length;
+    rootComments = comments ?? [];
+  }
 
   function handleCommentLike(commentId) {
     likeComment(commentId);
@@ -84,7 +89,6 @@ export default function CommentSection({ roadmap }) {
     makeComment(comment);
   }
 
-  const totalComments = comments.length;
   return (
     <>
       <div className="w-full mt-10 md:mt-0 rounded-sm  justify-between gap-3 ">
@@ -113,16 +117,15 @@ export default function CommentSection({ roadmap }) {
   [&::-webkit-scrollbar-track]:bg-white
   [&::-webkit-scrollbar-thumb]:bg-gray-200 w-full pb-5 flex flex-col gap-3 rounded-md lg:max-w-[500px]  overflow-scroll overflow-x-auto"
           >
-            {rootComments.length &&
-              rootComments?.map((comment) => (
-                <Comment
-                  key={comment._id}
-                  commentId={comment._id}
-                  onLike={handleCommentLike}
-                  onUnlike={handleCommentUnlike}
-                  onReply={setSelectComment}
-                />
-              ))}
+            {rootComments?.map((comment) => (
+              <Comment
+                key={comment._id}
+                commentId={comment._id}
+                onLike={handleCommentLike}
+                onUnlike={handleCommentUnlike}
+                onReply={setSelectComment}
+              />
+            ))}
           </div>
           <div
             // ref={commentBoxRef}

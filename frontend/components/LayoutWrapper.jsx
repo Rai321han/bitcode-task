@@ -6,6 +6,7 @@ import Navbar from "./Navigation";
 export function LayoutWrapper({ children }) {
   const pathname = usePathname();
   const hideNavbar = [
+    "/",
     "/auth/login",
     "/auth/register",
     "/verify-reminder",

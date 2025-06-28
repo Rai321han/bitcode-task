@@ -24,11 +24,19 @@
   }
 }
 
+@theme {
+  --breakpoint-tablet: 610px;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-primary: #d15f0d;
+  --color-dark: #413d3b;
+  --color-normal-text: #787878;
+  --color-grayline: #cdcccc;
 }
 
 @media (prefers-color-scheme: dark) {

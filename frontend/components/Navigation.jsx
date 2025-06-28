@@ -1,5 +1,5 @@
 "use client";
-
+import { RxHamburgerMenu } from "react-icons/rx";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { useLogout } from "@/hooks/useLogout";
 import Link from "next/link";
@@ -10,40 +10,101 @@ export default function Navbar() {
   const { mutate: logout, isPending } = useLogout();
   const [isOpen, setIsOpen] = useState(false);
 
-  const firstletter = !isLoading && user.username.split("")[0];
+  let firstletter;
+  if (user) firstletter = user.username.split("")[0];
   return (
-    <nav className="p-2 md:p-4 bg-gray-100 shadow">
-      <div className="max-w-7xl mx-auto flex flex-row justify-between items-center">
-        <h1 className="text-sm sm:text-lg font-bold text-gray-500">
-          BitCodeTask
-        </h1>
-        {isLoading === false && (
+    <>
+      <nav className=" bg-gray-100 sticky top-0 z-1000">
+        <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row gap-3 items-center">
-            <div>
+            <div className="p-2 px-4 font-extrabold text-primary bg-white">
+              bitcode.
+            </div>
+            {
+              <div className="hidden md:block h-full border-x-1 border-x-grayline">
+                <Link
+                  href="/roadmaps"
+                  className="h-full cursor-pointer hover:brightness-105 disabled:cursor-not-allowed px-3 py-1 sm:px-4 sm:py-2  text-normal-text hover:text-primary text-md"
+                >
+                  Roadmaps
+                </Link>
+              </div>
+            }
+          </div>
+          {isLoading === false && user && (
+            <div className="hidden md:flex md:flex-row md:gap-3 items-center ">
+              <div className="ml-4 text-md flex flex-row items-center justify-center text-gray-500 p-2 w-[20px] h-[20px] sm:w-[30px] sm:h-[30px] bg-emerald-400 rounded-[100%]">
+                <div className="text-sm text-white">{firstletter}</div>
+              </div>
+              <div>
+                {user && (
+                  <button
+                    disabled={isPending}
+                    onClick={logout}
+                    className="cursor-pointer hover:brightness-105 disabled:cursor-not-allowed px-3 py-1 sm:px-4 sm:py-2 bg-primary text-white text-md"
+                  >
+                    {isPending ? "loggin out..." : "Logout"}
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+          {!user && (
+            <div className="md:flex md:flex-row items-center hidden">
+              <div className="px-4">
+                <Link
+                  href={"/auth/login"}
+                  className="hover:underline hover:underline-offset-4 hover:text-primary cursor-pointer "
+                >
+                  Sign in
+                </Link>
+              </div>
               <Link
-                href="/roadmaps"
-                className="text-orange-700  cursor-pointer"
+                href={"/auth/register"}
+                className="cursor-pointer hover:brightness-105 disabled:cursor-not-allowed px-3 py-1 sm:px-4 sm:py-2 bg-primary text-white text-md"
               >
-                Roadmaps
+                Sign up
               </Link>
             </div>
-            <div className="text-md flex flex-row items-center justify-center text-gray-500 p-2 w-[30px] h-[30px] sm:w-[40px] sm:h-[40px] bg-emerald-400 rounded-[100%]">
-              <div className="text-sm text-white">{firstletter}</div>
-            </div>
-            <div>
+          )}
+          <div className="block md:hidden mr-5 cursor-pointer">
+            <RxHamburgerMenu
+              className="fill-gray-700"
+              onClick={() => setIsOpen((prev) => !prev)}
+            />
+          </div>
+        </div>
+      </nav>
+      {isOpen && (
+        <>
+          <div className="absolute z-[1001] bg-black opacity-[0.4] backdrop-blur-3xl w-screen h-screen top-0"></div>
+          <div className="absolute top-0 h-full md:hidden bg-gray-200 z-[1100] border-r-1 border-r-gray-400 shadow-md">
+            <div className="flex flex-col text-gray-600">
               {user && (
-                <button
-                  disabled={isPending}
-                  onClick={logout}
-                  className="cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed px-2 py-1 sm:px-3 sm:py-2 bg-orange-600 text-white rounded-md text-md"
-                >
-                  {isPending ? "loggin out..." : "logout"}
-                </button>
+                <>
+                  <div className="flex flex-row justify-between items-center gap-3 px-3 py-2 ">
+                    <div className="text-md flex flex-row items-center justify-center text-gray-500 p-2 w-[20px] h-[20px] sm:w-[30px] sm:h-[30px] bg-emerald-400 rounded-[100%]">
+                      <div className="text-sm text-white">{firstletter}</div>
+                    </div>
+                    <div>{user.username}</div>
+                  </div>
+                  <Link href={"/roadmaps"} className="px-3 py-1 hover:bg-white">
+                    Roadmap
+                  </Link>
+
+                  <button
+                    disabled={isPending}
+                    onClick={logout}
+                    className="text-left hover:brightness-110 cursor-pointer disabled:cursor-not-allowed px-3 py-1 sm:px-4 sm:py-2 bg-primary text-white text-md"
+                  >
+                    {isPending ? "loggin out..." : "Logout"}
+                  </button>
+                </>
               )}
             </div>
           </div>
-        )}
-      </div>
-    </nav>
+        </>
+      )}
+    </>
   );
 }

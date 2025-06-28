@@ -27,7 +27,7 @@ export const fetchInServer = async (url, options = {}) => {
       // refresh token is invalid/expired
       // logout user or redirect
       // window.location.href = "/login";
-      throw new Error("Session expired");
+      console.error("Session expired");
     }
   }
 
