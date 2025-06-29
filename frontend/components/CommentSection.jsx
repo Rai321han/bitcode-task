@@ -4,72 +4,37 @@ import { RxCross1 } from "react-icons/rx";
 import { LuCornerUpRight } from "react-icons/lu";
 import CommentBox from "@/components/CommentBox";
 import Link from "next/link";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getComments } from "@/actions/comments";
+import { useQuery } from "@tanstack/react-query";
+
 import Comment from "./Comment";
 import { useEffect, useState } from "react";
 import useLikeComment from "@/hooks/useLikeComment";
 import useUnlikeComment from "@/hooks/useUnlikeComment";
 import useMakeComment from "@/hooks/useMakeComment";
 import { useAuth } from "@/app/providers/AuthProvider";
-import socket from "@/libs/socket";
-import useSocket from "@/hooks/useSocket";
+import useSocketComment from "@/hooks/useSocketComment";
+import { getComments } from "@/actions/comments";
 
 export default function CommentSection({ roadmap }) {
   const [selectComment, setSelectComment] = useState(null);
-  const queryClient = useQueryClient();
+  const socket = useSocketComment(roadmap._id);
   const { user } = useAuth();
-  useSocket(roadmap._id);
   const { likeComment } = useLikeComment();
   const { unlikeComment } = useUnlikeComment();
   const { makeComment } = useMakeComment();
+
+
   const {
-    data: comments,
+    data: comments = [],
     status,
     isError,
   } = useQuery({
     queryKey: ["comments", roadmap._id],
     queryFn: () =>
       getComments({ roadmapId: roadmap._id, parentCommentId: null }),
+    retry: 2,
+    enabled: !!roadmap._id,
   });
-
-  useEffect(() => {
-    if (!roadmap?._id) return;
-
-    const handleNewComment = (comment) => {
-      console.log("📥 Received new_comment via socket:", comment);
-      const key = comment.parentCommentId
-        ? ["comments", comment.parentCommentId]
-        : ["comments", roadmap._id];
-
-      console.log("Socket received new comment for key:", key);
-      console.log("Old comments:", queryClient.getQueryData(key));
-
-      queryClient.setQueryData(key, (old = []) => {
-        if (old.some((c) => c._id === comment._id)) return old;
-        const newComments = [...old, comment];
-        console.log("New comments after adding:", newComments);
-        return newComments;
-      });
-
-      // Update individual comment cache
-      queryClient.setQueryData(["comment", comment._id], comment);
-    };
-
-    socket.on("new_comment", handleNewComment);
-
-    return () => {
-      socket.off("new_comment", handleNewComment);
-    };
-  }, [roadmap._id, queryClient]);
-
-  useEffect(() => {
-    if (status === "success" && comments) {
-      comments.forEach((comment) => {
-        queryClient.setQueryData(["comment", comment._id], comment);
-      });
-    }
-  }, [status, comments, queryClient]);
 
   if (isError) {
     return (
@@ -79,19 +44,11 @@ export default function CommentSection({ roadmap }) {
     );
   }
 
-  let totalComments = 0;
-  let rootComments = [];
-  if (comments) {
-    totalComments = comments.length;
-    rootComments = comments ?? [];
-  }
+  let totalComments = comments?.length || 0;
+  let rootComments = comments || [];
 
   function handleCommentLike(commentId) {
     likeComment(commentId);
-  }
-
-  function handleCommentUnlike(commentId) {
-    unlikeComment(commentId);
   }
 
   function handleCommentUnlike(commentId) {
@@ -145,15 +102,16 @@ export default function CommentSection({ roadmap }) {
   [&::-webkit-scrollbar-track]:bg-white
   [&::-webkit-scrollbar-thumb]:bg-gray-200 w-full pb-5 flex flex-col gap-3 rounded-md lg:max-w-[500px]  overflow-scroll overflow-x-auto"
           >
-            {rootComments?.map((comment) => (
-              <Comment
-                key={comment._id}
-                commentId={comment._id}
-                onLike={handleCommentLike}
-                onUnlike={handleCommentUnlike}
-                onReply={setSelectComment}
-              />
-            ))}
+            {status === "success" &&
+              rootComments?.map((comment) => (
+                <Comment
+                  key={comment._id}
+                  commentId={comment._id}
+                  onLike={handleCommentLike}
+                  onUnlike={handleCommentUnlike}
+                  onReply={setSelectComment}
+                />
+              ))}
           </div>
           <div
             // ref={commentBoxRef}

@@ -48,17 +48,13 @@ const io = new SocketServer(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log("User connected", socket.id);
-
   // roadmap joining
   socket.on("join_roadmap", (roadmapId) => {
     socket.join(roadmapId);
-    console.log(`Socket ${socket.id} joined room ${roadmapId}`);
   });
 
   // making new comment
   socket.on("new_comment", ({ roadmapId, comment }) => {
-    console.log("🟡 Received comment in socket:", comment);
     socket.to(roadmapId).emit("new_comment", comment);
   });
 
@@ -77,10 +73,12 @@ io.on("connection", (socket) => {
     socket.to(roadmapId).emit("upvote_roadmap", newUpvoteCount);
   });
 
-  // on disconnect
-  socket.on("disconnect", () => {
-    console.log("User disconnected", socket.id);
+  socket.on("leave_roadmap", (roadmapId) => {
+    socket.leave(roadmapId);
   });
+
+  // on disconnect
+  socket.on("disconnect", () => {});
 });
 
 const port = process.env.PORT || 5100;

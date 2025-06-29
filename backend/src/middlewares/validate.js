@@ -8,12 +8,8 @@ export const validate = (req, res, next) => {
       field: err.param,
       message: err.msg,
     }));
-    
-    return res.status(422).json({
-      success: false,
-      errors: allErrors,
-    });
-  }
 
+    throw new ValidationError("validation errors", allErrors);
+  }
   next();
 };

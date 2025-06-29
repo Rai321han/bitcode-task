@@ -9,6 +9,8 @@ export default function Comment({ commentId, onReply, onLike, onUnlike }) {
   const [showReplies, setShowReplies] = useState(false);
   const queryClient = useQueryClient();
 
+
+
   const { user } = useAuth();
 
   const { data: comment, status: commentStatus } = useQuery({

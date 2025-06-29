@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${inter.variable}  antialiased font-inter min-h-[80vh]`}
+        className={`${inter.variable}  antialiased font-inter min-h-[80vh] overflow-x-hidden`}
       >
         <QueryProvider>
           <AuthProvider>{children}</AuthProvider>

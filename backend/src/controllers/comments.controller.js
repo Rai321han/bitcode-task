@@ -116,7 +116,7 @@ export async function createComment(req, res) {
     throw new AppError("missing required fields", 400);
 
   try {
-    // database connection
+
     //---- A COMMENT ----
     // content:
     // roadmapId:

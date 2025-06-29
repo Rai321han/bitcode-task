@@ -9,4 +9,17 @@ const socket = io(process.env.NEXT_PUBLIC_BASE_API_URL, {
   reconnectionDelay: 1000, // Delay between reconnection attempts
 });
 
+// Log connection events for debugging
+socket.on("connect", () => {
+  console.log("✅ Socket connected with ID:", socket.id);
+});
+
+socket.on("connect_error", (error) => {
+  console.error("❌ Socket connection error:", error.message);
+});
+
+socket.on("disconnect", () => {
+  console.log("❌ Socket disconnected, ID:", socket.id);
+});
+
 export default socket;
