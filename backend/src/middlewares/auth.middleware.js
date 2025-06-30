@@ -20,6 +20,6 @@ export const protect = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    throw new AppError("Forbidden: Invalid token", 403);
+    next(error)
   }
 };
