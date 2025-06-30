@@ -12,14 +12,14 @@ export const fetchInClient = async (url, options = {}) => {
         `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/refresh`,
         {
           method: "POST",
-          credentials: options?.headers?.Authorization ? "omit" : "include",
+          credentials: "include",
         }
       );
 
       if (refreshRes.ok) {
         res = await fetch(url, {
           ...options,
-          credentials: options?.headers?.Authorization ? "omit" : "include",
+          credentials: "include",
         });
       } else {
         return null;

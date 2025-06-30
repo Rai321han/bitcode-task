@@ -227,12 +227,14 @@ export const refresh = async function (req, res, next) {
   try {
     const token = req.cookies.refreshToken;
 
-    if (!token) throw new AppError("No refresh token provided", 401);
+    if (!token) throw new AppError("No refresh token provided /refresh", 401);
 
     // refresh token verification
     const decoded = jwt.verify(token, REFRESH_SECRET);
     await connectDB();
     const user = await User.findById(decoded.id);
+
+    console.log(user);
 
     if (!user || user.refreshToken !== token) {
       res.clearCookie("refreshToken", {
@@ -241,7 +243,7 @@ export const refresh = async function (req, res, next) {
         sameSite: isProduction ? "None" : "lax",
         path: "/",
       });
-      throw new AppError("Invalid refresh token", 403);
+      throw new AppError("Invalid refresh token /refresh", 403);
     }
 
     // refresh token rotation
@@ -337,17 +339,17 @@ export const getUser = async function (req, res, next) {
   try {
     const token = req.cookies.accessToken;
 
-    if (!token) throw new AppError("Token not found", 401);
+    if (!token) throw new AppError("Token not found /me", 401);
 
     const decoded = jwt.verify(token, ACCESS_SECRET);
 
-    if (!decoded) throw new AppError("Invalid token", 401);
+    if (!decoded) throw new AppError("Invalid token /me", 401);
 
     await connectDB();
 
     const user = await User.findById(decoded.id);
 
-    if (!user) throw new AppError("User not found", 404);
+    if (!user) throw new AppError("User not found /me", 404);
 
     res.json({ user: { id: user._id, username: user.username } });
   } catch (error) {
