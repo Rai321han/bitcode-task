@@ -4,7 +4,7 @@ import { AppError } from "../utils/AppError.js";
 // @desc    Get all roadmaps
 // @route   GET /api/roadmaps
 // @access  Public
-export async function getRoadmaps(req, res) {
+export async function getRoadmaps(req, res, next) {
   try {
     await connectDB();
     const filters = req.query?.filter || [];
@@ -26,11 +26,12 @@ export async function getRoadmaps(req, res) {
       roadmaps: roadmaps || [],
     });
   } catch (error) {
-    throw new AppError("Failed to fetch roadmaps", 500);
+    console.error("error", error);
+    next(error);
   }
 }
 
-export async function getRoadmapById(req, res) {
+export async function getRoadmapById(req, res, next) {
   const roadmapId = req.params.id;
 
   try {
@@ -41,6 +42,7 @@ export async function getRoadmapById(req, res) {
       roadmap,
     });
   } catch (error) {
-    throw new AppError("Failed to fetch roadmap by id", 500);
+    console.error("error", error);
+    next(error);
   }
 }

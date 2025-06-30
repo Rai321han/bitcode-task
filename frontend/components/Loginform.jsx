@@ -55,7 +55,7 @@ export default function Loginform() {
             <FormInput
               name="email"
               id="email"
-              type="text"
+              type="email"
               placeholder="ex: john@gmail.com"
             />
           </FormElement>
@@ -68,7 +68,7 @@ export default function Loginform() {
               placeholder="********"
             />
           </FormElement>
-          <FormErrorLabel message={formError} />
+          <FormErrorLabel message={formError || error?.message} />
           <FormButton disabled={isPending}>
             {isPending ? "loggin in..." : "login"}
           </FormButton>

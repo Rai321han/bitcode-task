@@ -5,7 +5,6 @@ import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
 import { AppError } from "../utils/AppError.js";
-import { nextTick } from "process";
 
 // ----------- TODO ------------------
 // 1. unverified entry should be removed from database after token is expired (not done)
@@ -16,7 +15,7 @@ const REFRESH_SECRET = process.env.REFRESH_SECRET;
 const isProduction = process.env.NODE_ENV === "production";
 
 // user registration
-export const sendVerificationEmail = async function (email, token) {
+export const sendVerificationEmail = async function (email, token, next) {
   try {
     // verify email -> route + randomly generated token as query
     const verifyUrl = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
@@ -64,11 +63,11 @@ export const sendVerificationEmail = async function (email, token) {
   `,
     });
   } catch (error) {
-    throw new AppError("failed to send verification email", 500);
+    next(error);
   }
 };
 
-export const register = async function (req, res) {
+export const register = async function (req, res, next) {
   try {
     const { username, email, password } = req.body;
 
@@ -100,12 +99,12 @@ export const register = async function (req, res) {
       redirectTo: `/verify-reminder?email=${email}`,
     });
   } catch (error) {
-    throw new AppError("Server error", 500);
+    next(error);
   }
 };
 
 // email verification
-export const verify = async function (req, res) {
+export const verify = async function (req, res, next) {
   try {
     const { token } = req.query;
     await connectDB();
@@ -160,12 +159,12 @@ export const verify = async function (req, res) {
       },
     });
   } catch (error) {
-    throw new AppError("Server error", 500);
+    next(error);
   }
 };
 
 // login function
-export const login = async function (req, res) {
+export const login = async function (req, res, next) {
   try {
     const { email, password } = req.body;
 
@@ -218,7 +217,8 @@ export const login = async function (req, res) {
       user: { id: user._id, username: user.username },
     });
   } catch (error) {
-    throw new AppError("Server error", 500);
+    console.error("Login error", error);
+    next(error);
   }
 };
 
@@ -229,17 +229,20 @@ export const refresh = async function (req, res, next) {
 
     if (!token) throw new AppError("No refresh token provided", 401);
 
-
-
     // refresh token verification
     const decoded = jwt.verify(token, REFRESH_SECRET);
     await connectDB();
     const user = await User.findById(decoded.id);
 
-
-    if (!user || user.refreshToken !== token)
+    if (!user || user.refreshToken !== token) {
+      res.clearCookie("refreshToken", {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? "None" : "lax",
+        path: "/",
+      });
       throw new AppError("Invalid refresh token", 403);
-
+    }
 
     // refresh token rotation
     const newRefreshToken = jwt.sign(
@@ -287,12 +290,12 @@ export const refresh = async function (req, res, next) {
       message: "new access token",
     });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
 
 // for login out user
-export const logout = async function (req, res) {
+export const logout = async function (req, res, next) {
   try {
     const refreshToken = req.cookies.refreshToken;
 
@@ -325,7 +328,7 @@ export const logout = async function (req, res) {
       message: "Logged out successfully!",
     });
   } catch (error) {
-    throw new AppError("Server error", 500);
+    next(error);
   }
 };
 

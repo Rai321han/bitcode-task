@@ -1,29 +1,35 @@
 export const fetchInClient = async (url, options = {}) => {
-  let res = await fetch(url, {
-    ...options,
-    credentials: options?.headers?.Authorization ? "omit" : "include",
-  });
+  try {
+    let res = await fetch(url, {
+      ...options,
+      credentials: options?.headers?.Authorization ? "omit" : "include",
+    });
 
-  // here I am getting user data
+    // here I am getting user data
 
-  if (res.status === 401) {
-    const refreshRes = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/refresh`,
-      {
-        method: "POST",
-        credentials: options?.headers?.Authorization ? "omit" : "include",
+    if (res.status === 401) {
+      const refreshRes = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/refresh`,
+        {
+          method: "POST",
+          credentials: options?.headers?.Authorization ? "omit" : "include",
+        }
+      );
+
+      if (refreshRes.ok) {
+        res = await fetch(url, {
+          ...options,
+          credentials: options?.headers?.Authorization ? "omit" : "include",
+        });
+      } else {
+        return null;
       }
-    );
-
-    let resFinal = null;
-    if (refreshRes.ok) {
-      resFinal = await fetch(url, {
-        ...options,
-        credentials: options?.headers?.Authorization ? "omit" : "include",
-      });
+      return res;
     }
-    return resFinal;
-  }
 
-  return res;
+    return res;
+  }catch (error) {
+    console.error("Fetch error:", error);
+    return null; // Return null instead of throwing to prevent crashes
+  }
 };

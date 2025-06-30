@@ -8,6 +8,9 @@ const login = async ({ email, password }) => {
     body: JSON.stringify({ email, password }),
   });
 
+  if (!res) {
+    throw new Error("Network error occurred");
+  }
   const data = await res.json();
 
   if (!res.ok) {
@@ -24,6 +27,9 @@ export function useLogin() {
     mutationFn: login,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["me"] });
+    },
+    onError: (error) => {
+      console.error("useLogin error:", error.message);
     },
   });
 }

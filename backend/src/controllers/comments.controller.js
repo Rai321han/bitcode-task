@@ -6,7 +6,7 @@ import Roadmap from "../models/roadmap.model.js";
 
 import { AppError } from "../utils/AppError.js";
 
-export async function getComments(req, res) {
+export async function getComments(req, res, next) {
   try {
     await connectDB();
     const roadmapId = req.params?.roadmapId;
@@ -30,11 +30,12 @@ export async function getComments(req, res) {
       comments,
     });
   } catch (error) {
-    throw new AppError("Failed to fetch comments", 500);
+    console.error("error", error);
+    next(error);
   }
 }
 
-export async function getCommentById(req, res) {
+export async function getCommentById(req, res, next) {
   try {
     await connectDB();
     const commentId = req.params?.commentId;
@@ -47,11 +48,12 @@ export async function getCommentById(req, res) {
       comment,
     });
   } catch (error) {
-    throw new AppError("Failed to fetch comment", 500);
+    console.error("error", error);
+    next(error);
   }
 }
 
-export async function likeComment(req, res) {
+export async function likeComment(req, res, next) {
   const likerId = req.body.likerId;
   const commentId = req.params.commentId;
 
@@ -74,11 +76,12 @@ export async function likeComment(req, res) {
 
     res.status(204).end();
   } catch (error) {
-    throw new AppError("internal server error", 500);
+    console.error("error", error);
+    next(error);
   }
 }
 
-export async function unlikeComment(req, res) {
+export async function unlikeComment(req, res, next) {
   const unlikerId = req.body.unlikerId;
   const commentId = req.params.commentId;
 
@@ -97,13 +100,14 @@ export async function unlikeComment(req, res) {
 
     res.status(204).end();
   } catch (error) {
-    throw new AppError("internal server error", 500);
+    console.error("error", error);
+    next(error);
   }
 }
 
 export async function deleteComment() {}
 
-export async function createComment(req, res) {
+export async function createComment(req, res, next) {
   const {
     commenterId,
     content,
@@ -116,7 +120,6 @@ export async function createComment(req, res) {
     throw new AppError("missing required fields", 400);
 
   try {
-
     //---- A COMMENT ----
     // content:
     // roadmapId:
@@ -154,6 +157,7 @@ export async function createComment(req, res) {
       comment: newComment,
     });
   } catch (error) {
-    throw new AppError("failed to save comment", 500);
+    console.error("error", error);
+    next(error);
   }
 }
