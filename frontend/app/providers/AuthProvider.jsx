@@ -3,7 +3,7 @@
 import { fetchInClient } from "@/libs/fetchInClient";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter } from "next/navigation";
-import { createContext, useContext, useEffect } from "react";
+import { createContext, useContext } from "react";
 const AuthContext = createContext();
 
 const fetchMe = async () => {
@@ -50,22 +50,7 @@ export function AuthProvider({ children }) {
   });
 
 
-  useEffect(() => {
-    if (!isPublicRoute && user) {
-      const interval = setInterval(async () => {
-        try {
-          await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/refresh`, {
-            method: "POST",
-            credentials: "include",
-          });
-        } catch (error) {
-          console.error("Periodic token refresh failed:", error);
-        }
-      }, 90 * 1000);
-
-      return () => clearInterval(interval);
-    }
-  }, [user, isPublicRoute]);
+  
 
   return (
     <AuthContext.Provider value={{ user: user ?? null, isLoading, refetch }}>
