@@ -9,8 +9,6 @@ import MiletoneDetail from "@/components/MiletoneDetail";
 import { useQuery } from "@tanstack/react-query";
 import { Suspense, use } from "react";
 
-
-
 export default function RoadmapDetailsPage({ params }) {
   const pageParams = use(params);
   const roadmapId = pageParams.id;
@@ -77,9 +75,9 @@ export default function RoadmapDetailsPage({ params }) {
             <MiletoneDetail milestones={milestones} />
           </div>
           <div className="lg:col-start-2 lg:col-end-3 lg:row-span-2">
-            <Suspense fallback={<LoadingCommentSection />}>
-              <CommentSection roadmap={roadmap} />
-            </Suspense>
+            {/* <Suspense fallback={<LoadingCommentSection />}> */}
+            <CommentSection roadmap={roadmap} />
+            {/* </Suspense> */}
           </div>
         </div>
       </div>

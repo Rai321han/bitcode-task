@@ -23,15 +23,14 @@ export default function CommentSection({ roadmap }) {
   const { unlikeComment } = useUnlikeComment();
   const { makeComment } = useMakeComment();
 
-
   const {
     data: comments = [],
     status,
     isError,
   } = useQuery({
     queryKey: ["comments", roadmap._id],
-    queryFn: () =>
-      getComments({ roadmapId: roadmap._id, parentCommentId: null }),
+    queryFn: async () =>
+      await getComments({ roadmapId: roadmap._id, parentCommentId: null }),
     retry: 2,
     enabled: !!roadmap._id,
   });
@@ -110,6 +109,7 @@ export default function CommentSection({ roadmap }) {
                   onLike={handleCommentLike}
                   onUnlike={handleCommentUnlike}
                   onReply={setSelectComment}
+                  isOptimistic={comment?.isOptimistic || false}
                 />
               ))}
           </div>
@@ -143,7 +143,6 @@ export default function CommentSection({ roadmap }) {
             </div>
             <CommentBox onSubmit={handleCommentSubmit} />
           </div>
-
         </div>
       </div>
     </>

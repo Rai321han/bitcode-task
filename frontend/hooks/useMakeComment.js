@@ -41,6 +41,7 @@ export default function useMakeComment() {
         likes: 0,
         likers: [],
         hasChild: false,
+        isOptimistic: true,
       };
       queryClient.setQueryData(commentKey, (old = []) => {
         // Prevent duplicates by checking if the comment already exists

@@ -13,7 +13,6 @@ export async function getComments({ roadmapId, parentCommentId = null }) {
     const data = await res.json();
     return data.comments;
   } catch (error) {
-    console.log("Error getting data", error.message);
     res.status(500).json({
       message: "error encountered",
     });
@@ -131,10 +130,12 @@ export async function createComment({
       }
     );
 
-    if (res.status === 500)
+    if (res.status === 500) {
+      console.log(res.status);
       return {
         message: "failed to save comment",
       };
+    }
 
     const data = await res.json();
     if (res.ok) {

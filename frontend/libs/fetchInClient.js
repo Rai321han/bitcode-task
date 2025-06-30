@@ -2,7 +2,7 @@ export const fetchInClient = async (url, options = {}) => {
   try {
     let res = await fetch(url, {
       ...options,
-      credentials: options?.headers?.Authorization ? "omit" : "include",
+      credentials: "include",
     });
 
     // here I am getting user data

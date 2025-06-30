@@ -5,18 +5,22 @@ import { useAuth } from "@/app/providers/AuthProvider";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
-export default function Comment({ commentId, onReply, onLike, onUnlike }) {
+export default function Comment({
+  commentId,
+  onReply,
+  onLike,
+  onUnlike,
+  isOptimistic = false,
+}) {
   const [showReplies, setShowReplies] = useState(false);
   const queryClient = useQueryClient();
-
-
 
   const { user } = useAuth();
 
   const { data: comment, status: commentStatus } = useQuery({
     queryKey: ["comment", commentId],
-    queryFn: () => getCommentById({ commentId }),
-    enabled: !!commentId,
+    queryFn: async () => await getCommentById({ commentId }),
+    enabled: !!commentId && !isOptimistic,
   });
 
   const {
