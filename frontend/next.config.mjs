@@ -1,11 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  rewrites: [
-    {
-      source: "/api/:path*",
-      destination: "https://bitcode-task.onrender.com/api/:path*",
-    },
-  ],
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "https://bitcode-task.onrender.com/:path*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;
