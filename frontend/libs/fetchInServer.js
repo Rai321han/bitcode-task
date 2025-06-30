@@ -1,31 +1,35 @@
 "use server";
 
 export const fetchInServer = async (url, options = {}) => {
-  let res = await fetch(url, {
-    ...options,
-    credentials: options?.headers?.Authorization ? "omit" : "include",
-  });
+  try {
+    let res = await fetch(url, {
+      ...options,
+      credentials: options?.headers?.Authorization ? "omit" : "include",
+    });
 
-  // here I am getting user data
+    // here I am getting user data
 
-  if (res.status === 401) {
-    const refreshRes = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/refresh`,
-      {
-        method: "POST",
-        ...options,
+    if (res.status === 401) {
+      const refreshRes = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/refresh`,
+        {
+          method: "POST",
+          ...options,
+        }
+      );
+
+      if (refreshRes.ok) {
+        res = fetch(url, {
+          ...options,
+          credentials: options?.headers?.Authorization ? "omit" : "include",
+        });
+      } else {
+        return null;
       }
-    );
-
-    let resFinal = null;
-    if (refreshRes.ok) {
-      resFinal = fetch(url, {
-        ...options,
-        credentials: options?.headers?.Authorization ? "omit" : "include",
-      });
+      return res;
     }
-    return resFinal;
+  } catch (error) {
+    console.error("Fetch error:", error);
+    return null; // Return null instead of throwing to prevent crashes
   }
-
-  return res;
 };
