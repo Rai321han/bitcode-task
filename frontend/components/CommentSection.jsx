@@ -143,9 +143,7 @@ export default function CommentSection({ roadmap }) {
             </div>
             <CommentBox onSubmit={handleCommentSubmit} />
           </div>
-          {/* {isOpen && (
-          
-          )} */}
+
         </div>
       </div>
     </>

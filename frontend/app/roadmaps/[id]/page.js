@@ -1,16 +1,22 @@
+"use client";
+
 import { getRoadById } from "@/actions/roadmaps";
 import Badge from "@/components/Badge";
 
 import CommentSection from "@/components/CommentSection";
 import LoadingCommentSection from "@/components/LoadingCommentSection";
 import MiletoneDetail from "@/components/MiletoneDetail";
-import { Suspense } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Suspense, use } from "react";
 
-export default async function RoadmapDetailsPage({ params }) {
-  const pageParams = await params;
+export default function RoadmapDetailsPage({ params }) {
+  const pageParams = use(params);
   const roadmapId = pageParams.id;
 
-  const roadmap = await getRoadById({ id: roadmapId });
+  const { data: roadmap } = useQuery({
+    queryKey: ["roadmap", roadmapId],
+    queryFn: async () => await getRoadById({ id: roadmapId }),
+  });
 
   const option = {
     day: "numeric",

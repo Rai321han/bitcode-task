@@ -18,22 +18,22 @@ export default function MiletoneDetail({ milestones }) {
         {milestones.map((milestone) => (
           <div
             key={milestone.title}
-            className={`cursor-pointer py-1.5 border-l-2 ${
+            className={`cursor-pointer pt-3 pb-0 border-l-2 ${
               milestone.status === "completed"
                 ? "border-green-300"
                 : "border-gray-500"
-            } relative  pl-5 flex flex-row`}
+            } relative  pl-5 flex flex-row `}
           >
             <p
               className={`${
                 milestone.status === "completed"
                   ? "text-gray-800"
                   : "text-gray-500"
-              }`}
+              } -mb-1.5`}
             >
               {milestone.title}
             </p>
-            <div className="absolute -translate-x-1/2 bg-white rounded-full left-0 top-1/2 -translate-y-1/2">
+            <div className="absolute -translate-x-1/2 bg-white rounded-full left-0 top-1/2 ">
               <MdOutlineTaskAlt
                 className={`${
                   milestone.status === "completed"
