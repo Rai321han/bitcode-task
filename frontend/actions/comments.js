@@ -6,6 +6,7 @@ export async function getComments({ roadmapId, parentCommentId = null }) {
       `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/roadmaps/${roadmapId}/comments?parentCommentId=${parentCommentId}`,
       {
         credentials: "include",
+        cache: "no-store",
       }
     );
     if (!res.ok) return null;
@@ -25,6 +26,7 @@ export async function getCommentById({ commentId }) {
       `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/comment/${commentId}`,
       {
         credentials: "include",
+        cache: "no-store",
       }
     );
     if (!res.ok) return null;
