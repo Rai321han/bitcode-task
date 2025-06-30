@@ -11,7 +11,7 @@ export default async function RoadmapsPage({ searchParams }) {
     sort: sortArray,
   });
 
-  const roadmapData = data;
+  const roadmapData = data || [];
 
   return (
     <div className="md:mt-5 md:mx-16 min-h-[90vh]">
@@ -27,17 +27,19 @@ export default async function RoadmapsPage({ searchParams }) {
           </div>
         </div>
         <div className="flex flex-row flex-wrap gap-3.5 bg-[#f4f4f4] rounded-lg p-5">
-          {!roadmapData ? (
-            <>
-              <div className="w-[290px] h-[300px] p-3 animate-pulse rounded-md bg-gray-200"></div>
-              <div className="w-[290px] h-[300px] p-3 animate-pulse rounded-md bg-gray-200"></div>
-              <div className="w-[290px] h-[300px] p-3 animate-pulse rounded-md bg-gray-200"></div>
-            </>
-          ) : (
+          {
+            // roadmapData ? (
+            //   <>
+            //     <div className="w-[290px] h-[300px] p-3 animate-pulse rounded-md bg-gray-200"></div>
+            //     <div className="w-[290px] h-[300px] p-3 animate-pulse rounded-md bg-gray-200"></div>
+            //     <div className="w-[290px] h-[300px] p-3 animate-pulse rounded-md bg-gray-200"></div>
+            //   </>
+            // ) : (
             roadmapData.map((roadmap) => (
               <Roadmap key={roadmap._id} data={roadmap} />
             ))
-          )}
+            // )
+          }
         </div>
       </div>
     </div>
