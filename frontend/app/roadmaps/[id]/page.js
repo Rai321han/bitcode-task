@@ -9,6 +9,8 @@ import MiletoneDetail from "@/components/MiletoneDetail";
 import { useQuery } from "@tanstack/react-query";
 import { Suspense, use } from "react";
 
+
+
 export default function RoadmapDetailsPage({ params }) {
   const pageParams = use(params);
   const roadmapId = pageParams.id;

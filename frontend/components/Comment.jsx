@@ -39,7 +39,7 @@ export default function Comment({ commentId, onReply, onLike, onUnlike }) {
         queryClient.setQueryData(["comment", reply._id], reply);
       });
     }
-  }, [replyStatus, replies, queryClient]);
+  }, [replyStatus, replies]);
 
   if (commentStatus === "pending") {
     return (
