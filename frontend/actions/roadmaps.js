@@ -36,7 +36,8 @@ export async function getRoadmaps({ filter, sort }) {
 
     return data.roadmaps;
   } catch (error) {
-    return null;
+    console.error("Error fetching roadmaps:", error);
+    return { error: true, message: error.message };
   }
 }
 
