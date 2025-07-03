@@ -9,9 +9,9 @@ import {
   Label,
   FormButton,
   FormErrorLabel,
-} from "./AuthForm/AuthForm";
+} from "./AuthForm";
 import { useRouter } from "next/navigation";
-import { useLogin } from "@/hooks/useLogin";
+import { useLogin } from "@/hooks/auth_hooks/useLogin";
 import { useAuth } from "@/app/providers/AuthProvider";
 
 export default function Loginform() {

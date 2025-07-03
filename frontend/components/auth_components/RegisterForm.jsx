@@ -1,6 +1,6 @@
 "use client";
 
-import { register } from "@/hooks/useRegister";
+import { register } from "@/hooks/auth_hooks/useRegister";
 // import { useAuth } from "@/app/providers/AuthProvider";
 import {
   AuthForm,
@@ -11,7 +11,7 @@ import {
   Label,
   FormButton,
   FormErrorLabel,
-} from "./AuthForm/AuthForm";
+} from "./AuthForm";
 // import { useRegister } from "@/hooks/useRegister";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

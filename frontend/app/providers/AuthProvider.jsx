@@ -49,9 +49,6 @@ export function AuthProvider({ children }) {
     },
   });
 
-
-  
-
   return (
     <AuthContext.Provider value={{ user: user ?? null, isLoading, refetch }}>
       {children}

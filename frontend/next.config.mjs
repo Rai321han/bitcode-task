@@ -4,8 +4,8 @@ const nextConfig = {
     return [
       {
         source: "/api/:path*",
-        // destination: "https://bitcode-task.onrender.com/:path*",
-        destination: "http://localhost:5100/:path*",
+        destination: "https://bitcode-task.onrender.com/:path*",
+        // destination: "http://localhost:5100/:path*",
       },
     ];
   },

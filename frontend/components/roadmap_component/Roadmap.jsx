@@ -1,5 +1,5 @@
 import { BiComment, BiUpvote } from "react-icons/bi";
-import Badge from "./Badge";
+import Badge from "../Badge";
 import Milestone from "./Milestone";
 import Link from "next/link";
 

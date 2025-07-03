@@ -2,26 +2,29 @@
 import { BiComment, BiUpvote } from "react-icons/bi";
 import { RxCross1 } from "react-icons/rx";
 import { LuCornerUpRight } from "react-icons/lu";
-import CommentBox from "@/components/CommentBox";
+import CommentBox from "@/components/comment_component/CommentBox";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
+import { debounce } from "lodash";
 
 import Comment from "./Comment";
-import { useEffect, useState } from "react";
-import useLikeComment from "@/hooks/useLikeComment";
-import useUnlikeComment from "@/hooks/useUnlikeComment";
-import useMakeComment from "@/hooks/useMakeComment";
+import { useState } from "react";
+import useLikeComment from "@/hooks/comment_hooks/useLikeComment";
+import useUnlikeComment from "@/hooks/comment_hooks/useUnlikeComment";
+import useMakeComment from "@/hooks/comment_hooks/useMakeComment";
 import { useAuth } from "@/app/providers/AuthProvider";
-import useSocketComment from "@/hooks/useSocketComment";
+// import useSocketComment from "@/hooks/useSocketComment";
 import { getComments } from "@/actions/comments";
+import useEditComment from "@/hooks/comment_hooks/useEditComment";
 
-export default function CommentSection({ roadmap }) {
+export default function CommentSection({ roadmap, socket }) {
   const [selectComment, setSelectComment] = useState(null);
-  const socket = useSocketComment(roadmap._id);
+  // const socket = useSocketComment(roadmap._id);
   const { user } = useAuth();
   const { likeComment } = useLikeComment();
   const { unlikeComment } = useUnlikeComment();
   const { makeComment } = useMakeComment();
+  const { editComment } = useEditComment();
 
   const {
     data: comments = [],
@@ -33,6 +36,7 @@ export default function CommentSection({ roadmap }) {
       await getComments({ roadmapId: roadmap._id, parentCommentId: null }),
     retry: 2,
     enabled: !!roadmap._id,
+    refetchOnWindowFocus: false,
   });
 
   if (isError) {
@@ -43,18 +47,45 @@ export default function CommentSection({ roadmap }) {
     );
   }
 
-  let totalComments = comments?.length || 0;
   let rootComments = comments || [];
 
-  function handleCommentLike(commentId) {
-    likeComment(commentId);
-  }
+  const handleCommentLike = debounce((commentId) => {
+    likeComment(
+      {
+        commentId,
+        likerId: user.id,
+      },
+      {
+        onSuccess: ({ commentId, likerId }) => {
+          socket.emit("like_comment", {
+            roadmapId: roadmap._id,
+            commentId,
+            likerId,
+          });
+        },
+      }
+    );
+  }, 200);
 
-  function handleCommentUnlike(commentId) {
-    unlikeComment(commentId);
-  }
+  const handleCommentUnlike = debounce((commentId) => {
+    unlikeComment(
+      {
+        commentId,
+        unlikerId: user.id,
+      },
+      {
+        onSuccess: ({ commentId, unlikerId }) => {
+          socket.emit("unlike_comment", {
+            roadmapId: roadmap._id,
+            commentId,
+            unlikerId,
+          });
+        },
+      }
+    );
+  }, 200);
 
-  function handleCommentSubmit(text) {
+  const handleCommentSubmit = debounce((text) => {
     makeComment(
       {
         roadmapId: roadmap._id,
@@ -71,28 +102,28 @@ export default function CommentSection({ roadmap }) {
         },
       }
     );
-  }
+  }, 300);
+
+  const handleEditComment = debounce((comment, content) => {
+    editComment(
+      {
+        comment,
+        content,
+      },
+      {
+        onSuccess: (savedComment) => {
+          socket.emit("new_comment", {
+            roadmapId: savedComment.roadmapId,
+            comment: savedComment,
+          });
+          setSelectComment(null);
+        },
+      }
+    );
+  }, 300);
 
   return (
     <>
-      <div className="w-full mt-10 md:mt-0 rounded-sm  justify-between gap-3 ">
-        <div className="grid grid-cols-[1fr_2fr_1fr] justify-between w-full">
-          <button className="hover:bg-gray-50 cursor-pointer flex flex-row items-center gap-1 border-1 border-gray-300 p-3 rounded-l-md">
-            <BiUpvote className="fill-gray-500" />
-            <p className="text-gray-500">{roadmap.upvotes}</p>
-          </button>
-          <Link
-            href="#comment"
-            className="hover:bg-gray-50 cursor-pointer text-center font-semibold text-gray-600 border-1 border-gray-300 p-3 "
-          >
-            Comments
-          </Link>
-          <button className="hover:bg-gray-50 cursor-pointer flex flex-row items-center gap-1 border-1 border-gray-300 p-3 rounded-r-md">
-            <BiComment className="fill-gray-500" />
-            <p className="text-gray-500">{totalComments}</p>
-          </button>
-        </div>
-      </div>
       <div className="relative w-full flex flex-col gap-3 mb-5">
         <div className="border-t-2 border-t-gray-400 mt-3"></div>
         <div className="h-[70vh] flex flex-col w-full">
@@ -104,11 +135,13 @@ export default function CommentSection({ roadmap }) {
             {status === "success" &&
               rootComments?.map((comment) => (
                 <Comment
+                  nested={1}
                   key={comment._id}
                   commentId={comment._id}
                   onLike={handleCommentLike}
                   onUnlike={handleCommentUnlike}
                   onReply={setSelectComment}
+                  onEdit={handleEditComment}
                   isOptimistic={comment?.isOptimistic || false}
                 />
               ))}
@@ -141,7 +174,7 @@ export default function CommentSection({ roadmap }) {
                 </>
               )}
             </div>
-            <CommentBox onSubmit={handleCommentSubmit} />
+            <CommentBox onSubmit={handleCommentSubmit} buttonName="Comment" />
           </div>
         </div>
       </div>

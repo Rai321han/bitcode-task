@@ -59,8 +59,18 @@ io.on("connection", (socket) => {
   });
 
   // like comment
-  socket.on("like_comment", ({ roadmapId, commentId }) => {
-    socket.to(roadmapId).emit("like_comment", commentId);
+  socket.on("edit_comment", ({ roadmapId, comment }) => {
+    socket.to(roadmapId).emit("edit_comment", comment);
+  });
+
+  // like comment
+  socket.on("like_comment", ({ roadmapId, commentId, userId }) => {
+    socket.to(roadmapId).emit("like_comment", { commentId, userId });
+  });
+
+  // like comment
+  socket.on("unlike_comment", ({ roadmapId, commentId, userId }) => {
+    socket.to(roadmapId).emit("unlike_comment", { commentId, userId });
   });
 
   // delete comment
@@ -69,8 +79,15 @@ io.on("connection", (socket) => {
   });
 
   // upvote roadmap
-  socket.on("upvote_roadmap", ({ roadmapId, newUpvoteCount }) => {
-    socket.to(roadmapId).emit("upvote_roadmap", newUpvoteCount);
+  socket.on("upvote_roadmap", ({ roadmapId, upvoterId }) => {
+    socket.to(roadmapId).emit("upvote_roadmap", { roadmapId, upvoterId });
+  });
+
+  // upvote roadmap
+  socket.on("remove_upvote_roadmap", ({ roadmapId, upvoterId }) => {
+    socket
+      .to(roadmapId)
+      .emit("remove_upvote_roadmap", { roadmapId, upvoterId });
   });
 
   socket.on("leave_roadmap", (roadmapId) => {

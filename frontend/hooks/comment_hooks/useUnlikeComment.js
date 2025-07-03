@@ -1,20 +1,21 @@
-import { LikeComment } from "@/actions/comments";
+import { LikeComment, UnlikeComment } from "@/actions/comments";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export default function useLikeComment() {
+export default function useUnlikeComment() {
   const queryClient = useQueryClient();
   const { user } = useAuth();
-  const likeMutation = useMutation({
-    mutationFn: ({ commentId }) => LikeComment({ commentId, likerId: user.id }),
+  const unlikeMutation = useMutation({
+    mutationFn: async ({ commentId, unlikerId }) =>
+      await UnlikeComment({ commentId, unlikerId }),
     onMutate: async ({ commentId }) => {
       await queryClient.cancelQueries({ queryKey: ["comment", commentId] });
       const previous = queryClient.getQueryData(["comment", commentId]);
-      if (previous && !previous.likers.includes(user.id)) {
+      if (previous && previous.likers.includes(user.id)) {
         queryClient.setQueryData(["comment", commentId], {
           ...previous,
-          likes: previous.likes + 1,
-          likers: [...previous.likers, user.id],
+          likes: previous.likes - 1,
+          likers: previous.likers.filter((liker) => liker !== user.id),
         });
       }
 
@@ -35,7 +36,7 @@ export default function useLikeComment() {
   });
 
   return {
-    likeComment: (commentId) => likeMutation.mutate({ commentId }),
-    isLiking: likeMutation.isPending,
+    unlikeComment: unlikeMutation.mutateAsync,
+    isUnliking: unlikeMutation.isPending,
   };
 }

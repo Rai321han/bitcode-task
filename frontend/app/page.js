@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-
 export default function Home() {
   return (
     <>
@@ -35,12 +34,12 @@ export default function Home() {
       <div className="overflow-hidden grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen  gap-16  font-[family-name:var(--font-geist-sans)]">
         <main className="flex flex-col  row-start-2 items-center sm:items-start w-full">
           <section className="min-h-[80vh] relative w-full flex flex-col gap-10 justify-center items-center">
-            <div className="absolute -z-1 -left-[10%] top-[10%] blur-[100px] md:blur-[200px] w-[200px] h-[200px] md:w-[50%] md:h-[600px] rounded-[100%] bg-[#E6FFFA]"></div>
-            <div className="absolute -z-1 -right-[10%] top-[10%] blur-[100px] md:blur-[200px] w-[200px] h-[200px] md:w-[50%] md:h-[600px] rounded-[100%] bg-[#FFE4CD]"></div>
+            <div className="absolute -z-1 -left-[10%] top-[10%] blur-[50px] md:blur-[200px] w-[200px] h-[200px] md:w-[50%] md:h-[600px] rounded-[100%] bg-[#E6FFFA]"></div>
+            <div className="absolute -z-1 -right-[10%] top-[10%] blur-[50px] md:blur-[200px] w-[200px] h-[200px] md:w-[50%] md:h-[600px] rounded-[100%] bg-[#FFE4CD]"></div>
 
             <div className="max-w-[900px] text-center">
               <p className="text-dark leading-tight text-3xl md:text-6xl font-extrabold  font-Inter">
-                Drive Product <br /> Direction Together
+                DRIVE PRODUCT <br /> DIRECTION TOGETHER
               </p>
             </div>
 

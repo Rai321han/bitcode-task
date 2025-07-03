@@ -1,7 +1,7 @@
 "use client";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useAuth } from "@/app/providers/AuthProvider";
-import { useLogout } from "@/hooks/useLogout";
+import { useLogout } from "@/hooks/auth_hooks/useLogout";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -77,8 +77,11 @@ export default function Navbar() {
       </nav>
       {isOpen && (
         <>
-          <div className="absolute z-[1001] bg-black opacity-[0.4] backdrop-blur-3xl w-screen h-screen top-0"></div>
-          <div className="absolute top-0 h-full md:hidden bg-gray-200 z-[1100] border-r-1 border-r-gray-400 shadow-md">
+          <div
+            onClick={() => setIsOpen(false)}
+            className="fixed z-[1001] bg-black opacity-[0.4] backdrop-blur-3xl w-full h-full top-0"
+          ></div>
+          <div className="fixed top-0 h-full md:hidden bg-gray-200 z-[1100] border-r-1 border-r-gray-400 shadow-md">
             <div className="flex flex-col text-gray-600">
               {user && (
                 <>

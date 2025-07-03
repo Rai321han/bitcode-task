@@ -25,10 +25,15 @@ export default function useMakeComment() {
         ? ["comments", parentCommentId]
         : ["comments", roadmapId];
 
+      const roadmapKey = ["roadmap", roadmapId];
+
       await queryClient.cancelQueries({
-        queryKey: ["comments", commentKey],
+        queryKey: commentKey,
       });
-      const previous = queryClient.getQueryData(commentKey);
+      const previousComment = structuredClone(
+        queryClient.getQueryData(commentKey)
+      );
+      const previousRoadmap = queryClient.getQueryData(roadmapKey);
 
       const tempId = crypto.randomUUID();
 
@@ -38,15 +43,28 @@ export default function useMakeComment() {
         content,
         roadmapId,
         parentCommentId,
+        commenterId: user.id,
         likes: 0,
         likers: [],
         hasChild: false,
         isOptimistic: true,
       };
+
+      // updating comment cache
       queryClient.setQueryData(commentKey, (old = []) => {
         // Prevent duplicates by checking if the comment already exists
+
         if (old.some((c) => c._id === tempId)) return old;
         return [...old, optimisticComment];
+      });
+
+      // updating roadmap comment count cache
+      queryClient.setQueryData(roadmapKey, (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          comments: old.comments + 1,
+        };
       });
 
       if (parentCommentId) {
@@ -58,13 +76,30 @@ export default function useMakeComment() {
         });
       }
 
-      return { previous, commentKey, optimisticComment };
+      return {
+        previousComment,
+        previousRoadmap,
+        roadmapKey,
+        commentKey,
+        optimisticComment,
+      };
     },
 
     onError: (_err, _vars, context) => {
-      if (context?.previous && context?.commentKey) {
-        queryClient.setQueryData(context.commentKey, context.previous);
+      if (context?.previousComment && context?.commentKey) {
+        queryClient.setQueryData(context.commentKey, context.previousComment);
       }
+
+      if (context?.previousRoadmap && context?.roadmapKey) {
+        queryClient.setQueryData(context.roadmapKey, (old) => {
+          return {
+            ...old,
+            comments: Math.max(0, old.comments - 1),
+          };
+        });
+      }
+
+      //todo - show toast
     },
 
     onSuccess: (savedComment, _vars, context) => {

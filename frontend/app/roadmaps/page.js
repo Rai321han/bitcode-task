@@ -2,10 +2,9 @@
 
 import FilterSort from "@/components/FilterSort";
 import { Suspense, use } from "react";
-import RoadmapList from "@/components/RoadmapList";
-import RoadmapFallback from "@/components/RoadmapFallback";
-import { useRoadmaps } from "@/hooks/useRoadmaps";
-
+import RoadmapList from "@/components/roadmap_component/RoadmapList";
+import RoadmapFallback from "@/components/roadmap_component/RoadmapFallback";
+import { useRoadmaps } from "@/hooks/roadmap_hooks/useRoadmaps";
 
 export default function RoadmapsPage({ searchParams }) {
   const { filter, sort } = use(searchParams);

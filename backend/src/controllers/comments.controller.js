@@ -105,8 +105,6 @@ export async function unlikeComment(req, res, next) {
   }
 }
 
-export async function deleteComment() {}
-
 export async function createComment(req, res, next) {
   const {
     commenterId,
@@ -161,3 +159,32 @@ export async function createComment(req, res, next) {
     next(error);
   }
 }
+
+export async function editComment(req, res, next) {
+  try {
+    const commentId = req.params?.commentId;
+    const { content } = req.body;
+    if (!commentId) throw new AppError("comment id not found", 401);
+
+    await connectDB();
+
+
+    const updatedComment = await Comment.findByIdAndUpdate(
+      commentId,
+      { content },
+      {
+        new: true,
+      }
+    );
+
+    return res.status(200).json({
+      success: true,
+      comment: updatedComment,
+    });
+  } catch (error) {
+    console.error("Error ", error);
+    next(error);
+  }
+}
+
+export async function deleteComment() {}

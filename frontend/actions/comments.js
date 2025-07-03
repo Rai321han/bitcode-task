@@ -9,13 +9,16 @@ export async function getComments({ roadmapId, parentCommentId = null }) {
         cache: "no-store",
       }
     );
-    if (!res.ok) return null;
+    if (!res) {
+      throw new Error("Network error");
+    }
+    if (!res.ok) {
+      throw new Error(`Failed to fetch comments: ${res.status}`);
+    }
     const data = await res.json();
-    return data.comments;
+    return data.comments || [];
   } catch (error) {
-    res.status(500).json({
-      message: "error encountered",
-    });
+    throw new Error(error);
   }
 }
 
@@ -28,11 +31,18 @@ export async function getCommentById({ commentId }) {
         cache: "no-store",
       }
     );
-    if (!res.ok) return null;
+    if (!res) {
+      throw new Error("Network error");
+    }
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch comment: ${res.status}`);
+    }
+
     const data = await res.json();
-    return data.comment;
+    return data.comment || null;
   } catch (error) {
-    console.log("Error getting data", error.message);
+    throw new Error(error);
   }
 }
 
@@ -41,7 +51,7 @@ export async function LikeComment({ commentId, likerId }) {
     const res = await fetchInClient(
       `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/comments/${commentId}/like`,
       {
-        method: "POST",
+        method: "PATCH",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
@@ -49,21 +59,19 @@ export async function LikeComment({ commentId, likerId }) {
         body: JSON.stringify({ likerId }),
       }
     );
+    if (!res.ok) {
+      const errorBody = await res.json().catch(() => ({}));
+      throw new Error(errorBody.message || "Failed to like comment");
+    }
 
-    if (res.status === 204)
+    if (res && res.ok) {
       return {
-        message: "liked",
+        commentId,
+        likerId,
       };
-
-    if (res.status === 500)
-      return {
-        message: "like failed",
-      };
+    }
   } catch (error) {
-    console.log("Error updating like", error);
-    return {
-      message: "request error",
-    };
+    throw new Error(error);
   }
 }
 
@@ -72,7 +80,7 @@ export async function UnlikeComment({ commentId, unlikerId }) {
     const res = await fetchInClient(
       `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/comments/${commentId}/unlike`,
       {
-        method: "POST",
+        method: "PATCH",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
@@ -81,17 +89,19 @@ export async function UnlikeComment({ commentId, unlikerId }) {
       }
     );
 
-    if (res.status === 204)
-      return {
-        message: "unliked",
-      };
+    if (!res.ok) {
+      const errorBody = await res.json().catch(() => ({}));
+      throw new Error(errorBody.message || "Failed to unlike comment");
+    }
 
-    if (res.status === 500)
+    if (res && res.ok) {
       return {
-        message: "unlike failed",
+        commentId,
+        unlikerId,
       };
+    }
   } catch (error) {
-    console.log("Error updating unlike", error);
+    console.log("Error updating comment like", error);
     return {
       message: "request error",
     };
@@ -106,13 +116,6 @@ export async function createComment({
   parentCommentId,
 }) {
   try {
-    // content:
-    // roadmapId:
-    // commenterName:
-    // parentCommentId:
-    // hasChild:
-    // likes:
-    // likers:
     const res = await fetchInClient(
       `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/${roadmapId}/comment`,
       {
@@ -142,9 +145,34 @@ export async function createComment({
       return data.comment;
     }
   } catch (error) {
-    console.log("Error saving comment", error);
-    return {
-      message: "request error",
-    };
+    throw new Error(error);
+  }
+}
+
+export async function editComment({ content, commentId }) {
+  try {
+    const res = await fetchInClient(
+      `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/comments/${commentId}`,
+      {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content,
+        }),
+      }
+    );
+
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(error.message || "Failed to edit comment");
+    }
+
+    const data = await res.json();
+    return data.comment;
+  } catch (error) {
+    throw new Error(error);
   }
 }

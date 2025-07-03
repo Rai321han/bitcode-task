@@ -1,21 +1,30 @@
 "use client";
-
+import { BiComment, BiUpvote } from "react-icons/bi";
 import { getRoadById } from "@/actions/roadmaps";
 import Badge from "@/components/Badge";
-
-import CommentSection from "@/components/CommentSection";
-import LoadingCommentSection from "@/components/LoadingCommentSection";
-import MiletoneDetail from "@/components/MiletoneDetail";
+import { debounce } from "lodash";
+import CommentSection from "@/components/comment_component/CommentSection";
+import MiletoneDetail from "@/components/roadmap_component/MiletoneDetail";
 import { useQuery } from "@tanstack/react-query";
-import { Suspense, use } from "react";
+import { use } from "react";
+import Link from "next/link";
+import useSocketRoadmap from "@/hooks/socket_hooks/useSocketRoadmap";
+import useUpvoteRoadmap from "@/hooks/roadmap_hooks/useUpvoteRoadmap";
+import { useAuth } from "@/app/providers/AuthProvider";
+import useRemoveUpvoteRoadmap from "@/hooks/roadmap_hooks/useRemoveUpvoteRoadmap";
 
 export default function RoadmapDetailsPage({ params }) {
   const pageParams = use(params);
+  const { user } = useAuth();
   const roadmapId = pageParams.id;
+  const socket = useSocketRoadmap(roadmapId);
+  const { upvoteRoadmap } = useUpvoteRoadmap();
+  const { removeUpvoteRoadmap } = useRemoveUpvoteRoadmap();
 
   const { data: roadmap } = useQuery({
     queryKey: ["roadmap", roadmapId],
     queryFn: async () => await getRoadById({ id: roadmapId }),
+    refetchOnWindowFocus: false,
   });
 
   const option = {
@@ -24,17 +33,54 @@ export default function RoadmapDetailsPage({ params }) {
     year: "numeric",
   };
   let creationDate = "";
-  let lastModified = "";
   let milestones = [];
 
   if (roadmap) {
-    const { createdAt, updatedAt } = roadmap;
+    const { createdAt } = roadmap;
     creationDate = new Date(createdAt).toLocaleDateString("en-US", option);
-    lastModified = new Date(updatedAt).toLocaleDateString("en-US", option);
+
     milestones = roadmap.milestones;
   }
 
   if (!roadmap) return;
+
+  const hasVoted = roadmap.likers.includes(user.id);
+
+  let totalComments = roadmap.comments;
+
+  const handleUpvote = debounce(() => {
+    if (hasVoted) {
+      removeUpvoteRoadmap(
+        {
+          roadmapId,
+          upvoterId: user.id,
+        },
+        {
+          onSuccess: ({ roadmapId, upvoterId }) => {
+            socket.emit("remove_upvote_roadmap", {
+              roadmapId,
+              upvoterId,
+            });
+          },
+        }
+      );
+    } else {
+      upvoteRoadmap(
+        {
+          roadmapId,
+          upvoterId: user.id,
+        },
+        {
+          onSuccess: ({ roadmapId, upvoterId }) => {
+            socket.emit("upvote_roadmap", {
+              roadmapId,
+              upvoterId,
+            });
+          },
+        }
+      );
+    }
+  }, 200);
 
   return (
     <>
@@ -65,19 +111,48 @@ export default function RoadmapDetailsPage({ params }) {
                 <p>Created:</p>
                 <p>{creationDate}</p>
               </div>
-              <div>
-                <p>Last modified:</p>
-                <p>{lastModified}</p>
-              </div>
             </div>
           </div>
           <div className="flex flex-col gap-2 w-full lg:col-span-1 lg:row-start-2 lg:row-end-3 pl-3">
             <MiletoneDetail milestones={milestones} />
           </div>
-          <div className="lg:col-start-2 lg:col-end-3 lg:row-span-2">
-            {/* <Suspense fallback={<LoadingCommentSection />}> */}
-            <CommentSection roadmap={roadmap} />
-            {/* </Suspense> */}
+          <div className="lg:row-start-1 lg:row-end-3 lg:col-start-2 lg:col-end-3">
+            <div className="w-full rounded-sm  justify-between gap-3 ">
+              <div className="grid grid-cols-[1fr_2fr_1fr] justify-between w-full">
+                <button
+                  onClick={handleUpvote}
+                  className="hover:bg-gray-50 cursor-pointer flex flex-row items-center gap-1 border-1 border-gray-300 p-3 rounded-l-md"
+                >
+                  <BiUpvote
+                    className={`${
+                      hasVoted ? "fill-amber-500" : "fill-gray-500"
+                    }`}
+                  />
+                  <p
+                    className={`${
+                      hasVoted ? "text-amber-500" : "text-gray-500"
+                    }`}
+                  >
+                    {roadmap.upvotes}
+                  </p>
+                </button>
+                <Link
+                  href="#comment"
+                  className="hover:bg-gray-50 cursor-pointer text-center font-semibold text-gray-600 border-1 border-gray-300 p-3 "
+                >
+                  Comments
+                </Link>
+                <button className="hover:bg-gray-50 cursor-pointer flex flex-row items-center gap-1 border-1 border-gray-300 p-3 rounded-r-md">
+                  <BiComment className="fill-gray-500" />
+                  <p className="text-gray-500">{totalComments}</p>
+                </button>
+              </div>
+            </div>
+            <div className="">
+              {/* <Suspense fallback={<LoadingCommentSection />}> */}
+              <CommentSection roadmap={roadmap} socket={socket} />
+              {/* </Suspense> */}
+            </div>
           </div>
         </div>
       </div>

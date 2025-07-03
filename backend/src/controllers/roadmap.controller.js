@@ -1,9 +1,6 @@
 import Roadmap from "../models/roadmap.model.js";
 import { connectDB } from "../db/db.js";
-import { AppError } from "../utils/AppError.js";
-// @desc    Get all roadmaps
-// @route   GET /api/roadmaps
-// @access  Public
+
 export async function getRoadmaps(req, res, next) {
   try {
     await connectDB();
@@ -43,6 +40,39 @@ export async function getRoadmapById(req, res, next) {
     });
   } catch (error) {
     console.error("error", error);
+    next(error);
+  }
+}
+
+export async function likeRoadmap(req, res, next) {
+  const roadmapId = req.params.id;
+  const upvoterId = req.body.upvoterId;
+
+  try {
+    await connectDB();
+    await Roadmap.findByIdAndUpdate(roadmapId, {
+      $inc: { upvotes: 1 },
+      $addToSet: { likers: upvoterId },
+    });
+    return res.status(204).end();
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+}
+
+export async function unlikeRoadmap(req, res, next) {
+  const roadmapId = req.params.id;
+  const upvoterId = req.body.upvoterId;
+  try {
+    await connectDB();
+    await Roadmap.findByIdAndUpdate(roadmapId, {
+      $inc: { upvotes: -1 },
+      $pull: { likers: upvoterId },
+    });
+    return res.status(204).end();
+  } catch (error) {
+    console.error(error);
     next(error);
   }
 }

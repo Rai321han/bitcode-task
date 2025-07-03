@@ -1,4 +1,4 @@
-import AuthGuard from "@/components/AuthGuard";
+import AuthGuard from "@/components/auth_components/AuthGuard";
 import Navbar from "@/components/Navigation";
 
 export default function ProtectedLayout({ children }) {

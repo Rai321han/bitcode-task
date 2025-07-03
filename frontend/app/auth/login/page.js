@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@/app/providers/AuthProvider";
-import Loginform from "@/components/Loginform";
+import Loginform from "@/components/auth_components/Loginform";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";

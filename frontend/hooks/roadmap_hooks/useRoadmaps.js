@@ -30,5 +30,6 @@ export function useRoadmaps({ filter, sort }) {
       const data = await res.json();
       return data.roadmaps || [];
     },
+    refetchOnWindowFocus: false,
   });
 }

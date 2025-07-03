@@ -1,3 +1,46 @@
+// export const fetchInClient = async (url, options = {}) => {
+//   try {
+//     let res = await fetch(url, {
+//       ...options,
+//       credentials: "include",
+//     });
+
+//     // here I am getting user data
+
+//     if (res.status === 401) {
+//       const refreshRes = await fetch(
+//         `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/refresh`,
+//         {
+//           method: "POST",
+//           credentials: "include",
+//         }
+//       );
+
+//       if (refreshRes.ok) {
+//         // Retry the original request with new token
+//         res = await fetch(url, {
+//           ...options,
+//           credentials: "include",
+//         });
+//         return res;
+//       } else {
+//         // Refresh failed - clear tokens and redirect to login
+//         if (typeof window !== "undefined") {
+//           window.location.href = "/auth/login";
+//         }
+//         return null;
+//       }
+//     }
+//     return res;
+//   } catch (error) {
+//     console.error("Fetch error:", error);
+//     return null; // Return null instead of throwing to prevent crashes
+//   }
+// };
+
+// Store the refresh promise to avoid duplicate requests
+let refreshPromise = null;
+
 export const fetchInClient = async (url, options = {}) => {
   try {
     let res = await fetch(url, {
@@ -5,10 +48,20 @@ export const fetchInClient = async (url, options = {}) => {
       credentials: "include",
     });
 
-    // here I am getting user data
-
     if (res.status === 401) {
-      const refreshRes = await fetch(
+      // If a refresh is already in progress, wait for it
+      if (refreshPromise) {
+        await refreshPromise;
+        // Retry the original request after refresh completes
+        res = await fetch(url, {
+          ...options,
+          credentials: "include",
+        });
+        return res;
+      }
+
+      // Start a new refresh request and store the promise
+      refreshPromise = fetch(
         `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/refresh`,
         {
           method: "POST",
@@ -16,20 +69,31 @@ export const fetchInClient = async (url, options = {}) => {
         }
       );
 
+      const refreshRes = await refreshPromise;
+
       if (refreshRes.ok) {
+        // Retry the original request with new token
         res = await fetch(url, {
           ...options,
           credentials: "include",
         });
+        // Clear the refresh promise after completion
+        refreshPromise = null;
+        return res;
       } else {
+        // Refresh failed - clear tokens and redirect to login
+        refreshPromise = null;
+        if (typeof window !== "undefined") {
+          window.location.href = "/auth/login";
+        }
         return null;
       }
-      return res;
     }
-
     return res;
-  }catch (error) {
+  } catch (error) {
     console.error("Fetch error:", error);
-    return null; // Return null instead of throwing to prevent crashes
+    // Clear the refresh promise in case of error
+    refreshPromise = null;
+    return null;
   }
 };

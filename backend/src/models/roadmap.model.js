@@ -19,6 +19,11 @@ const roadmapSchema = new Schema(
       type: Number,
       default: 0,
     },
+    likers: [
+      {
+        type: Schema.Types.ObjectId,
+      },
+    ],
     milestones: [
       {
         title: {

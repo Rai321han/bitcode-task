@@ -123,7 +123,7 @@ export const verify = async function (req, res, next) {
     const accessToken = jwt.sign(
       { id: user._id, username: user.username },
       ACCESS_SECRET,
-      { expiresIn: "2m" }
+      { expiresIn: "15m" }
     );
     const refreshToken = jwt.sign(
       { id: user._id, username: user.username },
@@ -148,7 +148,7 @@ export const verify = async function (req, res, next) {
       secure: isProduction, // required for localhost
       sameSite: isProduction ? "None" : "lax", // required for localhost to allow cross-origin
       path: "/", // allow on all routes
-      maxAge: 2 * 60 * 1000, // 2 mins
+      maxAge: 15 * 60 * 1000, // 2 mins
     });
     res.status(200).json({
       code: "EMAIL_VERIFIED",
@@ -188,7 +188,7 @@ export const login = async function (req, res, next) {
     const accessToken = jwt.sign(
       { id: user._id, username: user.username },
       ACCESS_SECRET,
-      { expiresIn: "2m" }
+      { expiresIn: "15m" }
     );
     ///////////////////
     user.refreshToken = refreshToken;
@@ -209,7 +209,7 @@ export const login = async function (req, res, next) {
       secure: isProduction, // required for localhost
       sameSite: isProduction ? "None" : "lax", // required for localhost to allow cross-origin
       path: "/", // allow on all routes
-      maxAge: 2 * 60 * 1000, // 2 mins
+      maxAge: 15 * 60 * 1000, // 2 mins
     });
 
     res.status(200).json({
@@ -233,8 +233,6 @@ export const refresh = async function (req, res, next) {
     const decoded = jwt.verify(token, REFRESH_SECRET);
     await connectDB();
     const user = await User.findById(decoded.id);
-
-    console.log(user);
 
     if (!user || user.refreshToken !== token) {
       res.clearCookie("refreshToken", {
@@ -265,7 +263,7 @@ export const refresh = async function (req, res, next) {
       },
       ACCESS_SECRET,
       {
-        expiresIn: "2m",
+        expiresIn: "15m",
       }
     );
 
@@ -285,12 +283,40 @@ export const refresh = async function (req, res, next) {
       secure: isProduction, // required for localhost
       sameSite: isProduction ? "None" : "lax", // required for localhost to allow cross-origin
       path: "/", // allow on all routes
-      maxAge: 2 * 60 * 1000, // 2 mins
+      maxAge: 15 * 60 * 1000, // 2 mins
     });
 
     res.status(200).json({
       message: "new access token",
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// get user data -> /api/me
+export const getUser = async function (req, res, next) {
+  try {
+    const token = req.cookies?.accessToken;
+
+    if (!token) throw new AppError("Token not found /me", 401);
+
+    let decoded = null;
+    try {
+      decoded = jwt.verify(token, ACCESS_SECRET);
+    } catch (error) {
+      throw new AppError("Invalid token /me", 401);
+    }
+
+    // if (!decoded) throw new AppError("Invalid token /me", 401);
+
+    await connectDB();
+
+    const user = await User.findById(decoded.id);
+
+    if (!user) throw new AppError("User not found /me", 404);
+
+    res.json({ user: { id: user._id, username: user.username } });
   } catch (error) {
     next(error);
   }
@@ -329,29 +355,6 @@ export const logout = async function (req, res, next) {
     res.status(200).json({
       message: "Logged out successfully!",
     });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// get user data -> /api/me
-export const getUser = async function (req, res, next) {
-  try {
-    const token = req.cookies.accessToken;
-
-    if (!token) throw new AppError("Token not found /me", 401);
-
-    const decoded = jwt.verify(token, ACCESS_SECRET);
-
-    if (!decoded) throw new AppError("Invalid token /me", 401);
-
-    await connectDB();
-
-    const user = await User.findById(decoded.id);
-
-    if (!user) throw new AppError("User not found /me", 404);
-
-    res.json({ user: { id: user._id, username: user.username } });
   } catch (error) {
     next(error);
   }
