@@ -17,7 +17,7 @@ export default function Footer() {
       </ul>
       <div className=" lg:col-start-2 lg:col-end-3 col-span-1 text-center row-start-3 row-end-4 lg:row-span-1">
         <p className="text-xs sm:text-sm text-light-opacity dark:text-dark-opacity tracking-wide">
-          All rights reserved by Raihan@2025
+          All rights reserved @ 2025 Raihan Uddin
         </p>
       </div>
       <ul className="flex flex-row gap-3 col-span-1 lg:col-start-3 lg:col-end-4 lg:justify-end justify-center row-start-2 row-end-3 lg:row-span-1">

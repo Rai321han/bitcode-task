@@ -38,7 +38,7 @@ export default function Loginform() {
       {
         onSuccess: async () => {
           await refetch();
-          router.prefetch("/roadmaps");
+          router.push("/roadmaps");
         },
         onError: (err) => setFormError(err.message || "Login failed"),
       }

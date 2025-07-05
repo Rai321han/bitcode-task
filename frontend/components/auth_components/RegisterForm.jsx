@@ -47,10 +47,11 @@ export default function RegisterForm() {
 
     if (data.error) {
       setFormError(data.message);
+      setIsLoading(false);
       return;
     }
     setIsLoading(false);
-    router.prefetch(data.redirectTo);
+    router.push(data.redirectTo);
   };
 
   return (
