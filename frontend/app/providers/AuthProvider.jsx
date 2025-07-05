@@ -30,9 +30,13 @@ const fetchMe = async () => {
 export function AuthProvider({ children }) {
   const router = useRouter();
   const pathname = usePathname();
-  const isPublicRoute = ["/", "/auth/login", "/auth/register"].includes(
-    pathname
-  );
+  const isPublicRoute = [
+    "/",
+    "/auth/login",
+    "/auth/register",
+    "/verify-email",
+    "/verify-reminder",
+  ].includes(pathname);
   const {
     data: user,
     isLoading,
