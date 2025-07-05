@@ -107,7 +107,6 @@ To get a local copy of the project and to start running the application, you can
    cd bitcode-task
    ```
 
-````
 
 2. Setup Environment Variables
 
@@ -248,4 +247,4 @@ Don't forget to give the project a star! Thanks again!
 [Gemini]: https://img.shields.io/badge/Gemini-white?style=for-the-badge&logo=googlegemini&color=black
 [Gemini-url]: https://ai.google.dev/
 [Firebase-url]: https://firebase.google.com
-````
+
