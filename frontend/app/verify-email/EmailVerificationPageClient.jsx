@@ -8,7 +8,6 @@ export default function EmailVerificationPage() {
   const token = params.get("token");
   const router = useRouter();
 
-  const { refetch } = useAuth();
 
   useEffect(() => {
     async function verify() {
@@ -31,8 +30,10 @@ export default function EmailVerificationPage() {
           return;
         }
 
-        await refetch();
-        router.push("/roadmaps");
+        // Give cookies time to register in browser
+        setTimeout(() => {
+          router.push("/roadmaps");
+        }, 100);
       } catch (err) {
         console.error("Error: ", err);
       }
