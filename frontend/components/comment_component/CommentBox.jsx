@@ -47,7 +47,9 @@ export default function CommentBox({
           value={text}
           placeholder="share your throught"
           onChange={handleInputChange}
-          className="w-full p-3 rounded placeholder:text-light-opacity dark:placeholder:text-dark-opacity break-words placeholder:text-sm resize-none overflow-y-auto outline-none text-sm text-light-body dark:text-dark-body"
+          className="w-full p-3 rounded placeholder:text-light-opacity dark:placeholder:text-dark-opacity break-words placeholder:text-sm resize-none [&::-webkit-scrollbar]:w-1
+  [&::-webkit-scrollbar-track]:bg-light-icon dark:[&::-webkit-scrollbar-track]:bg-dark-icon
+  [&::-webkit-scrollbar-thumb]:bg-light-fg dark:[&::-webkit-scrollbar-thumb]:bg-dark-fg overflow-y-auto outline-none text-sm text-light-body dark:text-dark-body"
           style={{ height: "auto" }}
           rows={1}
           onKeyDown={(e) => {
