@@ -7,7 +7,7 @@ export default function VerifyReminderPageClient() {
 
   return (
     <div className="flex flex-row items-center justify-center py-10 bg-light-bg dark:bg-dark-bg w-screen h-screen">
-      <div className="rounded-md bg-text-fg dark:bg-dark-fg p-5 flex flex-col items-center justify-center max-w-[900px]">
+      <div className="rounded-md bg-light-fg dark:bg-dark-fg p-5 flex flex-col items-center justify-center max-w-[900px] ">
         <h1 className="text-2xl font-bold text-light-title dark:text-dark-title">
           Verify Your Email
         </h1>

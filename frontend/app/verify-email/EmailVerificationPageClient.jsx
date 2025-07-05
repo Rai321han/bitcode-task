@@ -22,7 +22,7 @@ export default function EmailVerificationPage() {
 
         if (!res.ok) {
           console.error(data.message);
-       
+
           alert("Email verification failed: " + data.message);
           router.push("/error");
           return;
@@ -38,7 +38,7 @@ export default function EmailVerificationPage() {
   }, [token, router]);
 
   return (
-    <div className="text-center py-10 text-light-body dark:text-dark-body">
+    <div className="bg-light-bg dark:bg-dark-bg flex flex-row items-center justify-center py-10 text-light-body dark:text-dark-body w-screen h-screen">
       <h1 className="text-xl font-bold">Verifying your email...</h1>
     </div>
   );
