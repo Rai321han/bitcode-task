@@ -30,7 +30,7 @@ export default function EmailVerificationPage() {
 
         router.push("/roadmaps");
       } catch (err) {
-        console.log("Error: ", err);
+        console.error("Error: ", err);
       }
     }
 

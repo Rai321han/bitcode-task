@@ -72,9 +72,11 @@ export const register = async function (req, res, next) {
     const { username, email, password } = req.body;
 
     await connectDB();
-    let exists = await User.findOne({ email });
+    let user = await User.findOne({ email });
 
-    if (exists) throw new AppError("User already exists", 409);
+    if (!user.isVerified) throw new AppError("Please verify your email", 409);
+
+    if (user) throw new AppError("User already exists", 409);
 
     // hashing the password
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -175,7 +177,7 @@ export const login = async function (req, res, next) {
 
     if (!user) throw new AppError("Invalid credentials", 401);
 
-    if (!user.isVerified) throw new AppError("Email is not verified", 401);
+    if (!user.isVerified) throw new AppError("Please verify your email", 401);
 
     // verify password
     const isMatched = await bcrypt.compare(password, user.password);

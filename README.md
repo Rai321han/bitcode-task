@@ -12,7 +12,6 @@
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
@@ -34,7 +33,7 @@ A collaborative platform where users can explore predefined roadmaps and engage 
 
 ## 🚀 Live Demo
 
-🔗 [Try it now](https://bitcode-task.vercel.app/)
+🔗 [🚀 LIVE LINK](https://bitcode-task.vercel.app/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -78,7 +77,7 @@ Major frameworks/libraries used to built this site:
 
 | Layer      | Tech                                     |
 | ---------- | ---------------------------------------- |
-| Frontend   | Next.js 15, Tailwind CSS, React Query    |
+| Frontend   | Next.js 15, Tailwind CSS, Tanstack Query |
 | Backend    | Express.js, MongoDB, Mongoose            |
 | Auth       | JWT (access & refresh), HttpOnly Cookies |
 | Deployment | Vercel (frontend), Render (backend)      |
@@ -106,22 +105,22 @@ To get a local copy of the project and to start running the application, you can
    Create .env.local for frontend
 
    ```sh
-    NEXT_PUBLIC_BASE_API_URL=http://localhost:5100
+    NEXT_PUBLIC_BASE_API_URL=http://localhost:5100 'or your api endpoint'
    ```
 
    Create .env for backend
 
    ```sh
-   PORT=backend server port number
-   MONGODB_URI=mongodb URI
-   ACCESS_SECRET=secret for signing access token
-   REFRESH_SECRET=secret for signing refresh token
-   EMAIL_USER=your email for sending verification email to user
-   EMAIL_PASS=your google app password
-   GOOGLE_REFRESH_TOKEN=your google refresh token
-   GOOGLE_CLIENT_SECRET=your google client secret
-   GOOGLE_CLIENT_ID=your google client ID
-   FRONTEND_URL=your frontend url
+   PORT='backend server port number'
+   MONGODB_URI='mongodb URI'
+   ACCESS_SECRET='secret for signing access token'
+   REFRESH_SECRET='secret for signing refresh token'
+   EMAIL_USER='your email for sending verification email to user'
+   EMAIL_PASS='your google app password'
+   GOOGLE_REFRESH_TOKEN='your google refresh token'
+   GOOGLE_CLIENT_SECRET='your google client secret'
+   GOOGLE_CLIENT_ID='your google client ID'
+   FRONTEND_URL='your frontend url'
    ```
 
 3. Install Dependencies
@@ -179,9 +178,9 @@ To get a local copy of the project and to start running the application, you can
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-# 🔐 Security Highlights
+## Security Highlights
 
-- Access Token expires quickly (e.g., 2 mins)
+- Access Token expires quickly (e.g., 15 mins)
 - Refresh Token stored securely in HttpOnly cookies
 - Refresh Token Rotation to prevent token replay attacks
 

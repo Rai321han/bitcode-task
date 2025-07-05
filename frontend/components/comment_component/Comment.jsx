@@ -30,6 +30,7 @@ export default function Comment({
   const { data: comment, status: commentStatus } = useQuery({
     queryKey: ["comment", commentId],
     queryFn: async () => await getCommentById({ commentId }),
+    initialData: () => queryClient.getQueryData(["comment", commentId]),
     enabled: !!commentId && !isOptimistic,
     refetchOnWindowFocus: false,
   });
