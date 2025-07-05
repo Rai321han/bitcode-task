@@ -59,7 +59,7 @@ export function FormInput({ children, className, ...rest }) {
 
 export function FormButton({ className, children, disabled, ...rest }) {
   const disabledStyle = disabled
-    ? "bg-dark-bg dark:bg-light-bd border-b-dark-fg dark:border-b-light-fg text-dark-title dark:text-light-title cursor-not-allowed border-b-l"
+    ? "bg-dark-bg dark:bg-light-bg border-b-dark-fg dark:border-b-light-fg text-dark-title dark:text-light-title cursor-not-allowed border-b-l"
     : "";
   return (
     <button
