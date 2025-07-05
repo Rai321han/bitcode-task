@@ -38,7 +38,7 @@ export default function EmailVerificationPage() {
   }, [token, router]);
 
   return (
-    <div className="text-center py-10">
+    <div className="text-center py-10 text-light-body dark:text-dark-body">
       <h1 className="text-xl font-bold">Verifying your email...</h1>
     </div>
   );

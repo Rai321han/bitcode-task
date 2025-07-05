@@ -46,7 +46,7 @@ export default function RegisterForm() {
     const data = await register({ email, password, username });
 
     if (data.error) {
-      setFormError("Something is wrong");
+      setFormError(data.message);
       return;
     }
     setIsLoading(false);
