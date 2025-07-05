@@ -14,14 +14,16 @@ export default function RegisterPage() {
     }
   }, [user, router]);
   return (
-    <div className="w-full flex flex-row min-h-[90vh] items-center justify-center">
+    <div className="w-full flex flex-row min-h-[90vh] items-center justify-center bg-light-bg dark:bg-dark-bg">
       <div className="flex flex-col items-center">
         <RegisterForm />
         <div className="text-sm flex flex-row gap-2">
-          <span className="text-gray-500">Already have an account?</span>
+          <span className="text-light-body dark:text-dark-body">
+            Already have an account?
+          </span>
           <Link
             href={"/auth/login"}
-            className="text-orange-800 hover:underline-offset-2 hover:underline"
+            className="text-primary hover:underline-offset-2 hover:underline"
           >
             Sign in
           </Link>

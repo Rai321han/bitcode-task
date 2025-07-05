@@ -43,16 +43,6 @@ export default function RegisterForm() {
       return;
     }
 
-    // register(
-    //   { email, password, username },
-    //   {
-    //     onSuccess: async () => {
-    //       await refetch();
-    //       router.push("/roadmaps");
-    //     },
-    //     onError: (err) => setFormError(err.message || "Registrations failed"),
-    //   }
-    // );
     const data = await register({ email, password, username });
 
     if (data.error) {
