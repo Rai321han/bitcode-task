@@ -18,7 +18,7 @@ export default function Navbar() {
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row gap-3 items-center">
             <div className="p-2 px-4 font-extrabold text-primary bg-light-bg  dark:bg-dark">
-              bitcode.
+              roadmap.
             </div>
             {
               <div className="hidden md:block h-full border-x-1 border-x-light-line dark:border-dark-line">

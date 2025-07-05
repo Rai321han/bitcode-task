@@ -10,7 +10,7 @@ export default function Home() {
         <div className="flex flex-row justify-between items-stretch">
           <div className="flex flex-row gap-3 items-center">
             <div className="py-1 sm:py-2 px-4 font-extrabold text-primary bg-light-bg dark:bg-dark-bg">
-              bitcode.
+              roadmap.
             </div>
           </div>
           <div className="flex flex-row items-stretch text-xs sm:text-sm">

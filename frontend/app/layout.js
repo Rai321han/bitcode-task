@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "BitCodeTask",
-  description: "Manage your task with BitCodeTask.",
+  title: "Roadmap App",
+  description: "Manage your task with Roadmap App.",
 };
 
 export default function RootLayout({ children }) {
