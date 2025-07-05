@@ -37,10 +37,10 @@ A collaborative platform where users can explore predefined roadmaps and engage 
 
 ### Demo Login - you can register too
 
-````sh
+```sh
 email: demo@gmail.com
 password: testing123
-``
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -105,6 +105,8 @@ To get a local copy of the project and to start running the application, you can
    ```sh
    git clone https://github.com/Rai321han/bitcode-task.git
    cd bitcode-task
+   ```
+
 ````
 
 2. Setup Environment Variables
@@ -246,3 +248,4 @@ Don't forget to give the project a star! Thanks again!
 [Gemini]: https://img.shields.io/badge/Gemini-white?style=for-the-badge&logo=googlegemini&color=black
 [Gemini-url]: https://ai.google.dev/
 [Firebase-url]: https://firebase.google.com
+````
