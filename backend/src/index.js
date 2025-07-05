@@ -51,49 +51,49 @@ const io = new SocketServer(server, {
 
 io.on("connection", (socket) => {
   // roadmap joining
-  socket.on("join_roadmap", (roadmapId) => {
-    socket.join(roadmapId);
+  socket.on("join_feature", (featureId) => {
+    socket.join(featureId);
   });
 
   // making new comment
-  socket.on("new_comment", ({ roadmapId, comment }) => {
-    socket.to(roadmapId).emit("new_comment", comment);
+  socket.on("new_comment", ({ featureId, comment }) => {
+    socket.to(featureId).emit("new_comment", comment);
   });
 
   // like comment
-  socket.on("edit_comment", ({ roadmapId, comment }) => {
-    socket.to(roadmapId).emit("edit_comment", comment);
+  socket.on("edit_comment", ({ featureId, comment }) => {
+    socket.to(featureId).emit("edit_comment", comment);
   });
 
   // like comment
-  socket.on("like_comment", ({ roadmapId, commentId, userId }) => {
-    socket.to(roadmapId).emit("like_comment", { commentId, userId });
+  socket.on("like_comment", ({ featureId, commentId, userId }) => {
+    socket.to(featureId).emit("like_comment", { commentId, userId });
   });
 
   // like comment
-  socket.on("unlike_comment", ({ roadmapId, commentId, userId }) => {
-    socket.to(roadmapId).emit("unlike_comment", { commentId, userId });
+  socket.on("unlike_comment", ({ featureId, commentId, userId }) => {
+    socket.to(featureId).emit("unlike_comment", { commentId, userId });
   });
 
   // delete comment
-  socket.on("delete_comment", ({ roadmapId, comment }) => {
-    socket.to(roadmapId).emit("delete_comment", { comment });
+  socket.on("delete_comment", ({ featureId, comment }) => {
+    socket.to(featureId).emit("delete_comment", { comment });
   });
 
   // upvote roadmap
-  socket.on("upvote_roadmap", ({ roadmapId, upvoterId }) => {
-    socket.to(roadmapId).emit("upvote_roadmap", { roadmapId, upvoterId });
+  socket.on("upvote_feature", ({ featureId, upvoterId }) => {
+    socket.to(featureId).emit("upvote_feature", { featureId, upvoterId });
   });
 
   // upvote roadmap
-  socket.on("remove_upvote_roadmap", ({ roadmapId, upvoterId }) => {
+  socket.on("remove_upvote_feature", ({ featureId, upvoterId }) => {
     socket
-      .to(roadmapId)
-      .emit("remove_upvote_roadmap", { roadmapId, upvoterId });
+      .to(featureId)
+      .emit("remove_upvote_feature", { featureId, upvoterId });
   });
 
-  socket.on("leave_roadmap", (roadmapId) => {
-    socket.leave(roadmapId);
+  socket.on("leave_feature", (featureId) => {
+    socket.leave(featureId);
   });
 
   // on disconnect

@@ -11,9 +11,9 @@ import {
 import { protect } from "../middlewares/auth.middleware.js";
 
 const comments = express.Router();
-comments.get("/roadmaps/:roadmapId/comments", protect, getComments);
+comments.get("/roadmap/:featureId/comments", protect, getComments);
 comments.get("/comment/:commentId", protect, getCommentById);
-comments.post("/:roadmapId/comment", protect, createComment);
+comments.post("/:featureId/comment", protect, createComment);
 comments.patch("/comments/:commentId/like", protect, likeComment);
 comments.patch("/comments/:commentId/unlike", protect, unlikeComment);
 comments.patch("/comments/:commentId", protect, editComment);

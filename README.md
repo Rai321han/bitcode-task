@@ -167,10 +167,10 @@ To get a local copy of the project and to start running the application, you can
    │   ├── .next                # Next.js build output (auto-generated)
    │   ├── public               # Static assets (images, icons, etc.)
    │   ├── app                  # App directory for routing (Next.js App Router)
-   │   ├── actions              # Server-side or client-side actions (if using Next.js 13+)
+   │   ├── actions              # client-side actions
    │   ├── components           # Reusable UI components
    │   ├── error                # Custom error pages (e.g., 404, 500)
-   │   ├── hooks                # Custom React hooks
+   │   ├── hooks                # Custom React hooks (auth hooks, feature hooks, comment hooks)
    │   ├── libs                 # External libraries or API utilities
    │   └── package.json
 

@@ -2,22 +2,22 @@ import mongoose from "mongoose";
 import { connectDB } from "../db/db.js";
 import Comments from "../models/comments.model.js";
 import Comment from "../models/comments.model.js";
-import Roadmap from "../models/roadmap.model.js";
+import Feature from "../models/feature.model.js";
 
 import { AppError } from "../utils/AppError.js";
 
 export async function getComments(req, res, next) {
   try {
     await connectDB();
-    const roadmapId = req.params?.roadmapId;
-    if (!roadmapId)
+    const featureId = req.params?.featureId;
+    if (!featureId)
       return res.json({
         success: false,
-        message: "Roadmap id not found",
+        message: "Feature id not found",
       });
     const filter = {};
-    const roadmapObjectId = new mongoose.Types.ObjectId(roadmapId);
-    filter.roadmapId = roadmapObjectId;
+    const featureObject = new mongoose.Types.ObjectId(featureId);
+    filter.featureId = featureObject;
     const parentCommentId = req.query.parentCommentId;
     filter.parentCommentId =
       parentCommentId === "null"
@@ -112,15 +112,15 @@ export async function createComment(req, res, next) {
     commenterName,
     parentComment = null,
   } = req.body;
-  const roadmapId = req.params.roadmapId;
+  const featureId = req.params.featureId;
 
-  if (!commenterId || !roadmapId || !commenterName)
+  if (!commenterId || !featureId || !commenterName)
     throw new AppError("missing required fields", 400);
 
   try {
     //---- A COMMENT ----
     // content:
-    // roadmapId:
+    // featureId:
     // commenterName:
     // parentCommentId:
     // hasChild:
@@ -135,7 +135,7 @@ export async function createComment(req, res, next) {
       : [];
     const newComment = await Comment.create({
       content,
-      roadmapId,
+      featureId,
       commenterName,
       commenterId,
       parentCommentId,
@@ -151,7 +151,7 @@ export async function createComment(req, res, next) {
       });
     }
 
-    const obj = await Roadmap.findByIdAndUpdate(roadmapId, {
+    const obj = await Feature.findByIdAndUpdate(featureId, {
       $inc: { comments: 1 },
     });
 
@@ -195,7 +195,7 @@ export async function editComment(req, res, next) {
 export async function deleteComment(req, res, next) {
   try {
     const { comment } = req.body;
-    if (!comment || !comment._id || !comment.roadmapId)
+    if (!comment || !comment._id || !comment.featureId)
       throw new AppError("Invalid comment payload", 400);
 
     await connectDB();
@@ -212,8 +212,8 @@ export async function deleteComment(req, res, next) {
       ],
     });
 
-    // Decrease roadmap comment count
-    await Roadmap.findByIdAndUpdate(comment.roadmapId, {
+    // Decrease Feature comment count
+    await Feature.findByIdAndUpdate(comment.featureId, {
       $inc: { comments: -result.deletedCount },
     });
 

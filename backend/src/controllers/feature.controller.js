@@ -1,7 +1,7 @@
-import Roadmap from "../models/roadmap.model.js";
+import Feature from "../models/feature.model.js";
 import { connectDB } from "../db/db.js";
 
-export async function getRoadmaps(req, res, next) {
+export async function getFeatures(req, res, next) {
   try {
     await connectDB();
     const filters = req.query?.filter || [];
@@ -11,16 +11,16 @@ export async function getRoadmaps(req, res, next) {
 
     if (filters.length > 0) query.status = { $in: filters };
 
-    let cursor = Roadmap.find(query);
+    let cursor = Feature.find(query);
 
     if (sort === "highest-voted") cursor = cursor.sort({ upvotes: -1 });
     else if (sort === "lowest-voted") cursor = cursor.sort({ upvotes: 1 });
 
-    let roadmaps = await cursor;
+    let features = await cursor;
 
     return res.status(200).json({
       success: true,
-      roadmaps: roadmaps || [],
+      features: features || [],
     });
   } catch (error) {
     console.error("error", error);
@@ -28,15 +28,15 @@ export async function getRoadmaps(req, res, next) {
   }
 }
 
-export async function getRoadmapById(req, res, next) {
-  const roadmapId = req.params.id;
+export async function getFeatureById(req, res, next) {
+  const featureId = req.params.id;
 
   try {
     await connectDB();
-    const roadmap = await Roadmap.findById(roadmapId);
+    const feature = await Feature.findById(featureId);
     return res.status(200).json({
       success: true,
-      roadmap,
+      feature,
     });
   } catch (error) {
     console.error("error", error);
@@ -44,13 +44,13 @@ export async function getRoadmapById(req, res, next) {
   }
 }
 
-export async function likeRoadmap(req, res, next) {
-  const roadmapId = req.params.id;
+export async function likeFeature(req, res, next) {
+  const featureId = req.params.id;
   const upvoterId = req.body.upvoterId;
 
   try {
     await connectDB();
-    await Roadmap.findByIdAndUpdate(roadmapId, {
+    await Feature.findByIdAndUpdate(featureId, {
       $inc: { upvotes: 1 },
       $addToSet: { likers: upvoterId },
     });
@@ -61,12 +61,12 @@ export async function likeRoadmap(req, res, next) {
   }
 }
 
-export async function unlikeRoadmap(req, res, next) {
-  const roadmapId = req.params.id;
+export async function unlikeFeature(req, res, next) {
+  const featureId = req.params.id;
   const upvoterId = req.body.upvoterId;
   try {
     await connectDB();
-    await Roadmap.findByIdAndUpdate(roadmapId, {
+    await Feature.findByIdAndUpdate(featureId, {
       $inc: { upvotes: -1 },
       $pull: { likers: upvoterId },
     });

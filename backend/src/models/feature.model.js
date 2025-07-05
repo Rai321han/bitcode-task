@@ -1,8 +1,12 @@
 import mongoose, { Schema } from "mongoose";
 
-const roadmapSchema = new Schema(
+const featureSchema = new Schema(
   {
     feature: {
+      type: String,
+      required: true,
+    },
+    description: {
       type: String,
       required: true,
     },
@@ -41,5 +45,5 @@ const roadmapSchema = new Schema(
   { timestamps: true }
 );
 
-const Roadmap = mongoose.model("Roadmap", roadmapSchema);
-export default Roadmap;
+const Feature = mongoose.model("Feature", featureSchema);
+export default Feature;
