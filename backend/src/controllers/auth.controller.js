@@ -174,6 +174,9 @@ export const login = async function (req, res, next) {
     const user = await User.findOne({ email }).select("+password"); // explicitly returning password
 
     if (!user) throw new AppError("Invalid credentials", 401);
+
+    if (!user.isVerified) throw new AppError("Email is not verified", 401);
+
     // verify password
     const isMatched = await bcrypt.compare(password, user.password);
     if (!isMatched) throw new AppError("Invalid credentials", 401);
