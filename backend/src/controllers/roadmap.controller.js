@@ -7,8 +7,6 @@ export async function getRoadmaps(req, res, next) {
     const filters = req.query?.filter || [];
     const sort = req.query?.sort || "";
 
-    console.log("params", { filters, sort });
-
     let query = {};
 
     if (filters.length > 0) query.status = { $in: filters };
@@ -19,7 +17,6 @@ export async function getRoadmaps(req, res, next) {
     else if (sort === "lowest-voted") cursor = cursor.sort({ upvotes: 1 });
 
     let roadmaps = await cursor;
-    console.log("roadmaps", roadmaps);
 
     return res.status(200).json({
       success: true,
