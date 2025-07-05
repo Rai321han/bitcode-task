@@ -22,11 +22,10 @@ export default function RoadmapsPage({ searchParams }) {
           </div>
         </div>
 
-        {/* <div className="grid col-auto bg-light-fg dark:bg-dark-fg rounded-lg p-5"> */}
         <Suspense fallback={<RoadmapFallback />}>
           <RoadmapList query={query} />
         </Suspense>
-        {/* </div> */}
+
       </div>
     </div>
   );

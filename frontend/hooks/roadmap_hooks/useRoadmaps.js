@@ -7,6 +7,10 @@ export function useRoadmaps({ filter, sort }) {
   filter.forEach((f) => params.append("filter", f));
   sort.forEach((s) => params.append("sort", s));
 
+  console.log({
+    filter,
+    sort,
+  });
   return useQuery({
     queryKey: ["roadmaps", filter, sort],
     queryFn: async () => {
@@ -16,7 +20,6 @@ export function useRoadmaps({ filter, sort }) {
         }/api/roadmaps?${params.toString()}`,
         {
           method: "GET",
-          // credentials: "include", // Send HttpOnly cookies
           cache: "no-store",
         }
       );
