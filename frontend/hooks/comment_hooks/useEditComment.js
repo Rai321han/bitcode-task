@@ -29,7 +29,7 @@ export default function useEditComment() {
 
       //
       if (!comment.parentCommentId) {
-        const commentsKey = ["comments", comment.roadmapId];
+        const commentsKey = ["comments", comment.featureId];
         queryClient.setQueryData(commentsKey, (old = []) =>
           old.map((c) =>
             c._id === optimisticComment._id ? optimisticComment : c
@@ -55,8 +55,8 @@ export default function useEditComment() {
         queryClient.setQueryData(context.commentKey, context.previous);
 
         const comment = context.previous;
-        if (comment?.roadmapId && !comment?.parentCommentId) {
-          queryClient.setQueryData(["comments", comment.roadmapId], (old) =>
+        if (comment?.featureId && !comment?.parentCommentId) {
+          queryClient.setQueryData(["comments", comment.featureId], (old) =>
             Array.isArray(old)
               ? old.map((c) => (c._id === comment._id ? comment : c))
               : []
@@ -81,7 +81,7 @@ export default function useEditComment() {
       }
 
       if (!savedComment.parentCommentId) {
-        const commentsKey = ["comments", savedComment.roadmapId];
+        const commentsKey = ["comments", savedComment.featureId];
         queryClient.setQueryData(commentsKey, (old = []) =>
           old.map((c) => (c._id === savedComment._id ? savedComment : c))
         );

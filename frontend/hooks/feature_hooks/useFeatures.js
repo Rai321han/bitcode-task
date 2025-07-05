@@ -1,20 +1,18 @@
-// hooks/useRoadmaps.js
 import { fetchInClient } from "@/libs/fetchInClient";
 import { useQuery } from "@tanstack/react-query";
 
-export function useRoadmaps({ filter, sort }) {
+export function useFeatures({ filter, sort }) {
   const params = new URLSearchParams();
   filter.forEach((f) => params.append("filter", f));
   sort.forEach((s) => params.append("sort", s));
 
-
   return useQuery({
-    queryKey: ["roadmaps", filter, sort],
+    queryKey: ["features", filter, sort],
     queryFn: async () => {
       const res = await fetchInClient(
         `${
           process.env.NEXT_PUBLIC_BASE_API_URL
-        }/api/roadmaps?${params.toString()}`,
+        }/api/roadmap?${params.toString()}`,
         {
           method: "GET",
           cache: "no-store",
@@ -23,12 +21,12 @@ export function useRoadmaps({ filter, sort }) {
 
       if (!res.ok) {
         throw new Error(
-          `Failed to fetch roadmaps: ${res.status} ${res.statusText}`
+          `Failed to fetch features: ${res.status} ${res.statusText}`
         );
       }
 
       const data = await res.json();
-      return data.roadmaps || [];
+      return data.features || [];
     },
     refetchOnWindowFocus: false,
   });

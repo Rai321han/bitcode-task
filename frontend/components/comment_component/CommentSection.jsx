@@ -18,9 +18,9 @@ import { getComments } from "@/actions/comments";
 import useEditComment from "@/hooks/comment_hooks/useEditComment";
 import useDeleteComment from "@/hooks/comment_hooks/useDeleteComment";
 
-export default function CommentSection({ roadmap, socket }) {
+export default function CommentSection({ feature, socket }) {
   const [selectComment, setSelectComment] = useState(null);
-  // const socket = useSocketComment(roadmap._id);
+  // const socket = useSocketComment(feature._id);
   const { user } = useAuth();
   const { likeComment } = useLikeComment();
   const { unlikeComment } = useUnlikeComment();
@@ -33,11 +33,11 @@ export default function CommentSection({ roadmap, socket }) {
     status,
     isError,
   } = useQuery({
-    queryKey: ["comments", roadmap._id],
+    queryKey: ["comments", feature._id],
     queryFn: async () =>
-      await getComments({ roadmapId: roadmap._id, parentCommentId: null }),
+      await getComments({ featureId: feature._id, parentCommentId: null }),
     retry: 2,
-    enabled: !!roadmap._id,
+    enabled: !!feature._id,
     refetchOnWindowFocus: false,
   });
 
@@ -60,7 +60,7 @@ export default function CommentSection({ roadmap, socket }) {
       {
         onSuccess: ({ commentId, likerId }) => {
           socket.emit("like_comment", {
-            roadmapId: roadmap._id,
+            featureId: feature._id,
             commentId,
             likerId,
           });
@@ -78,7 +78,7 @@ export default function CommentSection({ roadmap, socket }) {
       {
         onSuccess: ({ commentId, unlikerId }) => {
           socket.emit("unlike_comment", {
-            roadmapId: roadmap._id,
+            featureId: feature._id,
             commentId,
             unlikerId,
           });
@@ -90,14 +90,14 @@ export default function CommentSection({ roadmap, socket }) {
   const handleCommentSubmit = debounce((text) => {
     makeComment(
       {
-        roadmapId: roadmap._id,
+        featureId: feature._id,
         content: text,
         parentComment: selectComment || null,
       },
       {
         onSuccess: (savedComment) => {
           socket.emit("new_comment", {
-            roadmapId: savedComment.roadmapId,
+            featureId: savedComment.featureId,
             comment: savedComment,
           });
           setSelectComment(null);
@@ -115,7 +115,7 @@ export default function CommentSection({ roadmap, socket }) {
       {
         onSuccess: (savedComment) => {
           socket.emit("new_comment", {
-            roadmapId: savedComment.roadmapId,
+            featureId: savedComment.featureId,
             comment: savedComment,
           });
           setSelectComment(null);
@@ -133,7 +133,7 @@ export default function CommentSection({ roadmap, socket }) {
         onSuccess: (comment) => {
           socket.emit("delete_comment", {
             comment,
-            roadmapId: comment.roadmapId,
+            featureId: comment.featureId,
           });
         },
       }

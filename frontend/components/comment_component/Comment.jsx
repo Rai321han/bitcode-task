@@ -6,6 +6,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import CommentBox from "./CommentBox";
+import getTimeString from "@/libs/timeFormat";
 
 export default function Comment({
   nested,
@@ -43,10 +44,10 @@ export default function Comment({
     queryKey: ["comments", commentId],
     queryFn: () =>
       getComments({
-        roadmapId: comment?.roadmapId,
+        featureId: comment?.featureId,
         parentCommentId: commentId,
       }),
-    enabled: showReplies && !!comment?.roadmapId, // only run when button is clicked and roadmapId is available
+    enabled: showReplies && !!comment?.featureId, // only run when button is clicked and featureId is available
     refetchOnWindowFocus: false,
   });
 
@@ -111,6 +112,8 @@ export default function Comment({
     );
   }
 
+  const time = getTimeString(comment.createdAt);
+
   return (
     <div className={`flex flex-col justify-end ${!comment.hasChild && "mb-3"}`}>
       {isEditMode === false && (
@@ -124,36 +127,41 @@ export default function Comment({
                 {comment.commenterName}
               </div>
             </div>
-            {user.id === comment.commenterId && (
-              <div className="rounded-full relative">
-                <div
-                  ref={optionDotRef}
-                  className="p-1"
-                  onClick={() => setisOptionOpen((prev) => !prev)}
-                >
-                  <HiOutlineDotsHorizontal className="fill-gray-500 cursor-pointer" />
-                </div>
-                {isOptionOpen && (
-                  <div
-                    ref={optionMenuRef}
-                    className="bg-transparent flex flex-col absolute top-6 right-0 shadow-md rounded-md text-light-opacity dark:text-dark-opacity"
-                  >
-                    <div
-                      onClick={() => setIsEditMode(true)}
-                      className="text-xs md:text-sm hover:bg-light-hover dark:hover:bg-dark-hover bg-light-fg dark:bg-dark-fg cursor-pointer px-2 py-1 rounded-t-md"
-                    >
-                      edit
-                    </div>
-                    <div
-                      onClick={() => onDelete(comment)}
-                      className="text-xs md:text-sm  hover:bg-light-hover dark:hover:bg-dark-hover bg-light-fg dark:bg-dark-fg cursor-pointer  px-2 py-1 rounded-b-md"
-                    >
-                      delete
-                    </div>
-                  </div>
-                )}
+            <div className="flex flex-row gap-2">
+              <div className="text-xs text-light-icon dark:text-dark-icon">
+                {time}
               </div>
-            )}
+              {user.id === comment.commenterId && (
+                <div className="rounded-full relative">
+                  <div
+                    ref={optionDotRef}
+                    className="p-1"
+                    onClick={() => setisOptionOpen((prev) => !prev)}
+                  >
+                    <HiOutlineDotsHorizontal className="fill-gray-500 cursor-pointer" />
+                  </div>
+                  {isOptionOpen && (
+                    <div
+                      ref={optionMenuRef}
+                      className="bg-transparent flex flex-col absolute top-6 right-0 shadow-md rounded-md text-light-opacity dark:text-dark-opacity"
+                    >
+                      <div
+                        onClick={() => setIsEditMode(true)}
+                        className="text-xs md:text-sm hover:bg-light-hover dark:hover:bg-dark-hover bg-light-fg dark:bg-dark-fg cursor-pointer px-2 py-1 rounded-t-md"
+                      >
+                        edit
+                      </div>
+                      <div
+                        onClick={() => onDelete(comment)}
+                        className="text-xs md:text-sm  hover:bg-light-hover dark:hover:bg-dark-hover bg-light-fg dark:bg-dark-fg cursor-pointer  px-2 py-1 rounded-b-md"
+                      >
+                        delete
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
           <div className="break-all">{comment.content}</div>
           <div className="flex flex-row text-xs text-light-opacity dark:text-dark-opacity justify-end gap-3">

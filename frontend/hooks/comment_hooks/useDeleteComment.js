@@ -28,21 +28,21 @@ export default function useDeleteComment() {
     mutationFn: async ({ comment }) => await deleteComment({ comment }),
 
     onMutate: async ({ comment }) => {
-      const roadmapKey = ["roadmap", comment.roadmapId];
+      const featureKey = ["feature", comment.featureId];
       const parentCommentId = comment.parentCommentId;
       const commentKey = parentCommentId
         ? ["comments", parentCommentId]
-        : ["comments", comment.roadmapId];
+        : ["comments", comment.featureId];
 
       await queryClient.cancelQueries({ queryKey: commentKey });
 
-      const previousRoadmap = structuredClone(
-        queryClient.getQueryData(roadmapKey)
+      const previousFeature = structuredClone(
+        queryClient.getQueryData(featureKey)
       );
 
       const numOfDeletions = dfsNestedDelete(comment._id, queryClient);
 
-      queryClient.setQueryData(roadmapKey, (old) => {
+      queryClient.setQueryData(featureKey, (old) => {
         if (!old) return old;
         return {
           ...old,
@@ -70,16 +70,16 @@ export default function useDeleteComment() {
           });
         }
       } else {
-        queryClient.setQueryData(["comments", comment.roadmapId], (old) => {
+        queryClient.setQueryData(["comments", comment.featureId], (old) => {
           if (!old) return old;
           return old.filter((c) => c._id !== comment._id);
         });
       }
 
       return {
-        previousRoadmap,
+        previousFeature,
         commentKey,
-        roadmapKey,
+        featureKey,
       };
     },
   });

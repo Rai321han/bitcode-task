@@ -1,13 +1,11 @@
 "use client";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useAuth } from "../providers/AuthProvider";
 
 export default function EmailVerificationPage() {
   const params = useSearchParams();
   const token = params.get("token");
   const router = useRouter();
-
 
   useEffect(() => {
     async function verify() {
@@ -32,8 +30,8 @@ export default function EmailVerificationPage() {
 
         // Give cookies time to register in browser
         setTimeout(() => {
-          router.push("/roadmaps");
-        }, 100);
+          router.push("/roadmap");
+        }, 200);
       } catch (err) {
         console.error("Error: ", err);
       }

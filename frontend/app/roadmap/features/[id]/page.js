@@ -1,29 +1,29 @@
 "use client";
 import { BiComment, BiUpvote } from "react-icons/bi";
-import { getRoadById } from "@/actions/roadmaps";
+import { getFeatureById } from "@/actions/features";
 import Badge from "@/components/Badge";
 import { debounce } from "lodash";
 import CommentSection from "@/components/comment_component/CommentSection";
-import MiletoneDetail from "@/components/roadmap_component/MiletoneDetail";
+import MiletoneDetail from "@/components/feature_component/MiletoneDetail";
 import { useQuery } from "@tanstack/react-query";
 import { use } from "react";
 import Link from "next/link";
-import useSocketRoadmap from "@/hooks/socket_hooks/useSocketRoadmap";
-import useUpvoteRoadmap from "@/hooks/roadmap_hooks/useUpvoteRoadmap";
 import { useAuth } from "@/app/providers/AuthProvider";
-import useRemoveUpvoteRoadmap from "@/hooks/roadmap_hooks/useRemoveUpvoteRoadmap";
+import useSocketFeature from "@/hooks/socket_hooks/useSocketFeature";
+import useUpvoteFeature from "@/hooks/feature_hooks/useUpvoteFeature";
+import useRemoveUpvoteFeature from "@/hooks/feature_hooks/useRemoveUpvoteFeature";
 
-export default function RoadmapDetailsPage({ params }) {
+export default function FeatureDetailsPage({ params }) {
   const pageParams = use(params);
   const { user } = useAuth();
-  const roadmapId = pageParams.id;
-  const socket = useSocketRoadmap(roadmapId);
-  const { upvoteRoadmap } = useUpvoteRoadmap();
-  const { removeUpvoteRoadmap } = useRemoveUpvoteRoadmap();
+  const featureId = pageParams.id;
+  const socket = useSocketFeature(featureId);
+  const { upvoteFeature } = useUpvoteFeature();
+  const { removeUpvoteFeature } = useRemoveUpvoteFeature();
 
-  const { data: roadmap } = useQuery({
-    queryKey: ["roadmap", roadmapId],
-    queryFn: async () => await getRoadById({ id: roadmapId }),
+  const { data: feature } = useQuery({
+    queryKey: ["feature", featureId],
+    queryFn: async () => await getFeatureById({ id: featureId }),
     refetchOnWindowFocus: false,
   });
 
@@ -35,45 +35,45 @@ export default function RoadmapDetailsPage({ params }) {
   let creationDate = "";
   let milestones = [];
 
-  if (roadmap) {
-    const { createdAt } = roadmap;
+  if (feature) {
+    const { createdAt } = feature;
     creationDate = new Date(createdAt).toLocaleDateString("en-US", option);
 
-    milestones = roadmap.milestones;
+    milestones = feature.milestones;
   }
 
-  if (!roadmap) return;
+  if (!feature) return;
 
-  const hasVoted = roadmap.likers.includes(user.id);
+  const hasVoted = feature.likers.includes(user.id);
 
-  let totalComments = roadmap.comments;
+  let totalComments = feature.comments;
 
   const handleUpvote = debounce(() => {
     if (hasVoted) {
-      removeUpvoteRoadmap(
+      removeUpvoteFeature(
         {
-          roadmapId,
+          featureId,
           upvoterId: user.id,
         },
         {
-          onSuccess: ({ roadmapId, upvoterId }) => {
-            socket.emit("remove_upvote_roadmap", {
-              roadmapId,
+          onSuccess: ({ featureId, upvoterId }) => {
+            socket.emit("remove_upvote_feature", {
+              featureId,
               upvoterId,
             });
           },
         }
       );
     } else {
-      upvoteRoadmap(
+      upvoteFeature(
         {
-          roadmapId,
+          featureId,
           upvoterId: user.id,
         },
         {
-          onSuccess: ({ roadmapId, upvoterId }) => {
-            socket.emit("upvote_roadmap", {
-              roadmapId,
+          onSuccess: ({ featureId, upvoterId }) => {
+            socket.emit("upvote_feature", {
+              featureId,
               upvoterId,
             });
           },
@@ -89,24 +89,18 @@ export default function RoadmapDetailsPage({ params }) {
           <div className="lg:col-span-1 lg:row-start-1 lg:row-end-2 p-5 bg-light-fg dark:bg-dark-fg border border-light-line dark:border-dark-line rounded-md w-full flex flex-col gap-5">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-5 sm:justify-between w-full">
               <h1 className="text-xl sm:text-2xl font-bold text-light-title dark:text-dark-title">
-                {roadmap.feature}
+                {feature.feature}
               </h1>
               <div className="inline-block">
-                <Badge type={roadmap.status} />
+                <Badge type={feature.status} />
               </div>
             </div>
             <div className="border-l-3 sm:border-l-4 border-gray-200 pl-2 sm:pl-4 w-full">
               <p className="text-light-body dark:text-dark-body text-sm w-full leading-[1.3rem]">
-                User authentication is a fundamental aspect of modern web
-                applications, providing a secure mechanism for verifying the
-                identity of users and controlling access to sensitive features
-                and data. This process typically begins with a registration
-                system, where new users can create an account by providing
-                essential information such as a username, email address, and
-                password.
+                {feature.description}
               </p>
             </div>
-            <div className="flex flex-row justify-between text-xs text-light-opacity dark:text-dark-opacity italic">
+            <div className="mt-auto text-xs text-light-opacity dark:text-dark-opacity italic">
               <div>
                 <p>Created:</p>
                 <p>{creationDate}</p>
@@ -137,7 +131,7 @@ export default function RoadmapDetailsPage({ params }) {
                         : "text-light-icon dark:fill-dark-icon"
                     }`}
                   >
-                    {roadmap.upvotes}
+                    {feature.upvotes}
                   </p>
                 </button>
                 <Link
@@ -156,7 +150,7 @@ export default function RoadmapDetailsPage({ params }) {
             </div>
             <div className="">
               {/* <Suspense fallback={<LoadingCommentSection />}> */}
-              <CommentSection roadmap={roadmap} socket={socket} />
+              <CommentSection feature={feature} socket={socket} />
               {/* </Suspense> */}
             </div>
           </div>

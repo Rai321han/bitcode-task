@@ -1,4 +1,4 @@
-export function RoadmapCard() {
+export function FeaetureCard() {
   return (
     <div className="hover:outline  p-4  gap-2 w-[350px] bg-light-bg dark:bg-dark-bg flex flex-col items-start  min-h[450px] rounded-md">
       <div className="rounded-sm">
@@ -17,15 +17,15 @@ export function RoadmapCard() {
   );
 }
 
-export default function RoadmapFallback() {
+export default function FeatureFallback() {
   return (
     <div className="flex flex-row flex-wrap gap-3.5 bg-light-fg dark:bg-dark-fg rounded-lg p-5 animate-pulse">
-      <RoadmapCard />
-      <RoadmapCard />
-      <RoadmapCard />
-      <RoadmapCard />
-      <RoadmapCard />
-      <RoadmapCard />
+      <FeaetureCard />
+      <FeaetureCard />
+      <FeaetureCard />
+      <FeaetureCard />
+      <FeaetureCard />
+      <FeaetureCard />
     </div>
   );
 }

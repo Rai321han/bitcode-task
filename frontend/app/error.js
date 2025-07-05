@@ -13,7 +13,7 @@ export default function error() {
         <div className="flex flex-row gap-1">
           <p className="text-gray-700">You may try going to</p>
           <Link
-            href={"/roadmaps"}
+            href={"/roadmap"}
             className="text-orange-700 hover:underline hover:underline-offset-2"
           >
             Homepage

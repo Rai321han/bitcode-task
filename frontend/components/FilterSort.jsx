@@ -14,7 +14,7 @@ export default function FilterSort({ filter, sort }) {
       params.set(key, values.join(","));
     } else params.delete(key);
 
-    router.replace(`/roadmaps?${params.toString()}`);
+    router.replace(`/roadmap?${params.toString()}`);
   };
   return (
     <>

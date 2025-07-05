@@ -2,19 +2,19 @@
 
 import FilterSort from "@/components/FilterSort";
 import { Suspense, use } from "react";
-import RoadmapList from "@/components/roadmap_component/RoadmapList";
-import RoadmapFallback from "@/components/roadmap_component/RoadmapFallback";
-import { useRoadmaps } from "@/hooks/roadmap_hooks/useRoadmaps";
+import FeatureList from "@/components/feature_component/FeatureList";
+import FeatureFallback from "@/components/feature_component/FeatureFallback";
+import { useFeatures } from "@/hooks/feature_hooks/useFeatures";
 import { useSearchParams } from "next/navigation";
 
-export default function RoadmapsPage() {
+export default function RoadmapPage() {
   const searchParams = useSearchParams();
   const filter = searchParams.get("filter") || "";
   const sort = searchParams.get("sort") || "";
   const filterArray = filter?.split(",").filter(Boolean) || [];
   const sortArray = sort?.split(",").filter(Boolean) || [];
 
-  const query = useRoadmaps({ filter: filterArray, sort: sortArray });
+  const query = useFeatures({ filter: filterArray, sort: sortArray });
 
   return (
     <div className="min-h-dvh p-5 md:p-20 bg-light-bg dark:bg-dark-bg">
@@ -25,8 +25,8 @@ export default function RoadmapsPage() {
           </div>
         </div>
 
-        <Suspense fallback={<RoadmapFallback />}>
-          <RoadmapList query={query} />
+        <Suspense fallback={<FeatureFallback />}>
+          <FeatureList query={query} />
         </Suspense>
       </div>
     </div>

@@ -6,22 +6,22 @@ export default function useMakeComment() {
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const commentMutation = useMutation({
-    mutationFn: async ({ roadmapId, content, parentComment }) =>
+    mutationFn: async ({ featureId, content, parentComment }) =>
       await createComment({
         commenterId: user.id,
-        roadmapId,
+        featureId,
         content,
         parentComment,
         commenterName: user.username,
       }),
 
-    onMutate: async ({ roadmapId, content, parentComment, commenterName }) => {
+    onMutate: async ({ featureId, content, parentComment, commenterName }) => {
       const parentCommentId = parentComment ? parentComment._id : null;
       const commentKey = parentCommentId
         ? ["comments", parentCommentId]
-        : ["comments", roadmapId];
+        : ["comments", featureId];
 
-      const roadmapKey = ["roadmap", roadmapId];
+      const featureKey = ["feature", featureId];
 
       await queryClient.cancelQueries({
         queryKey: commentKey,
@@ -29,7 +29,7 @@ export default function useMakeComment() {
       const previousComment = structuredClone(
         queryClient.getQueryData(commentKey)
       );
-      const previousRoadmap = queryClient.getQueryData(roadmapKey);
+      const previousFeature = queryClient.getQueryData(featureKey);
 
       const tempId = crypto.randomUUID();
 
@@ -37,7 +37,7 @@ export default function useMakeComment() {
         _id: tempId,
         commenterName,
         content,
-        roadmapId,
+        featureId,
         parentCommentId,
         commenterId: user.id,
         likes: 0,
@@ -45,6 +45,7 @@ export default function useMakeComment() {
         chain: [],
         hasChild: false,
         isOptimistic: true,
+        createdAt: new Date(),
       };
 
       if (parentCommentId) {
@@ -63,8 +64,8 @@ export default function useMakeComment() {
         return [...old, optimisticComment];
       });
 
-      // updating roadmap comment count cache
-      queryClient.setQueryData(roadmapKey, (old) => {
+      // updating feature comment count cache
+      queryClient.setQueryData(featureKey, (old) => {
         if (!old) return old;
         return {
           ...old,
@@ -83,8 +84,8 @@ export default function useMakeComment() {
 
       return {
         previousComment,
-        previousRoadmap,
-        roadmapKey,
+        previousFeature,
+        featureKey,
         commentKey,
         optimisticComment,
       };
@@ -95,8 +96,8 @@ export default function useMakeComment() {
         queryClient.setQueryData(context.commentKey, context.previousComment);
       }
 
-      if (context?.previousRoadmap && context?.roadmapKey) {
-        queryClient.setQueryData(context.roadmapKey, (old) => {
+      if (context?.previousFeature && context?.featureKey) {
+        queryClient.setQueryData(context.featureKey, (old) => {
           return {
             ...old,
             comments: Math.max(0, old.comments - 1),
@@ -115,11 +116,11 @@ export default function useMakeComment() {
       );
       queryClient.setQueryData(["comment", savedComment._id], savedComment);
     },
-    onSettled: (_data, _error, { roadmapId, parentComment }) => {
+    onSettled: (_data, _error, { featureId, parentComment }) => {
       const parentCommentId = parentComment ? parentComment._id : null;
       const commentKey = parentCommentId
         ? ["comments", parentCommentId]
-        : ["comments", roadmapId];
+        : ["comments", featureId];
 
       // Only invalidate if no socket update has occurred
       const currentData = queryClient.getQueryData(commentKey);

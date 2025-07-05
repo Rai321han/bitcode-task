@@ -22,18 +22,18 @@ function dfsNestedDelete(commentId, queryClient) {
   return res;
 }
 
-export default function useSocketRoadmap(roadmapId) {
+export default function useSocketFeature(featureId) {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    if (!roadmapId) return;
+    if (!featureId) return;
 
     if (!socket.connected) {
       socket.connect();
     }
 
-    const join = () => socket.emit("join_roadmap", roadmapId);
-    const leave = () => socket.emit("leave_roadmap", roadmapId);
+    const join = () => socket.emit("join_feature", featureId);
+    const leave = () => socket.emit("leave_feature", featureId);
 
     ////// COMMENT EVENT ///////
 
@@ -41,9 +41,9 @@ export default function useSocketRoadmap(roadmapId) {
     const handleNewComment = (comment) => {
       const key = comment.parentCommentId
         ? ["comments", comment.parentCommentId]
-        : ["comments", roadmapId];
+        : ["comments", featureId];
 
-      const roadmapKey = ["roadmap", comment.roadmapId];
+      const featureKey = ["feature", comment.featureId];
 
       // updating the list
       queryClient.setQueryData(key, (old = []) => {
@@ -54,7 +54,7 @@ export default function useSocketRoadmap(roadmapId) {
         return newComments;
       });
 
-      queryClient.setQueryData(roadmapKey, (old) => {
+      queryClient.setQueryData(featureKey, (old) => {
         return {
           ...old,
           comments: old.comments + 1,
@@ -83,7 +83,7 @@ export default function useSocketRoadmap(roadmapId) {
     const handleEditComment = (updatedComment) => {
       const key = updatedComment?.parentCommentId
         ? ["comments", updatedComment.parentCommentId]
-        : ["comments", updatedComment.roadmapId];
+        : ["comments", updatedComment.featureId];
 
       queryClient.setQueryData(key, (old = []) =>
         old.map((c) => (c._id === updatedComment._id ? updatedComment : c))
@@ -95,9 +95,9 @@ export default function useSocketRoadmap(roadmapId) {
     // TODO - getting comment delete
     const handleDeleteComment = ({ comment }) => {
       const deletionsCount = dfsNestedDelete(comment._id, queryClient);
-      const roadmapKey = ["roadmap", comment.roadmapId];
+      const featureKey = ["feature", comment.featureId];
       const parentCommentId = comment.parentCommentId;
-      queryClient.setQueryData(roadmapKey, (old) => {
+      queryClient.setQueryData(featureKey, (old) => {
         if (!old) return old;
         return {
           ...old,
@@ -125,7 +125,7 @@ export default function useSocketRoadmap(roadmapId) {
           });
         }
       } else {
-        queryClient.setQueryData(["comments", comment.roadmapId], (old) => {
+        queryClient.setQueryData(["comments", comment.featureId], (old) => {
           if (!old) return old;
           return old.filter((c) => c._id !== comment._id);
         });
@@ -158,31 +158,31 @@ export default function useSocketRoadmap(roadmapId) {
       });
     };
 
-    // getting roadmap upvote
-    const handleUpvoteRoadmap = ({ roadmapId, upvoterId }) => {
-      const key = ["roadmap", roadmapId];
-      queryClient.setQueryData(key, (roadmap) => {
-        if (!roadmap || !upvoterId) return roadmap;
-        const hasUpvoted = roadmap.likers.includes(upvoterId);
+    // getting feature upvote
+    const handleUpvoteFeature = ({ featureId, upvoterId }) => {
+      const key = ["feature", featureId];
+      queryClient.setQueryData(key, (feature) => {
+        if (!feature || !upvoterId) return feature;
+        const hasUpvoted = feature.likers.includes(upvoterId);
         return {
-          ...roadmap,
-          upvotes: hasUpvoted ? roadmap.upvotes - 1 : roadmap.upvotes + 1,
+          ...feature,
+          upvotes: hasUpvoted ? feature.upvotes - 1 : feature.upvotes + 1,
           likers: hasUpvoted
-            ? roadmap.likers.filter((u) => u !== upvoterId)
-            : [...roadmap.likers, upvoterId],
+            ? feature.likers.filter((u) => u !== upvoterId)
+            : [...feature.likers, upvoterId],
         };
       });
     };
 
-    // getting roadmap upvote
-    const handleRemoveUpvoteRoadmap = ({ roadmapId, upvoterId }) => {
-      const key = ["roadmap", roadmapId];
-      queryClient.setQueryData(key, (roadmap) => {
-        if (!roadmap || !upvoterId) return roadmap;
+    // getting feature upvote
+    const handleRemoveUpvoteFeature = ({ featureId, upvoterId }) => {
+      const key = ["feature", featureId];
+      queryClient.setQueryData(key, (feature) => {
+        if (!feature || !upvoterId) return feature;
         return {
-          ...roadmap,
-          upvotes: Math.max(roadmap.upvotes - 1, 0),
-          likers: roadmap.likers.filter((u) => u !== upvoterId),
+          ...feature,
+          upvotes: Math.max(feature.upvotes - 1, 0),
+          likers: feature.likers.filter((u) => u !== upvoterId),
         };
       });
     };
@@ -196,8 +196,8 @@ export default function useSocketRoadmap(roadmapId) {
     socket.on("delete_comment", handleDeleteComment);
     socket.on("like_comment", handleLikeComment);
     socket.on("unlike_comment", handleUnlikeComment);
-    socket.on("upvote_roadmap", handleUpvoteRoadmap);
-    socket.on("remove_upvote_roadmap", handleRemoveUpvoteRoadmap);
+    socket.on("upvote_feature", handleUpvoteFeature);
+    socket.on("remove_upvote_feature", handleRemoveUpvoteFeature);
 
     return () => {
       socket.off("connect", join);
@@ -206,12 +206,12 @@ export default function useSocketRoadmap(roadmapId) {
       socket.off("delete_comment", handleDeleteComment);
       socket.off("like_comment", handleLikeComment);
       socket.off("unlike_comment", handleUnlikeComment);
-      socket.off("upvote_roadmap", handleUpvoteRoadmap);
-      socket.off("remove_upvote_roadmap", handleRemoveUpvoteRoadmap);
+      socket.off("upvote_feature", handleUpvoteFeature);
+      socket.off("remove_upvote_feature", handleRemoveUpvoteFeature);
 
       leave();
     };
-  }, [roadmapId, queryClient]);
+  }, [featureId, queryClient]);
 
   return socket;
 }

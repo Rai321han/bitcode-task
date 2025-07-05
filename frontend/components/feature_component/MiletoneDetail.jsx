@@ -1,17 +1,17 @@
 import { MdOutlineTaskAlt } from "react-icons/md";
 
 export default function MiletoneDetail({ milestones }) {
-  let remains = 0;
+  let completed = 0;
   if (milestones.length > 0) {
     milestones.map((milestone) => {
-      if (milestone.status === "incompleted") remains += 1;
+      if (milestone.status === "completed") completed += 1;
     });
   }
   return (
     <>
       <div className="font-semibold text-light-title dark:text-dark-title">
         {milestones.length > 0
-          ? `Milestone (${remains} / ${milestones.length})`
+          ? `Milestone (${completed} / ${milestones.length})`
           : "No milestones"}
       </div>
       <div className="flex flex-col">

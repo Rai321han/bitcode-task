@@ -9,10 +9,7 @@ const AuthContext = createContext();
 const fetchMe = async () => {
   try {
     let res = await fetchInClient(
-      `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/me`,
-      {
-        credentials: "include",
-      }
+      `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/me`
     );
 
     if (!res || !res.ok) {
@@ -44,7 +41,7 @@ export function AuthProvider({ children }) {
   } = useQuery({
     queryKey: ["me"],
     queryFn: fetchMe,
-    retry: false,
+    retry: 2,
     enabled: !isPublicRoute, // Skip fetch on public routes
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
     onError: () => {

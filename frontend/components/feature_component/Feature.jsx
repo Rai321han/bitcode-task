@@ -3,11 +3,11 @@ import Badge from "../Badge";
 import Milestone from "./Milestone";
 import Link from "next/link";
 
-export default function Roadmap({ data }) {
+export default function Feature({ data }) {
   const { feature, status, upvotes, comments, milestones } = data;
   return (
     <Link
-      href={`/roadmaps/${data._id}`}
+      href={`/roadmap/features/${data._id}`}
       className="hover:outline hover:outline-blue-300 p-4  gap-2 w-full max-w-[400px] bg-light-bg dark:bg-dark-bg flex flex-col items-start  rounded-md"
     >
       {/* <div > */}

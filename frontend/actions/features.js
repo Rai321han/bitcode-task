@@ -1,6 +1,6 @@
 import { fetchInClient } from "@/libs/fetchInClient";
 
-export async function getRoadmaps({ filter, sort }) {
+export async function getFeatures({ filter, sort }) {
   const params = new URLSearchParams();
   filter.forEach((f) => params.append("filter", f));
   sort.forEach((s) => params.append("sort", s));
@@ -9,7 +9,7 @@ export async function getRoadmaps({ filter, sort }) {
     const res = await fetchInClient(
       `${
         process.env.NEXT_PUBLIC_BASE_API_URL
-      }/api/roadmaps?${params.toString()}`,
+      }/api/roadmap?${params.toString()}`,
       {
         cache: "no-store",
       }
@@ -18,17 +18,17 @@ export async function getRoadmaps({ filter, sort }) {
     if (!res || !res.ok) return null;
     const data = await res.json();
 
-    return data.roadmaps;
+    return data.features;
   } catch (error) {
-    console.error("Error fetching roadmaps:", error);
+    console.error("Error fetching features:", error);
     return { error: true, message: error.message };
   }
 }
 
-export async function getRoadById({ id }) {
+export async function getFeatureById({ id }) {
   try {
     const res = await fetchInClient(
-      `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/roadmaps/${id}`,
+      `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/roadmap/features/${id}`,
       {
         cache: "no-store",
       }
@@ -37,16 +37,16 @@ export async function getRoadById({ id }) {
     if (!res.ok) return null;
     const data = await res.json();
 
-    return data.roadmap;
+    return data.feature;
   } catch (error) {
     console.log("Error getting data", error.message);
   }
 }
 
-export async function LikeRoadmap({ roadmapId, upvoterId }) {
+export async function LikeFeature({ featureId, upvoterId }) {
   try {
     const res = await fetchInClient(
-      `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/roadmaps/${roadmapId}/like`,
+      `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/roadmap/features/${featureId}/like`,
       {
         method: "PATCH",
         credentials: "include",
@@ -59,27 +59,27 @@ export async function LikeRoadmap({ roadmapId, upvoterId }) {
 
     if (!res.ok) {
       const errorBody = await res.json().catch(() => ({}));
-      throw new Error(errorBody.message || "Failed to like roadmap");
+      throw new Error(errorBody.message || "Failed to like feature");
     }
 
     if (res && res.ok) {
       return {
-        roadmapId,
+        featureId,
         upvoterId,
       };
     }
   } catch (error) {
-    console.log("Error updating roadmap like", error);
+    console.log("Error updating feature like", error);
     return {
       message: "request error",
     };
   }
 }
 
-export async function UnlikeRoadmap({ roadmapId, upvoterId }) {
+export async function UnlikeFeature({ featureId, upvoterId }) {
   try {
     const res = await fetchInClient(
-      `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/roadmaps/${roadmapId}/unlike`,
+      `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/roadmap/features/${featureId}/unlike`,
       {
         method: "PATCH",
         credentials: "include",
@@ -97,12 +97,12 @@ export async function UnlikeRoadmap({ roadmapId, upvoterId }) {
 
     if (res && res.ok) {
       return {
-        roadmapId,
+        featureId,
         upvoterId,
       };
     }
   } catch (error) {
-    console.log("Error updating roadmap upvote", error);
+    console.log("Error updating feature upvote", error);
     return {
       message: "request error",
     };

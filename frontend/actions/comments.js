@@ -1,9 +1,9 @@
 import { fetchInClient } from "@/libs/fetchInClient";
 
-export async function getComments({ roadmapId, parentCommentId = null }) {
+export async function getComments({ featureId, parentCommentId = null }) {
   try {
     const res = await fetchInClient(
-      `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/roadmaps/${roadmapId}/comments?parentCommentId=${parentCommentId}`,
+      `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/roadmap/${featureId}/comments?parentCommentId=${parentCommentId}`,
       {
         credentials: "include",
         cache: "no-store",
@@ -110,14 +110,14 @@ export async function UnlikeComment({ commentId, unlikerId }) {
 
 export async function createComment({
   content,
-  roadmapId,
+  featureId,
   commenterId,
   commenterName,
   parentComment,
 }) {
   try {
     const res = await fetchInClient(
-      `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/${roadmapId}/comment`,
+      `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/${featureId}/comment`,
       {
         method: "POST",
         credentials: "include",

@@ -10,7 +10,7 @@ export default function RegisterPage() {
   const router = useRouter();
   useEffect(() => {
     if (user) {
-      router.push("/roadmaps");
+      router.push("/roadmap");
     }
   }, [user, router]);
   return (

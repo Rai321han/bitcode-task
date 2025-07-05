@@ -23,10 +23,10 @@ export default function Navbar() {
             {
               <div className="hidden md:block h-full border-x-1 border-x-light-line dark:border-dark-line">
                 <Link
-                  href="/roadmaps"
+                  href="/roadmap"
                   className="h-full cursor-pointer hover:brightness-105 disabled:cursor-not-allowed px-3 py-1 sm:px-4 sm:py-2  text-normal-text hover:text-primary text-md"
                 >
-                  Roadmaps
+                  Roadmap
                 </Link>
               </div>
             }
@@ -92,7 +92,7 @@ export default function Navbar() {
                     <div>{user.username}</div>
                   </div>
                   <Link
-                    href={"/roadmaps"}
+                    href={"/roadmap"}
                     className="px-10 py-2 hover:bg-primary hover:text-white"
                   >
                     Roadmap
