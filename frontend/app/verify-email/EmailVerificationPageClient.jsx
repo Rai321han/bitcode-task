@@ -1,11 +1,14 @@
 "use client";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useAuth } from "../providers/AuthProvider";
 
 export default function EmailVerificationPage() {
   const params = useSearchParams();
   const token = params.get("token");
   const router = useRouter();
+
+  const { refetch } = useAuth();
 
   useEffect(() => {
     async function verify() {
@@ -28,6 +31,7 @@ export default function EmailVerificationPage() {
           return;
         }
 
+        await refetch();
         router.push("/roadmaps");
       } catch (err) {
         console.error("Error: ", err);
