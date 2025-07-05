@@ -80,7 +80,7 @@ export function FormButton({ className, children, disabled, ...rest }) {
 export function FormErrorLabel({ className, message }) {
   return (
     message && (
-      <div className="bg-red-200 text-red-700 text-sm p-2 rounded-md">
+      <div className="bg-red-200 text-red-700 text-sm p-2 rounded-md max-w-[400px]">
         {message}
       </div>
     )

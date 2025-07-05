@@ -74,7 +74,8 @@ export const register = async function (req, res, next) {
     await connectDB();
     let user = await User.findOne({ email });
 
-    if (!user.isVerified) throw new AppError("Please verify your email", 409);
+    if (user && !user.isVerified)
+      throw new AppError("Please verify your email", 409);
 
     if (user) throw new AppError("User already exists", 409);
 
