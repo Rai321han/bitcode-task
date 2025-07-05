@@ -35,6 +35,13 @@ A collaborative platform where users can explore predefined roadmaps and engage 
 
 🔗 [🚀 LIVE LINK](https://bitcode-task.vercel.app/)
 
+### Demo Login - you can register too
+
+````sh
+email: demo@gmail.com
+password: testing123
+``
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Features
@@ -98,7 +105,7 @@ To get a local copy of the project and to start running the application, you can
    ```sh
    git clone https://github.com/Rai321han/bitcode-task.git
    cd bitcode-task
-   ```
+````
 
 2. Setup Environment Variables
 
