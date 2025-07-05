@@ -5,11 +5,14 @@ import { Suspense, use } from "react";
 import RoadmapList from "@/components/roadmap_component/RoadmapList";
 import RoadmapFallback from "@/components/roadmap_component/RoadmapFallback";
 import { useRoadmaps } from "@/hooks/roadmap_hooks/useRoadmaps";
+import { useSearchParams } from "next/navigation";
 
-export default function RoadmapsPage({ searchParams }) {
-  const { filter, sort } = use(searchParams);
-  const filterArray = filter?.split(",") || [];
-  const sortArray = sort?.split(",") || [];
+export default function RoadmapsPage() {
+  const searchParams = useSearchParams();
+  const filter = searchParams.get("filter") || "";
+  const sort = searchParams.get("sort") || "";
+  const filterArray = filter?.split(",").filter(Boolean) || [];
+  const sortArray = sort?.split(",").filter(Boolean) || [];
 
   const query = useRoadmaps({ filter: filterArray, sort: sortArray });
 
@@ -25,7 +28,6 @@ export default function RoadmapsPage({ searchParams }) {
         <Suspense fallback={<RoadmapFallback />}>
           <RoadmapList query={query} />
         </Suspense>
-
       </div>
     </div>
   );
