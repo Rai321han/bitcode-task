@@ -6,13 +6,13 @@ export default function useMakeComment() {
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const commentMutation = useMutation({
-    mutationFn: async ({ featureId, content, parentComment }) =>
+    mutationFn: async ({ featureId, content, parentComment, commenterName }) =>
       await createComment({
         commenterId: user.id,
         featureId,
         content,
         parentComment,
-        commenterName: user.username,
+        commenterName,
       }),
 
     onMutate: async ({ featureId, content, parentComment, commenterName }) => {
@@ -33,6 +33,7 @@ export default function useMakeComment() {
 
       const tempId = crypto.randomUUID();
 
+      const optiTime = new Date();
       const optimisticComment = {
         _id: tempId,
         commenterName,
@@ -45,7 +46,7 @@ export default function useMakeComment() {
         chain: [],
         hasChild: false,
         isOptimistic: true,
-        createdAt: new Date(),
+        createdAt: optiTime,
       };
 
       if (parentCommentId) {
@@ -111,11 +112,17 @@ export default function useMakeComment() {
     onSuccess: (savedComment, _vars, context) => {
       queryClient.setQueryData(context.commentKey, (old = []) =>
         old.map((c) =>
-          c._id === context.optimisticComment._id ? savedComment : c
+          c._id === context.optimisticComment._id
+            ? { ...savedComment, isOptimistic: false }
+            : c
         )
       );
-      queryClient.setQueryData(["comment", savedComment._id], savedComment);
+      queryClient.setQueryData(["comment", savedComment._id], {
+        ...savedComment,
+        isOptimistic: false,
+      });
     },
+
     onSettled: (_data, _error, { featureId, parentComment }) => {
       const parentCommentId = parentComment ? parentComment._id : null;
       const commentKey = parentCommentId

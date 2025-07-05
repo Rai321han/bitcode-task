@@ -87,12 +87,13 @@ export default function CommentSection({ feature, socket }) {
     );
   }, 200);
 
-  const handleCommentSubmit = debounce((text) => {
+  const handleCommentSubmit = (text) => {
     makeComment(
       {
         featureId: feature._id,
         content: text,
         parentComment: selectComment || null,
+        commenterName: user.username,
       },
       {
         onSuccess: (savedComment) => {
@@ -104,7 +105,7 @@ export default function CommentSection({ feature, socket }) {
         },
       }
     );
-  }, 300);
+  };
 
   const handleEditComment = debounce((comment, content) => {
     editComment(
@@ -124,7 +125,7 @@ export default function CommentSection({ feature, socket }) {
     );
   }, 300);
 
-  const handleDeleteComment = debounce((comment) => {
+  const handleDeleteComment = (comment) => {
     deleteComment(
       {
         comment,
@@ -138,7 +139,7 @@ export default function CommentSection({ feature, socket }) {
         },
       }
     );
-  });
+  };
 
   return (
     <>
