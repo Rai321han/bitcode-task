@@ -17,6 +17,6 @@ comments.post("/:roadmapId/comment", protect, createComment);
 comments.patch("/comments/:commentId/like", protect, likeComment);
 comments.patch("/comments/:commentId/unlike", protect, unlikeComment);
 comments.patch("/comments/:commentId", protect, editComment);
-comments.delete("/comments/:commentId", protect, deleteComment);
+comments.post("/comments", protect, deleteComment);
 
 export default comments;

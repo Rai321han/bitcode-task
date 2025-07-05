@@ -29,6 +29,8 @@ app.use("/api", authRouter);
 app.use(errorHandler);
 
 process.on("uncaughtException", (err) => {
+  console.error(err);
+
   console.error("Uncaught Exception:", err.message);
   process.exit(1); // Exit to prevent an unstable state
 });
@@ -74,8 +76,8 @@ io.on("connection", (socket) => {
   });
 
   // delete comment
-  socket.on("delete_comment", ({ roadmapId, commentId }) => {
-    socket.to(roadmapId).emit("delete_comment", commentId);
+  socket.on("delete_comment", ({ roadmapId, comment }) => {
+    socket.to(roadmapId).emit("delete_comment", { comment });
   });
 
   // upvote roadmap

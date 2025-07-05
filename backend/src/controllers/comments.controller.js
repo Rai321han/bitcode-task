@@ -110,7 +110,7 @@ export async function createComment(req, res, next) {
     commenterId,
     content,
     commenterName,
-    parentCommentId = null,
+    parentComment = null,
   } = req.body;
   const roadmapId = req.params.roadmapId;
 
@@ -127,7 +127,12 @@ export async function createComment(req, res, next) {
     // likes:
     // likers:
     // -------
+    const parentCommentId = parentComment?._id || null;
     await connectDB();
+
+    const chain = parentComment
+      ? [...parentComment.chain, parentCommentId]
+      : [];
     const newComment = await Comment.create({
       content,
       roadmapId,
@@ -135,6 +140,7 @@ export async function createComment(req, res, next) {
       commenterId,
       parentCommentId,
       hasChild: false,
+      chain,
       likes: 0,
       likers: [],
     });
@@ -168,7 +174,6 @@ export async function editComment(req, res, next) {
 
     await connectDB();
 
-
     const updatedComment = await Comment.findByIdAndUpdate(
       commentId,
       { content },
@@ -187,4 +192,50 @@ export async function editComment(req, res, next) {
   }
 }
 
-export async function deleteComment() {}
+export async function deleteComment(req, res, next) {
+  try {
+    const { comment } = req.body;
+    if (!comment || !comment._id || !comment.roadmapId)
+      throw new AppError("Invalid comment payload", 400);
+
+    await connectDB();
+
+    const commentId = new mongoose.Types.ObjectId(comment._id);
+
+    // Delete the comment itself + all that have this commentId in their chain
+
+    const parentCommentId = comment.parentCommentId || null;
+    const result = await Comment.deleteMany({
+      $or: [
+        { _id: commentId },
+        { chain: commentId }, // matches all descendants
+      ],
+    });
+
+    // Decrease roadmap comment count
+    await Roadmap.findByIdAndUpdate(comment.roadmapId, {
+      $inc: { comments: -result.deletedCount },
+    });
+
+    if (parentCommentId) {
+      const remainingChildren = await Comment.exists({
+        parentCommentId: parentCommentId,
+      });
+
+      if (!remainingChildren) {
+        await Comment.findByIdAndUpdate(parentCommentId, {
+          hasChild: false,
+        });
+      }
+    }
+
+    return res.status(200).json({
+      success: true,
+      deletedCount: result.deletedCount,
+      comment,
+    });
+  } catch (error) {
+    console.error("Error ", error);
+    next(error);
+  }
+}

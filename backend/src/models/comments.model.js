@@ -29,7 +29,13 @@ const CommentSchema = new Schema({
     type: Number,
     default: 0,
   },
+
   likers: [
+    {
+      type: Schema.Types.ObjectId,
+    },
+  ],
+  chain: [
     {
       type: Schema.Types.ObjectId,
     },
