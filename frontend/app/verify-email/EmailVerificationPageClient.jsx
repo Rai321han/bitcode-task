@@ -22,7 +22,7 @@ export default function EmailVerificationPage() {
 
         if (!res.ok) {
           console.error(data.message);
-          console.error(data.message);
+       
           alert("Email verification failed: " + data.message);
           router.push("/error");
           return;
