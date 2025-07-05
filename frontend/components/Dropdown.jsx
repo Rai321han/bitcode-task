@@ -18,18 +18,18 @@ export function DropdownItem({ children, value }) {
     item = (
       <div
         key={value}
-        className="flex flex-row items-center gap-2 justify-start"
+        className="border-b border-light-line rounded-t-lg dark:border-dark-line flex flex-row items-center gap-2 justify-start pl-3 "
       >
         <input
           type="checkbox"
           checked={isSelected}
-          className="text-sm hover:bg-gray-200 px-2 py-1 rounded-sm select-none"
+          className="text-sm checked:bg-primary rounded-md select-none bg-light-fg dark:bg-dark-fg "
           id={value}
           value={value}
           name={value}
           onChange={() => handleCheckboxChange(value)}
         />
-        <label className="select-none" htmlFor={value}>
+        <label className="select-none grow pr-3.5 py-2 text-sm" htmlFor={value}>
           {children}
         </label>
       </div>
@@ -39,8 +39,8 @@ export function DropdownItem({ children, value }) {
       <div
         key={value}
         className={`${
-          isSelected && "bg-gray-200 "
-        } text-sm hover:bg-gray-200 px-2 py-1 rounded-sm select-none`}
+          isSelected && "bg-light-fg dark:bg-dark-fg "
+        } text-sm hover:bg-light-fg hover:dark:bg-dark-fg px-2 py-1 rounded-sm select-none`}
         data-value={value}
         onClick={(e) => handleSortChange(e.target.dataset.value)}
       >
@@ -52,7 +52,7 @@ export function DropdownItem({ children, value }) {
 
 export function DropdownContainer({ children }) {
   return (
-    <div className="p-2 text-gray-500 whitespace-nowrap bg-white shadow-md border border-gray-200 rounded-md flex flex-col gap-1 justify-start">
+    <div className="text-light-opacity dark:text-dark-opacity whitespace-nowrap bg-light-bg dark:bg-dark-bg shadow-md border border-light-fg dark:border-dark-fg  rounded-md flex flex-col overflow-hidden justify-start">
       {children}
     </div>
   );
@@ -94,9 +94,12 @@ export function Dropdown({ children, icon, title, setSelect, selected, type }) {
     <DropdownContext.Provider
       value={{ close, handleSortChange, type, handleCheckboxChange, selected }}
     >
-      <div ref={dropdownRef} className="relative cursor-pointer">
+      <div
+        ref={dropdownRef}
+        className="relative cursor-pointer rounded-md bg-light-fg dark:bg-dark-fg px-2 py-1.5"
+      >
         <div
-          className="flex flex-row items-center text-gray-500 gap-2"
+          className="flex flex-row items-center text-icon text-light-icon dark:text-dark-icon gap-2"
           onClick={toggle}
         >
           <div>{icon}</div>

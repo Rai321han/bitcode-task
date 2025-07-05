@@ -113,7 +113,7 @@ export async function createComment({
   roadmapId,
   commenterId,
   commenterName,
-  parentCommentId,
+  parentComment,
 }) {
   try {
     const res = await fetchInClient(
@@ -128,7 +128,7 @@ export async function createComment({
           content,
           commenterId,
           commenterName,
-          parentCommentId: parentCommentId || null,
+          parentComment: parentComment || null,
         }),
       }
     );
@@ -168,6 +168,32 @@ export async function editComment({ content, commentId }) {
     if (!res.ok) {
       const error = await res.json();
       throw new Error(error.message || "Failed to edit comment");
+    }
+
+    const data = await res.json();
+    return data.comment;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+export async function deleteComment({ comment }) {
+  try {
+    const res = await fetchInClient(
+      `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/comments`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ comment }),
+      }
+    );
+
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(error.message || "Failed to delete comment");
     }
 
     const data = await res.json();

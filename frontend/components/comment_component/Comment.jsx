@@ -14,6 +14,7 @@ export default function Comment({
   onLike,
   onUnlike,
   onEdit,
+  onDelete,
   isOptimistic = false,
 }) {
   const [showReplies, setShowReplies] = useState(false);
@@ -114,11 +115,10 @@ export default function Comment({
       {isEditMode === false && (
         <div
           key={comment._id}
-          className={`p-3 text-gray-700 text-sm flex flex-col gap-1 justify-start  bg-gray-100 rounded-md`}
+          className={`p-3 text-light-body dark:text-dark-body text-sm flex flex-col gap-1 justify-start bg-light-comment  dark:bg-dark-comment rounded-md`}
         >
           <div className="flex flex-row gap-1.5 justify-between">
             <div className="flex flex-row gap-1.5">
-              <div className="w-[20px] h-[20px] bg-gray-300 rounded-full"></div>
               <div className="text-sm font-semibold">
                 {comment.commenterName}
               </div>
@@ -135,15 +135,18 @@ export default function Comment({
                 {isOptionOpen && (
                   <div
                     ref={optionMenuRef}
-                    className="bg-transparent flex flex-col absolute top-6 right-0 shadow-md rounded-md text-gray-700"
+                    className="bg-transparent flex flex-col absolute top-6 right-0 shadow-md rounded-md text-light-opacity dark:text-dark-opacity"
                   >
                     <div
                       onClick={() => setIsEditMode(true)}
-                      className="text-xs md:text-sm hover:bg-gray-100 bg-white cursor-pointer px-2 py-1 rounded-t-md"
+                      className="text-xs md:text-sm hover:bg-light-hover dark:hover:bg-dark-hover bg-light-fg dark:bg-dark-fg cursor-pointer px-2 py-1 rounded-t-md"
                     >
                       edit
                     </div>
-                    <div className="text-xs md:text-sm hover:bg-gray-100 cursor-pointer bg-white px-2 py-1 rounded-b-md">
+                    <div
+                      onClick={() => onDelete(comment)}
+                      className="text-xs md:text-sm  hover:bg-light-hover dark:hover:bg-dark-hover bg-light-fg dark:bg-dark-fg cursor-pointer  px-2 py-1 rounded-b-md"
+                    >
                       delete
                     </div>
                   </div>
@@ -152,7 +155,7 @@ export default function Comment({
             )}
           </div>
           <div className="break-all">{comment.content}</div>
-          <div className="flex flex-row text-xs justify-end gap-3">
+          <div className="flex flex-row text-xs text-light-opacity dark:text-dark-opacity justify-end gap-3">
             {nested < 3 && (
               <button
                 onClick={() => onReply(comment)}
@@ -163,7 +166,7 @@ export default function Comment({
             )}
             <button
               className={`flex flex-row gap-1 cursor-pointer ${
-                hasLiked && "text-blue-500"
+                hasLiked && "text-primary"
               }`}
               onClick={handleOnClick}
             >
@@ -194,14 +197,14 @@ export default function Comment({
         <div className="text-right">
           <button
             onClick={() => setShowReplies((prev) => !prev)}
-            className="text-sm text-right cursor-pointer  px-2 text-gray-600"
+            className="text-sm text-right cursor-pointer  px-2 text-light-opacity dark:text-dark-opacity"
           >
             {showReplies ? "Hide replies" : "View replies"}
           </button>
         </div>
       )}
       {showReplies && (
-        <div className="ml-4 mt-2 pl-2 relative border-l-1 border-gray-300">
+        <div className="ml-4 mt-2 pl-2 relative border-l-1 border-light-fg dark:border-dark-line">
           {repliesPending ? (
             <p className="text-xs text-gray-400">Loading replies...</p>
           ) : (
@@ -211,6 +214,7 @@ export default function Comment({
                 key={reply._id}
                 commentId={reply._id}
                 onLike={onLike}
+                onDelete={onDelete}
                 onUnlike={onUnlike}
                 onEdit={onEdit}
                 onReply={onReply}

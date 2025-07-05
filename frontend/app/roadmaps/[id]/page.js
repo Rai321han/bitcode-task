@@ -84,11 +84,11 @@ export default function RoadmapDetailsPage({ params }) {
 
   return (
     <>
-      <div className="px-2 pt-5 flex flex-col gap-3 items-center justify-center">
+      <div className="p-10 md:p-20 flex flex-col gap-3 items-center justify-center bg-light-bg dark:bg-dark-bg">
         <div className="flex flex-col lg:grid lg:grid-cols-[3fr_2fr] grid-rows-2 gap-10 max-w-[1000px] lg:max-w-[1200px]">
-          <div className="lg:col-span-1 lg:row-start-1 lg:row-end-2 p-5 border border-gray-300 rounded-md w-full flex flex-col gap-5">
+          <div className="lg:col-span-1 lg:row-start-1 lg:row-end-2 p-5 bg-light-fg dark:bg-dark-fg border border-light-line dark:border-dark-line rounded-md w-full flex flex-col gap-5">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-5 sm:justify-between w-full">
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-600">
+              <h1 className="text-xl sm:text-2xl font-bold text-light-title dark:text-dark-title">
                 {roadmap.feature}
               </h1>
               <div className="inline-block">
@@ -96,7 +96,7 @@ export default function RoadmapDetailsPage({ params }) {
               </div>
             </div>
             <div className="border-l-3 sm:border-l-4 border-gray-200 pl-2 sm:pl-4 w-full">
-              <p className="text-gray-500 text-sm w-full leading-[1.3rem]">
+              <p className="text-light-body dark:text-dark-body text-sm w-full leading-[1.3rem]">
                 User authentication is a fundamental aspect of modern web
                 applications, providing a secure mechanism for verifying the
                 identity of users and controlling access to sensitive features
@@ -106,7 +106,7 @@ export default function RoadmapDetailsPage({ params }) {
                 password.
               </p>
             </div>
-            <div className="flex flex-row justify-between text-xs text-gray-400 italic">
+            <div className="flex flex-row justify-between text-xs text-light-opacity dark:text-dark-opacity italic">
               <div>
                 <p>Created:</p>
                 <p>{creationDate}</p>
@@ -117,20 +117,24 @@ export default function RoadmapDetailsPage({ params }) {
             <MiletoneDetail milestones={milestones} />
           </div>
           <div className="lg:row-start-1 lg:row-end-3 lg:col-start-2 lg:col-end-3">
-            <div className="w-full rounded-sm  justify-between gap-3 ">
+            <div className="w-full rounded-sm  justify-between gap-3 mb-5">
               <div className="grid grid-cols-[1fr_2fr_1fr] justify-between w-full">
                 <button
                   onClick={handleUpvote}
-                  className="hover:bg-gray-50 cursor-pointer flex flex-row items-center gap-1 border-1 border-gray-300 p-3 rounded-l-md"
+                  className="hover:bg-light-hover dark:hover:bg-dark-hover  transition-all duration-100 bg-light-fg dark:bg-dark-fg cursor-pointer flex flex-row items-center gap-1 border-r-1 border-light-line dark:border-dark-line p-3 rounded-l-md"
                 >
                   <BiUpvote
                     className={`${
-                      hasVoted ? "fill-amber-500" : "fill-gray-500"
+                      hasVoted
+                        ? "fill-amber-500"
+                        : "fill-light-icon dark:fill-dark-icon"
                     }`}
                   />
                   <p
                     className={`${
-                      hasVoted ? "text-amber-500" : "text-gray-500"
+                      hasVoted
+                        ? "text-amber-500"
+                        : "text-light-icon dark:fill-dark-icon"
                     }`}
                   >
                     {roadmap.upvotes}
@@ -138,13 +142,15 @@ export default function RoadmapDetailsPage({ params }) {
                 </button>
                 <Link
                   href="#comment"
-                  className="hover:bg-gray-50 cursor-pointer text-center font-semibold text-gray-600 border-1 border-gray-300 p-3 "
+                  className="hover:bg-light-hover dark:hover:bg-dark-hover transition-all duration-100 bg-light-fg dark:bg-dark-fg  cursor-pointer text-center font-semibold text-light-opacity dark:text-dark-opacity  p-3 "
                 >
                   Comments
                 </Link>
-                <button className="hover:bg-gray-50 cursor-pointer flex flex-row items-center gap-1 border-1 border-gray-300 p-3 rounded-r-md">
-                  <BiComment className="fill-gray-500" />
-                  <p className="text-gray-500">{totalComments}</p>
+                <button className="hover:bg-light-hover dark:hover:bg-dark-hover transition-all duration-100 bg-light-fg dark:bg-dark-fg  cursor-pointer flex flex-row items-center gap-1 border-l-1 border-light-line dark:border-dark-line p-3 rounded-r-md">
+                  <BiComment className="fill-light-icon dark:fill-dark-icon" />
+                  <p className="text-light-icon dark:fill-dark-icon">
+                    {totalComments}
+                  </p>
                 </button>
               </div>
             </div>

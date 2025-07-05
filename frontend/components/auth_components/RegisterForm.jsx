@@ -60,7 +60,7 @@ export default function RegisterForm() {
       return;
     }
     setIsLoading(false);
-    router.push(data.redirectTo);
+    router.prefetch(data.redirectTo);
   };
 
   return (

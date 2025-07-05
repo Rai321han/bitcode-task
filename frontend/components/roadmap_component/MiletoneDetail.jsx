@@ -9,7 +9,7 @@ export default function MiletoneDetail({ milestones }) {
   }
   return (
     <>
-      <div className="font-semibold text-gray-600">
+      <div className="font-semibold text-light-title dark:text-dark-title">
         {milestones.length > 0
           ? `Milestone (${remains} / ${milestones.length})`
           : "No milestones"}
@@ -21,24 +21,24 @@ export default function MiletoneDetail({ milestones }) {
             className={`cursor-pointer pt-3 pb-0 border-l-2 ${
               milestone.status === "completed"
                 ? "border-green-300"
-                : "border-gray-500"
+                : "border-light-line dark:border-dark-line"
             } relative  pl-5 flex flex-row `}
           >
             <p
               className={`${
                 milestone.status === "completed"
-                  ? "text-gray-800"
-                  : "text-gray-500"
+                  ? "text-light-body dark:text-dark-body"
+                  : "text-light-opacity dark:text-dark-opacity"
               } -mb-1.5`}
             >
               {milestone.title}
             </p>
-            <div className="absolute -translate-x-1/2 bg-white rounded-full left-0 top-1/2 ">
+            <div className="absolute -translate-x-1/2 bg-light-fg dark:bg-dark-fg rounded-full left-0 top-1/2 ">
               <MdOutlineTaskAlt
                 className={`${
                   milestone.status === "completed"
                     ? "fill-green-400"
-                    : "fill-gray-500"
+                    : "fill-light-icon dark:fill-dark-icon"
                 }`}
               />
             </div>

@@ -6,21 +6,17 @@ export default function useMakeComment() {
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const commentMutation = useMutation({
-    mutationFn: async ({ roadmapId, content, parentCommentId }) =>
+    mutationFn: async ({ roadmapId, content, parentComment }) =>
       await createComment({
         commenterId: user.id,
         roadmapId,
         content,
-        parentCommentId,
+        parentComment,
         commenterName: user.username,
       }),
 
-    onMutate: async ({
-      roadmapId,
-      content,
-      parentCommentId,
-      commenterName,
-    }) => {
+    onMutate: async ({ roadmapId, content, parentComment, commenterName }) => {
+      const parentCommentId = parentComment ? parentComment._id : null;
       const commentKey = parentCommentId
         ? ["comments", parentCommentId]
         : ["comments", roadmapId];
@@ -46,9 +42,18 @@ export default function useMakeComment() {
         commenterId: user.id,
         likes: 0,
         likers: [],
+        chain: [],
         hasChild: false,
         isOptimistic: true,
       };
+
+      if (parentCommentId) {
+        const parentComment = queryClient.getQueryData([
+          "comment",
+          parentCommentId,
+        ]);
+        optimisticComment.chain = [...parentComment.chain, parentCommentId];
+      }
 
       // updating comment cache
       queryClient.setQueryData(commentKey, (old = []) => {
@@ -110,7 +115,8 @@ export default function useMakeComment() {
       );
       queryClient.setQueryData(["comment", savedComment._id], savedComment);
     },
-    onSettled: (_data, _error, { roadmapId, parentCommentId }) => {
+    onSettled: (_data, _error, { roadmapId, parentComment }) => {
+      const parentCommentId = parentComment ? parentComment._id : null;
       const commentKey = parentCommentId
         ? ["comments", parentCommentId]
         : ["comments", roadmapId];

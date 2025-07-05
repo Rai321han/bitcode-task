@@ -14,14 +14,14 @@ export default function Navbar() {
   if (user) firstletter = user.username.split("")[0];
   return (
     <>
-      <nav className=" bg-gray-100 sticky top-0 z-1000">
+      <nav className=" bg-light-fg dark:bg-dark-fg sticky top-0 z-1000">
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row gap-3 items-center">
-            <div className="p-2 px-4 font-extrabold text-primary bg-white">
+            <div className="p-2 px-4 font-extrabold text-primary bg-light-bg  dark:bg-dark">
               bitcode.
             </div>
             {
-              <div className="hidden md:block h-full border-x-1 border-x-grayline">
+              <div className="hidden md:block h-full border-x-1 border-x-light-line dark:border-dark-line">
                 <Link
                   href="/roadmaps"
                   className="h-full cursor-pointer hover:brightness-105 disabled:cursor-not-allowed px-3 py-1 sm:px-4 sm:py-2  text-normal-text hover:text-primary text-md"
@@ -81,24 +81,27 @@ export default function Navbar() {
             onClick={() => setIsOpen(false)}
             className="fixed z-[1001] bg-black opacity-[0.4] backdrop-blur-3xl w-full h-full top-0"
           ></div>
-          <div className="fixed top-0 h-full md:hidden bg-gray-200 z-[1100] border-r-1 border-r-gray-400 shadow-md">
-            <div className="flex flex-col text-gray-600">
+          <div className="fixed top-0 h-full md:hidden bg-light-fg dark:bg-dark-fg z-[1100] border-r-1 border-r-light-line dark:border-r-dark-line shadow-md">
+            <div className="flex flex-col text-light-opacity dark:text-dark-opacity">
               {user && (
                 <>
-                  <div className="flex flex-row justify-between items-center gap-3 px-3 py-2 ">
-                    <div className="text-md flex flex-row items-center justify-center text-gray-500 p-2 w-[20px] h-[20px] sm:w-[30px] sm:h-[30px] bg-emerald-400 rounded-[100%]">
+                  <div className="flex flex-row items-center gap-3 justify-center py-2 ">
+                    <div className="text-md flex flex-row items-center justify-center  p-2 w-[20px] h-[20px] sm:w-[30px] sm:h-[30px] bg-emerald-400 rounded-[100%]">
                       <div className="text-sm text-white">{firstletter}</div>
                     </div>
                     <div>{user.username}</div>
                   </div>
-                  <Link href={"/roadmaps"} className="px-3 py-1 hover:bg-white">
+                  <Link
+                    href={"/roadmaps"}
+                    className="px-10 py-2 hover:bg-primary hover:text-white"
+                  >
                     Roadmap
                   </Link>
 
                   <button
                     disabled={isPending}
                     onClick={logout}
-                    className="text-left hover:brightness-110 cursor-pointer disabled:cursor-not-allowed px-3 py-1 sm:px-4 sm:py-2 bg-primary text-white text-md"
+                    className="text-left  hover:brightness-110 cursor-pointer disabled:cursor-not-allowed px-10 py-2 bg-btn text-white text-md"
                   >
                     {isPending ? "loggin out..." : "Logout"}
                   </button>

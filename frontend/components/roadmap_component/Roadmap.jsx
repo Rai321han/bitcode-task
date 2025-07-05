@@ -8,25 +8,29 @@ export default function Roadmap({ data }) {
   return (
     <Link
       href={`/roadmaps/${data._id}`}
-      className="hover:outline hover:outline-blue-300 p-4  gap-2 w-[350px] bg-white flex flex-col items-start shadow-2xl shadow-gray-200 rounded-md"
+      className="hover:outline hover:outline-blue-300 p-4  gap-2 w-full max-w-[400px] bg-light-bg dark:bg-dark-bg flex flex-col items-start  rounded-md"
     >
       {/* <div > */}
       <div className="rounded-sm">
-        <p className="text-gray-600 text-md">{feature}</p>
+        <p className="text-light-title dark:text-dark-title text-md">
+          {feature}
+        </p>
       </div>
       <Badge type={status} />
       <div className="flex flex-row justify-between w-full">
-        <div className="text-gray-400 text-sm">
+        <div className="text-light-opacity dark:text-dark-opacity text-sm">
           {milestones.length === 0
             ? "No milestones"
             : `${milestones.length} milestones`}
         </div>
-        <div className="flex flex-row gap-1 text-gray-500">
-          <div className="flex flex-row text-sm items-center">
-            {upvotes} <BiUpvote />
+        <div className="flex flex-row gap-2 text-light-icon dark:text-dark-icon">
+          <div className="flex flex-row gap-0.5 text-sm items-center">
+            <p>{upvotes}</p>
+            <BiUpvote className="fill-light-icon dark:fill-dark-icon" />
           </div>
-          <div className="flex flex-row text-sm items-center">
-            {comments} <BiComment />
+          <div className="flex flex-row gap-0.5 text-sm items-center">
+            <p>{comments}</p>
+            <BiComment className="fill-light-icon dark:fill-dark-icon" />
           </div>
         </div>
       </div>

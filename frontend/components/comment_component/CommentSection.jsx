@@ -16,6 +16,7 @@ import { useAuth } from "@/app/providers/AuthProvider";
 // import useSocketComment from "@/hooks/useSocketComment";
 import { getComments } from "@/actions/comments";
 import useEditComment from "@/hooks/comment_hooks/useEditComment";
+import useDeleteComment from "@/hooks/comment_hooks/useDeleteComment";
 
 export default function CommentSection({ roadmap, socket }) {
   const [selectComment, setSelectComment] = useState(null);
@@ -25,6 +26,7 @@ export default function CommentSection({ roadmap, socket }) {
   const { unlikeComment } = useUnlikeComment();
   const { makeComment } = useMakeComment();
   const { editComment } = useEditComment();
+  const { deleteComment } = useDeleteComment();
 
   const {
     data: comments = [],
@@ -90,7 +92,7 @@ export default function CommentSection({ roadmap, socket }) {
       {
         roadmapId: roadmap._id,
         content: text,
-        parentCommentId: selectComment?._id || null,
+        parentComment: selectComment || null,
       },
       {
         onSuccess: (savedComment) => {
@@ -122,15 +124,30 @@ export default function CommentSection({ roadmap, socket }) {
     );
   }, 300);
 
+  const handleDeleteComment = debounce((comment) => {
+    deleteComment(
+      {
+        comment,
+      },
+      {
+        onSuccess: (comment) => {
+          socket.emit("delete_comment", {
+            comment,
+            roadmapId: comment.roadmapId,
+          });
+        },
+      }
+    );
+  });
+
   return (
     <>
-      <div className="relative w-full flex flex-col gap-3 mb-5">
-        <div className="border-t-2 border-t-gray-400 mt-3"></div>
-        <div className="h-[70vh] flex flex-col w-full">
+      <div className=" w-full flex flex-col gap-3 pt-2 bg-light-comment-container  dark:bg-dark-fg rounded-t-md rounded-b-lg">
+        <div className="h-[70vh] flex flex-col w-full rounded-b-lg">
           <div
             className="px-2 [&::-webkit-scrollbar]:w-1
-  [&::-webkit-scrollbar-track]:bg-white
-  [&::-webkit-scrollbar-thumb]:bg-gray-200 w-full pb-5 flex flex-col gap-3 rounded-md lg:max-w-[500px]  overflow-scroll overflow-x-auto"
+  [&::-webkit-scrollbar-track]:bg-light-icon dark:[&::-webkit-scrollbar-track]:bg-dark-icon
+  [&::-webkit-scrollbar-thumb]:bg-light-fg dark:[&::-webkit-scrollbar-thumb]:bg-dark-fg w-full pb-5 flex flex-col gap-3 rounded-md lg:max-w-[500px]  overflow-scroll overflow-x-auto"
           >
             {status === "success" &&
               rootComments?.map((comment) => (
@@ -142,6 +159,7 @@ export default function CommentSection({ roadmap, socket }) {
                   onUnlike={handleCommentUnlike}
                   onReply={setSelectComment}
                   onEdit={handleEditComment}
+                  onDelete={handleDeleteComment}
                   isOptimistic={comment?.isOptimistic || false}
                 />
               ))}
@@ -151,22 +169,22 @@ export default function CommentSection({ roadmap, socket }) {
             className="mt-auto  w-full rounded-xl"
             id="comment"
           >
-            <div className="flex flex-row gap-1 items-center px-2 py-1 bg-white -mb-1 rounded-md">
+            <div className="flex flex-row gap-1 items-center px-2 py-1  -mb-1 rounded-md">
               {selectComment && (
                 <>
                   <div>
                     <LuCornerUpRight />
                   </div>
-                  <div className="text-sm text-gray-600  w-fit">
+                  <div className="text-sm text-light-opacity dark:text-dark-opacity w-fit">
                     Replying to{" "}
-                    <span className="text-gray-700 font-bold">
+                    <span className="text-light-body dark:text-dark-opacity font-bold">
                       {user.id === selectComment.commenterId
                         ? "Myself"
                         : selectComment.commenterName}
                     </span>
                   </div>
                   <div
-                    className="p-2 rounded-md hover:bg-amber-100"
+                    className="p-2 rounded-md"
                     onClick={() => setSelectComment(null)}
                   >
                     <RxCross1 />

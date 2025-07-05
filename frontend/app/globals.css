@@ -3,6 +3,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  scroll-behavior: smooth;
 }
 
 @layer utilities {
@@ -26,6 +27,56 @@
 
 @theme {
   --breakpoint-tablet: 610px;
+
+  /* colors - light*/
+  --color-light-bg: #FFFFFF;
+  --color-light-fg: #F3F4F6;
+  --color-light-icon: #7B7B7B;
+  --color-light-body: #434343;
+  --color-light-title: #444444;
+  --color-light-opacity: #737373;
+  --color-light-line: #CCCCCC;
+  --color-light-hover: #EBEBEB;
+  --color-light-comment: #F0F0F0;
+  --color-light-input: #f1f3f4;
+  --color-light-comment-container: #D2D2D2;
+  
+
+  /* color - dark */
+  --color-dark-bg: #1E1E1E;
+  --color-dark-fg: #303030;
+  --color-dark-icon: #9D9D9D;
+  --color-dark-body: #C7C7CC;
+  --color-dark-title: #E5E7EB;
+  --color-dark-opacity: #A1A1A1;
+  --color-dark-line: #4D4B4B;
+  --color-dark-hover: #514E4E;
+  --color-dark-comment: #1e1e1e;
+  --color-dark-input: #414141;
+  --color-dark-comment-container: 
+
+
+
+  /* common colors */
+  --color-success: #58AE76;
+  --color-progress: #CC6600;
+  --color-danger: #E4685A;
+  --color-pending: #5ABBE4;
+  --color-btn: #E17C16;
+  --color-hover: #F89838;
+
+  /* text */
+  --text-title: 2.5rem;
+  --text-heading: 2rem;
+  --text-subheading: 1.8rem;
+  --text-body: 1.6rem,
+  --text-small: 1.3rem;
+  --text-icon: 1rem;
+  --text-btn: 1.2rem;
+
+
+  /* border */
+  --spacing-thin: 1px
 }
 
 @theme inline {

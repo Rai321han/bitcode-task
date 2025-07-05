@@ -20,9 +20,9 @@ export default function CommentBox({
 
   function handleInputChange(e) {
     const el = e.target;
-    el.style.height = "auto"; 
+    el.style.height = "auto";
     const scrollHeight = el.scrollHeight;
-    const maxHeight = 300; 
+    const maxHeight = 300;
     el.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
 
     const currentText = e.target.value;
@@ -40,16 +40,22 @@ export default function CommentBox({
   };
 
   return (
-    <div className=" bg-white rounded-xl border-2 border-gray-300 ">
-      <div className="flex flex-col items-stretch bg-gray-100 rounded-lg">
+    <div className=" bg-light-input dark:bg-dark-input rounded-b-lg  ">
+      <div className="flex flex-col items-stretch  rounded-lg">
         <textarea
           ref={textareaRef}
           value={text}
           placeholder="share your throught"
           onChange={handleInputChange}
-          className="w-full p-2 rounded placeholder:text-gray-400 break-words placeholder:text-sm resize-none overflow-y-auto outline-none text-sm text-gray-700"
+          className="w-full p-3 rounded placeholder:text-light-opacity dark:placeholder:text-dark-opacity break-words placeholder:text-sm resize-none overflow-y-auto outline-none text-sm text-light-body dark:text-dark-body"
           style={{ height: "auto" }}
           rows={1}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              handleSubmit();
+            }
+          }}
         />
         <div
           className=" rounded-b-xl w-full"
@@ -59,8 +65,7 @@ export default function CommentBox({
             }
           }}
         >
-          <div className="h-2 w-full blur-xs bg-gradient-to-t from-gray-100  via-gray-100 to-gray-100 "></div>
-          <div className="flex flex-row justify-between w-full p-1">
+          <div className="flex flex-row justify-between w-full p-2">
             <div className="mr-5 text-xs text-red-400">{inputError}</div>
             <button
               onClick={handleSubmit}
