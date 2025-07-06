@@ -74,7 +74,7 @@ password: testing123
 ### 🧠 Feedback-Focused UI
 
 - Intuitive, clean interface
-- Real-time-ready architecture (WebSocket support planned)
+- Real-time-ready architecture (with socket.io)
 
 ---
 
@@ -89,6 +89,7 @@ Major frameworks/libraries used to built this site:
 | Auth       | JWT (access & refresh), HttpOnly Cookies |
 | Deployment | Vercel (frontend), Render (backend)      |
 | Email      | Nodemailer (for verification)            |
+| Real Time | Socket.io|
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
