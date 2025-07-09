@@ -42,6 +42,10 @@ email: demo@gmail.com
 password: testing123
 ```
 
+```sh
+please make sure third party cookies are not limited in your browser.
+```
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Features
